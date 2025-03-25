@@ -1,0 +1,24 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: trestles
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/ayushiyerji
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/pratyush20p/
+---
+
+Hi! Welcome to my blog. I am Pratyush Sinha from India. I have been working in Tech for the last 10 years. First as a Trainee Decision Scientist(Very Glorified SAS programmer) and now as a Decision Science Consultant(Not glorified enough Machine Learning Engineer).
+In the career spanning over a decade, I have had a chance to work SAS, Python, C++, and a fair bit of VBA. 
+I do not claim to be an expert in any of these languages but I think I can reason through most codebases thrown at me.
+I have worked with Forecasting algorithms a lot, NLP and more recently LLMs.
+
+I currently spend a lot of my day in meetings trying to understand and build solutions our clients have need.
+
+Aside from work, I mostly spend my time with my family and reading. Whatever remains of the day is consumed by Liverpool Football Club.
+
+The idea behind this blog is very simple - Share a lot of my learnings and hopefully meet people who have similar interests. 

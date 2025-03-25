@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Pratyush Sinha"
+  navbar:
+    left:
+      - about.qmd
+    right:
+      - icon: github
+        href: https://github.com/ayushiyerji
+      - icon: linkedin
+        href: https://www.linkedin.com/in/pratyush20p/
+format:
+  html:
+    theme:
+      - darkly
+    css: styles.css
+
+
+

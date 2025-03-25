@@ -1,0 +1,33 @@
+
+---
+title: "Why even bother with a blog?"
+author: "Pratyush Sinha"
+date: "2025-02-09"
+categories: [musings, life]
+---
+
+It is 2025, AI which can match humans is surely upon us. Every day we have breakthroughs in AI which would put careers to end. 
+
+Probably the first to go out the window would be Software Engineers. Probably is a key word here! I don't want Software Engineers automated. But hey Engineering in all forms has always been a cost centre for the business. And when the factory workers were being automated by assembly line noone considered their feelings. Also the fooling around with three instances of Dev, QA, Prod and making databases and selling them as a Gold Pill for businesses(SalesForce) was probably not the right move.
+
+These models or atleast the genesis of these models was based on the entirety of Internet data. Noone cared about the Copyright data and Terms of Service. Data from Reddit which was at one time the Front Page of the Internet was used. (It isn't now, it is mostly a porn website too scared of Wallstreet to call it one.) At the time of writing, one of the leaders of AI movement  Open AI is claiming that a more cost effective model originating from China was trained on Open AI's outputs. That is not very open is it?
+
+If a machine can generate text with pretty much the same intent as me, the text by itself would not matter. Instead I matter and ergo the content I put out there matters.
+
+Before I go on ranting about why Blogging is amazing, I want to put one thought upfront. I do not support the argument of writing makes you think better. I think it just is. I will write more about this and it could be writings for another blog.
+
+I want to write because I feel it can connect me with people who share similar interests as mine. There are faster means out there. I prefer blogging. I should ahve started blogging a decade earlier because I was convinced. But my inherent laziness I have found a way to do this for 10 years. 10 years is 3653 days. I feel like an idiot.
+
+At the begining, it was shame guilt fear of failure. What if I could not write perfectly? What if my words do not resonate the intended audience? Later it was business and then followed by more guilt of why did I not do this before.
+
+I would not drive more into why I did not to do ti? Why now? There is plenty of writings for going forward. 
+
+I want to write about my learings in the week. I read a lot of mathematics papers. I try to code most of the papers but at the end of the year it always feels like I have done nothing. I also undertake multiple courses. None of that is documented anyhwere. 
+
+All of what I am writing doing and documenting is going to be redundant because of AI. But this blog should continue regardless. 
+
+To document what I was. To be a person who could be reached out to. To show what the World means to me.
+For I cannot claim to be a champion of this world yet!
+
+
+
