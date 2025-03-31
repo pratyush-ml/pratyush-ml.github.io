@@ -1,0 +1,43 @@
+
+---
+title: "Weekly Updates - 13/2025"
+author: "Pratyush Sinha"
+date: "2025-03-30"
+categories: [Weekly Updates, life, learnings]
+---
+
+# Reflecting on a Decade in Corporate Life: Where I've Been and What's Next
+
+After contemplating my 10-year corporate journey for several months, I've come to an unexpected realization. When I started, I believed that dedicating a decade to my profession would make me exceptionally skilled at it.
+
+In my early career days, I naively thought five years would be sufficient to achieve meaningful accomplishments in data science. Looking back, I can only smile at my youthful optimism.
+
+The reality is that I've rarely paused to critically evaluate my career trajectory. There's a sense that I've simply drifted along the current. Despite making conscious efforts toward promotion, these attempts haven't significantly impacted my professional growth so far.
+
+## Noteworthy Observations This Week
+
+### The ChatGPT Image Generation Debate
+
+ChatGPT released their new image generation model, sparking excitement about Ghibli-style transformations and igniting a Twitter discourse. My thoughts:
+
+* **On AI "stealing" artistic styles:** As an Indian, I view digital rights and AI art debates through a unique lens. The concept feels somewhat abstract in my context.
+
+* **Global perspective:** Most people engaging with these tools aren't Ghibli aficionados - they're following trends. Meanwhile, Ghibli gains worldwide exposure through these interactions.
+
+* **Corporate caution:** Meta likely has similar technology in development but hesitates on release due to copyright concerns. They're playing it safe while LLMs force us to reconsider intellectual property frameworks altogether.
+
+* **Humorous observation:** Given India's unique relationship with copyright (considering T-series and Pritam's success), perhaps we could offer "Judiciary as a Service" to tech giants navigating digital rights challenges.
+
+### AI Model Landscape
+
+Gemini 2.5 appears to outperform Claude 3.7. It's fascinating that Google maintains technical superiority yet struggles with market perception in AI. The best technology doesn't always win the market.
+
+Comparing ChatGPT, Gemini, Claude, and Grok reveals ChatGPT's strength lies primarily in marketing - an advantage that may fade without developing stronger B2B applications beyond their core model.
+
+### Leadership Insights
+
+Satya Nadella stands out for his exceptional clarity as a CEO. His conversation with Dwarkesh about AGI timeline assessment was remarkably thoughtful. Nadella suggests that true AGI would manifest as a 10% GDP increase within three years - indicating that economic benchmarks remain the truest measure of technological impact, and that current "intelligence as a service" hasn't yet achieved substantial enterprise adoption.
+
+## Looking Forward
+
+I'm interested in exploring Agents further, though I should first document HTML5 generation for model explainability. I also plan to write about import statements and self-contained UV environments.
