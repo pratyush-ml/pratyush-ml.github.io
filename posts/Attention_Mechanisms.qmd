@@ -323,7 +323,7 @@ class SelfAttention_v2(nn.Module):
 torch.manual_seed(789)
 sa_v2 = SelfAttention_v2(d_in, d_out)
 print(sa_v2(inputs))
-```
+``` 
 
 ## Translator's Learnings from this step
 Now, the translator has learned that not all relationships are equal. By introducing $W_q$, $W_k$, and $W_v$, they’ve developed three distinct mental frameworks: What am I looking for? (Query), What do I offer to others? (Key), and What is the actual meaning? (Value). They are no longer just looking at neighbors; they are actively learning which connections are the most important for understanding the "soul" of the sentence. There is one hack that the translator is using right now. It has a look up to future words.
