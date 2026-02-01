@@ -75,10 +75,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5388f6050e1e8e864ddc20838a0f45d0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-19300dba7cdce1167f8ebad4c9f773c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-81fe5dcfeb64615fe1e55f802320c342.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-19300dba7cdce1167f8ebad4c9f773c0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -140,7 +144,169 @@ window.Quarto = {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -178,6 +344,7 @@ window.Quarto = {
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -268,6 +435,7 @@ window.Quarto = {
 
 
 
+
 <p>This chapter deals with attention mechanisms. At a very high level, the flow of the chapters is as follows:</p>
 <ul>
 <li><strong>Simplified Self-Attention:</strong> Introduces the broad idea.</li>
@@ -330,7 +498,7 @@ window.Quarto = {
 <section id="step-1" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="step-1"><span class="header-section-number">2.1</span> Step 1</h2>
 <p>Generating intermediate weight W which is the dot product on the embedding vector for each token.</p>
-<div id="1207f60e" class="cell" data-execution_count="1">
+<div id="1207f60e" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -369,7 +537,7 @@ window.Quarto = {
 <section id="step-2" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="step-2"><span class="header-section-number">2.2</span> Step 2:</h2>
 <p>Normalizing the intermediate weights now. The weight should sum up on a scale of 0 to 1. The easiest way to do this is using softmax layer.</p>
-<div id="e57aa626" class="cell" data-execution_count="2">
+<div id="e57aa626" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>attn_weights_2 <span class="op">=</span> torch.softmax(attn_scores_2, dim <span class="op">=</span><span class="dv">0</span>)</span>
@@ -385,7 +553,7 @@ Sum should be 1: 1.0</code></pre>
 <section id="step-3" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="step-3"><span class="header-section-number">2.3</span> Step 3:</h2>
 <p>A weighted sum of the embeddings vector and the normalized attention weight.</p>
-<div id="91056fdf" class="cell" data-execution_count="3">
+<div id="91056fdf" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> inputs[<span class="dv">1</span>]</span>
@@ -407,7 +575,7 @@ Sum should be 1: 1.0</code></pre>
 <section id="step-4" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="step-4"><span class="header-section-number">2.4</span> Step 4:</h2>
 <p>So far, we have only done this for one token. Let’s extend this to the whole list of input tokens.</p>
-<div id="c97bb160" class="cell" data-execution_count="4">
+<div id="c97bb160" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>attn_scores <span class="op">=</span> torch.empty(inputs.shape)</span>
@@ -433,7 +601,7 @@ Attention score for all words tensor([[0.6310, 0.6310, 0.6310],
 </div>
 </div>
 <p>A slightly advanced approach leveraging linear algebra is:</p>
-<div id="30494de5" class="cell" data-execution_count="5">
+<div id="30494de5" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
@@ -468,7 +636,7 @@ Attention score for all words tensor([[0.6310, 0.6310, 0.6310],
 <h1 data-number="3"><span class="header-section-number">3</span> Implementing self attention with trainable weights.</h1>
 <p>Trainable weights that form the basis of the mechanism used in LLMs. The previous iteration uses matrix multiplications on its own embeddings. This iteration introduces a new class of trainable weights matrices <span class="math inline">\(W_{q}\)</span>, <span class="math inline">\(W_{k}\)</span>, <span class="math inline">\(W_{v}\)</span>. These weights are randomly initialized and are used to project the input tokens into query, key, value matrices.</p>
 <p>We follow the same idea of the previous step, start with one token and then generalize for all tokens.</p>
-<div id="f32be53c" class="cell" data-execution_count="6">
+<div id="f32be53c" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Picking one token</span></span>
@@ -530,7 +698,7 @@ tensor([0.3061, 0.8210])</code></pre>
 <p>The scaling by the square root of the embedding dimension is the reason why this self attetnion mechanism is called the scaled-dot product attention.</p>
 </blockquote>
 <p>This looks fairly complex. This would be way simpler if we introduce some linear algebra. The central idea is, we do two successive matrix multiplications within the three initialized weights that we have introduced. There is one normalization layer in between.The output dimension needs to be the same as in the input i.e token_count * embedding_vector_size. The below code simplifies the above code</p>
-<div id="9c0472c6" class="cell" data-execution_count="7">
+<div id="9c0472c6" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
@@ -584,7 +752,7 @@ tensor([0.3061, 0.8210])</code></pre>
 <p>a further deep dive on the algorithms available for weight initialization of nn.Linear and when to use them is present in the link <a href="https://gemini.google.com/app/d91673816e6cae90">Weight Initialization</a></p>
 </blockquote>
 <p>We add the linear layer now to improve on the first interation.</p>
-<div id="7b29d6a4" class="cell" data-execution_count="8">
+<div id="7b29d6a4" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SelfAttention_v2(nn.Module):</span>
@@ -635,7 +803,7 @@ tensor([0.3061, 0.8210])</code></pre>
 <li>Normalize the rows of the masked attention scores</li>
 </ul>
 <p>Implementing this pretty much the same way as before. We will do small codes with one go, then we will formalize with a class</p>
-<div id="d2c1e157" class="cell" data-execution_count="9">
+<div id="d2c1e157" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First two steps combined</span></span>
@@ -681,7 +849,7 @@ tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
 </div>
 <p>This is a pretty neat implementation which hits our objective of causal attention model right on the head. However, there is a room for a few improvements primarily from a mathematical standpoint. 1. Use negative infinity to get rid of that extra normalization at step 4. The whole idea of step 4 was normalize all the values left after zeroing upper traingle of the matrix.When we use negative infinity with softmax the output is 0 and 2. Dropouts addition to avoid overfitting - This is a technique where randomly selected hidden layer inputs are ignored during <strong>training</strong>. This avoids overfitting by making sure that the model does not rely heavily on a specific set of hidden layer inputs. Dropouts is only used during training and not inference.</p>
 <p>We can combine all of this in one go and create our final class. We will also make it work with batches.</p>
-<div id="33e251ee" class="cell" data-execution_count="10">
+<div id="33e251ee" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>batch <span class="op">=</span> torch.stack((inputs,inputs), dim <span class="op">=</span> <span class="dv">0</span>)</span>
@@ -754,7 +922,7 @@ tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
 <h1 data-number="5"><span class="header-section-number">5</span> Multi-Headed Attention</h1>
 <p>The term multi-headed attention refers to dividing the attention mechanism into multiple heads each operating indepedent. Here a single causal attention module can be considered single-head attention, where these is only one set of attention weights processing the input sequentially.</p>
 <p>The main idea is to run the attention mechanism multiple times with different, learned linear projects.</p>
-<div id="a254e66f" class="cell" data-execution_count="11">
+<div id="a254e66f" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttentionWrapper(nn.Module):</span>
@@ -771,7 +939,7 @@ tensor([[1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000],
 </details>
 </div>
 <p>This is precisely what a multi-headed attention is.</p>
-<div id="d605e9e5" class="cell" data-execution_count="12">
+<div id="d605e9e5" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">123</span>)</span>
@@ -807,7 +975,7 @@ contex_vecs.shape: torch.Size([2, 6, 4])</code></pre>
 </div>
 <p>The shape of the output vector is now controlled by the number of Attention heads.</p>
 <p>Currently, the implementation is sequential. We need to parallelize this. We can do this with Linear Algebra. We need to concatenate these attention weights and then do matrix multiplication at once.</p>
-<div id="723b39d4" class="cell" data-execution_count="13">
+<div id="723b39d4" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttention(nn.Module):</span>
@@ -915,6 +1083,19 @@ contex_vecs.shape: torch.Size([2, 6, 4])</code></pre>
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
     const icon = "";
     const anchorJS = new window.AnchorJS();
     anchorJS.options = {
