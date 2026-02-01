@@ -15,7 +15,8 @@ website:
 format:
   html:
     theme:
-      - darkly
+      light: sandstone
+      dark: darkly
     css: styles.css
 
 
