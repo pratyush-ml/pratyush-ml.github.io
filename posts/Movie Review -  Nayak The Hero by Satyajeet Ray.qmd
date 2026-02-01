@@ -3,7 +3,7 @@ title: "Movie Review: Nayak - the Real hero by Satyajeet Ray"
 author: "Pratyush Sinha"
 date: "2025-04-08"
 categories: [Movie Reviews]
-draft: True
+draft: False
 ---
 
 I am a swucker for movies. I don't like these rowdy movies - Saiyaara, Houseful 5. These are the kind of movies. I don't think movies should be crass. They should be reflective of the times around us.

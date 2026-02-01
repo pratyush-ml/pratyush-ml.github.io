@@ -1,0 +1,585 @@
+---
+title: "Chapter 03: Coding Attention Mechanisms"
+subtitle: "Learning Notes from LLMs from Scratch"
+author: "Pratyush Sinha"
+date: last-modified
+categories: [Learning, Python, Book-Notes]
+description: "A summary of my learnings and code implementations from Chapter 03 of the book."
+
+# This section connects Quarto to your uv environment
+jupyter: python3 
+
+execute:
+  echo: true          # Shows your code in the output
+  warning: false      # Keeps the document clean from library warnings
+  freeze: auto        # Only re-renders when you change the file
+  cache: true         # Speeds up rendering for code-heavy notes
+
+format:
+  html:
+    toc: true         # Adds a Table of Contents on the right
+    toc-depth: 3      # How many heading levels to show in TOC
+    code-fold: show   # Allows readers to toggle code visibility (starts as shown)
+    code-copy: true   # Adds a copy button to your code blocks
+    number-sections: true
+---
+
+This chapter deals with attention mechanisms. At a very high level, the flow of the chapters is as follows:
+
+
+* **Simplified Self-Attention:** Introduces the broad idea.
+* **Self-Attention:** Trainable weights that form the basis of the mechanism used in LLMs.
+* **Causal Attention:** A type of self-attention that only considers previous and current inputs in the sequence, ensuring the temporal order of text generation.
+* **Multi-Head Attention:** An extension of self-attention and causal attention that enables models to simultaneously attend to information from different representation spaces.
+
+
+---
+
+
+# Naive Approach: Word-to-Word Translation
+
+Imagine a translator who only has a pocket dictionary but no understanding of grammar. To translate "The early bird catches the worm," they simply swap each word for its equivalent in the target language.
+
+The immediate problem is that words cannot always be translated using a simple one-to-one replacement; a single word in one language might require three in another. The second problem is structural: some languages arrange elements differently (e.g., Subject-Verb-Object vs. Subject-Object-Verb). Our dictionary-wielding translator would produce a "word salad" that lacks any coherent flow or meaning.
+
+## Better but slightly more compute-constrained approach
+
+Naturally, we should follow how human translators work: take input in the language, synthesize it, and then return the output in the target language. In a computational sense, this is what **Encoder-Decoders** are.
+The **Encoder** acts like the translator listening to the source sentence and forming a mental "summary" of the idea. This summary—technically called a **context vector**—is then passed to the **Decoder**, which begins speaking the sentence in the new language. Before Transformers, **Recurrent Neural Networks (RNNs)** were the standard norm. RNNs are well-suited for sequential data because they process information one step at a time, feeding the output of the previous word into the current step to maintain a sense of history.
+
+## Encoder-Decoder RNNs trouble
+Once we move to encoder-decoder RNNs, the challenges are two-fold. As the input text is fed into the encoder, it processes it sequentially and updates its **hidden state**. It captures the entire meaning of the sentence in the final hidden state. The decoder then takes this "bottleneck" state to start generating the translation.
+
+The big limitation is that RNNs can’t directly access earlier hidden states from the encoder during decoding. This leads to **lost context**.
+
+> **The Translator's Struggle:** Imagine our translator is listening to a 50-word sentence. By the time the speaker finishes, the translator has a general "vibe" of the sentence, but they’ve likely forgotten the specific adjectives used at the very beginning. Because the RNN forces the entire meaning into one single vector, the "signal" from the start of the sequence washes out by the time it reaches the end.
+
+## The Solution: Bahdanau Attention
+
+The current solution is the **Attention Mechanism**, which captures these data dependencies. Instead of forcing the translator to rely on a single, fading memory of the whole sentence, the **Bahdanau Attention** mechanism allows the translator to "re-read" specific parts of the source text as they generate each word.
+
+When the decoder is about to produce a word, it looks back at all the encoder's hidden states and assigns a "weight" to them. If the translator is currently translating a noun, the attention mechanism tells them to "focus" more on the original noun and its modifiers in the source sentence, rather than the distant verbs.
+
+Mathematically, the context vector  for each decoding step  is a weighted sum of all encoder hidden states :
+$$c_t = \sum_{i=1}^{T} \alpha_{ti} h_i$$
+Where $\alpha_{ti}$ represents the "attention score," or how much focus the translator is giving to word  while producing word . This ensures that no matter how long the sequence is, the important details are never truly lost.
+
+---
+
+**Let's now jump on how the Attention mechanism works**
+Attention mechanism is like the engine that drives the entire transformer block. Once we get a hang of the attention mechanism, the rest of the parts are relatively easy to fill in.
+
+# Attending Different Parts  of the Input with Self Attention
+**Simplified Self-Attention:** In this section we aim to create create context vectors.
+Context Vectors are just a glorified embeddings vector or in other words an enriched embedding vector.
+
+A simplified self attention would have the following three steps:
+
+> The first three steps are being implemented for each token.
+
+1. Calculate the intermediate weight W which is the dot product on the embedding vector for each token.
+2. Normalize this resultant weights matrix across all the tokens
+3. Finally we do a weighted sum of the embeddings vector based on the weight.
+4. Scale to final all tokens
+
+
+*This looks awfully similar to the idea of relative position. Why do we need context vectors when we have relation position encodoing before creating the embeddings vector?*
+
+> There is a fundamental difference in their purposes:
+
+> Position Encodings: Tell the model where a word is in a sentence (e.g., "This word is at index 2"). It provides the "coordinates."
+
+> Context Vectors (Self-Attention): Tell the model what the word means in relation to others. Even if the model knows a word is at index 2, it doesn't know if that word is a verb acting on the noun at index 5 until self-attention runs.
+
+> Crucial Distinction: Position encodings are additive data (spatial info); Context vectors are calculated relationships (semantic info).
+
+## Step 1
+Generating intermediate weight W which is the dot product on the embedding vector for each token.
+```{python}
+import torch
+
+# Declaring an input token of size 6 with embedding size of 3
+inputs = torch.tensor(
+    [[0.43, 0.15, 0.89], # Your     (x^1)
+   [0.55, 0.87, 0.66], # journey  (x^2)
+   [0.57, 0.85, 0.64], # starts   (x^3)
+   [0.22, 0.58, 0.33], # with     (x^4)
+   [0.77, 0.25, 0.10], # one      (x^5)
+   [0.05, 0.80, 0.55]] # step     (x^6)
+)
+
+# For demonstration purposes, we select one input token
+query = inputs[1]
+
+# 
+attn_scores_2 = torch.empty(inputs.shape[0])
+# print(attn_scores_2)
+
+# Calculating step 1. This results in a vector of the same size as the context length
+# Context length here means the number of tokens
+for i , x_i in enumerate(inputs):
+    attn_scores_2[i] = torch.dot(x_i, query)
+
+
+print(f"Attention score for second word i.e Journey {attn_scores_2}")
+```
+
+Just for more clarity, the dimension is equal to the number of tokens because the embeddding vector of the token 'journey' now has a dot product with all the tokens in the input text.
+
+## Step 2:
+Normalizing the intermediate weights now. The weight should sum up on a scale of 0 to 1. The easiest way to do this is using softmax layer.
+
+```{python}
+attn_weights_2 = torch.softmax(attn_scores_2, dim =0)
+print(f"This is normalizing the vector of immediate weights {attn_weights_2}")
+print(f"Sum should be 1: {attn_weights_2.sum()}")
+```
+
+## Step 3:
+A weighted sum of the embeddings vector and the normalized attention weight.
+
+```{python}
+query = inputs[1]
+context_vec_2 = torch.zeros(query.shape)
+for i, x_i in enumerate(inputs):
+    context_vec_2 += attn_weights_2[i]*x_i
+print(f"The final attention weight: {context_vec_2}")
+```
+
+The resultant vector for one token is the same as the input token embeddings size
+From a code perspective, this is a relatively poor. But for demonstration purposes, this will do. 
+
+When reviewing the code, an obvious question is the difference between torch.zeros vs torch.empty. THe way are pretty much the same.
+
+> Torch.zero initializes matrix of all zeros. The memory allocation for this is done. Torch.empty allocates memory but does not initialize it. This means that we should not use it with a sum operation. This means that if we print torch.empty it will return whatever is present in the memory allocation from before. The reason we use it is because it is slightly faster.
+
+
+
+## Step 4:
+So far, we have only done this for one token. Let's extend this to the whole list of input tokens.
+```{python}
+attn_scores = torch.empty(inputs.shape)
+print(attn_scores)
+for i, x_i in enumerate(inputs):
+    for j , x_j in enumerate(inputs):
+        attn_scores[i] = torch.dot(x_i, x_j)
+print(f"Attention score for all words {attn_scores}")
+
+```
+
+A slightly advanced approach leveraging linear algebra is:
+```{python}
+# Step 1
+attn_scores = inputs @ inputs.T 
+
+# Step 2
+attn_weights = torch.softmax(attn_scores, dim =-1) # Do it on the last dimension of the vector, which in this case is equal to token size.
+
+# Step 3
+
+all_context_vectors = attn_weights @ inputs
+print(all_context_vectors)
+```
+
+To summarize iteration 1, we did a watered down version of self attention. We took one token as an input, dot product across all tokens embeddings, normalize the resultant weights across token length and finally we do a sum proudct of this normalized weight with each embedding vector. We repeat the same exercise for all tokens.
+Few important things to consider for the scaled version.
+attn_scores has dimensions: token_length * token_length
+attn_weights: token_length * token_length
+all_context_vectors: token_length * embedding_size
+
+## Translator's Learnings from this step
+
+At this stage, our translator has stopped using a word-for-word dictionary. They’ve realized that words are defined by their neighbors. When they see the word "bank," they now look at the rest of the sentence to see if there are words like "river" or "money." They are building a rough 'vibe' of the sentence, but they're still using a fixed set of rules and can't yet adapt their focus based on the specific task at hand.
+
+---
+
+
+# Implementing self attention with trainable weights.
+Trainable weights that form the basis of the mechanism used in LLMs.
+The previous iteration uses matrix multiplications on its own embeddings. This iteration introduces a new class of trainable weights matrices $W_{q}$, $W_{k}$, $W_{v}$. These weights are randomly initialized and are used to project the input tokens into query, key, value matrices.
+
+We follow the same idea of the previous step, start with one token and then generalize for all tokens.
+
+```{python}
+# Picking one token
+x_2 = inputs[1]
+d_in = inputs.shape[1] # Picking the embedding size. Here this value is 3
+d_out = 2 # This is output size of the matrix
+
+# We have initialized the random weights of the same size as the token embeddings and arbitary number 2.
+
+torch.manual_seed(123)
+# All these 3 matrices are of the same size 3 * 2
+W_query = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+W_key = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+W_value = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+
+# Multiplying the input token of size 1 * 3 with 3 * 2
+# The result is a matrix of size 1 * 2
+query_2 = x_2 @ W_query 
+key_2 = x_2 @ W_key
+value_2 = x_2 @ W_value
+print(query_2)
+
+
+# These matrices are updated here but they could very well be used for one token
+keys = inputs @ W_key
+values = inputs @ W_value
+print("keys.shape:", keys.shape)
+print("values.shape:", values.shape)
+
+
+keys_2 = keys[1]
+attn_scores_22 = query_2.dot(keys_2)
+print(attn_scores_22)
+
+attn_scores_2 = query_2 @ keys.T
+print(attn_scores_2)
+
+d_k = keys.shape[-1]
+attn_weights_2 = torch.softmax(attn_scores_2 / d_k ** 0.5, dim =-1) # Why do we use d_k ** 0.5?
+print(attn_weights_2)
+
+context_vec_2 = attn_weights_2 @ values
+print(context_vec_2)
+```
+
+> Why do we need $d_{k}$ ^ 0.5 ? The reason for this normalization is to improve the training performance by avoiding small gradients. This does not matter a lot now, because the embedding size is fairly small but when dealing with large GPT-like LLMs, large dot produts can result in very large gradients during backpropogration due to the softmax function applied to them. As dot products increase, the softmax function behaves like a step function resulting in very very small gradients. These large/small gradients can cause gradients to drastically slow down learning or cause training to stagnate.. 
+
+> The scaling by the square root of the embedding dimension is the reason why this self attetnion mechanism is called the scaled-dot product attention.
+
+This looks fairly complex. This would be way simpler if we introduce some linear algebra. 
+The central idea is, we do two successive matrix multiplications within the three initialized weights that we have introduced. There is one normalization layer in between.The output dimension needs to be the same as in the input i.e token_count * embedding_vector_size. The below code simplifies the above code
+
+```{python}
+import torch.nn as nn
+class SelfAttention_v1(nn.Module):
+    def __init__(self, d_in, d_out):
+        super().__init__()
+        self.W_query = torch.nn.Parameter(torch.rand(d_in, d_out)) # Got rid of requires gradient = False part
+        self.W_key = torch.nn.Parameter(torch.rand(d_in, d_out)) 
+        self.W_value = torch.nn.Parameter(torch.rand(d_in, d_out)) 
+        
+
+    def forward(self, x):
+        query = x @ self.W_query 
+        key = x @ self.W_key
+        value = x @ self.W_value
+
+        attn_scores = query @ key.T
+        attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim = -1)
+
+        context_vec = attn_weights @ values
+        return context_vec
+
+torch.manual_seed(123)
+sa_v1 = SelfAttention_v1(d_in, d_out)
+print(sa_v1(inputs))
+```
+
+There is this interesting quote from the book. 
+
+> We can improve the SelfAttention_v1 implementation further by utilizing PyTorch’s nn.Linear layers, which effectively perform matrix multiplication when the bias units are  disabled. Additionally, a significant advantage of using nn.Linear instead of manually  implementing nn.Parameter(torch.rand(...)) is that nn.Linear has an optimized weight initialization scheme, contributing to more stable and effective model training.
+
+This absolutely did not make sense to me in the first go. I have tried to simplify this below.
+
+The first sentence is pretty straightforward and does not require much explaination. It means that if we turn bias = False for nn.Linear layer then what we are left with a matrix of the same size as the nn.Parameter. The second bit is the interesting one. "Optimized weight implementation scheme" here is pointing to the weight initialization by torch.rand.
+When torch.rand is used the sample is pulled from a normal distribution between [0,1]. The challenge with sampling from a normal distribution is two fold
+
+- All weights are only positive. This restricts the model's ability to learn complex patterns early on and can shift the output mean significantly.
+- Weights are relatively high (~0.5). This does not seem too high but is considered high for deep learning algorithms. 
+
+
+When we use nn.Linear the advantage is a distribution from [-1,1] with mean 0. This allows weights to be negative or positive, keeping the activations centered around zero and preventing the "exploding internal variance".
+
+
+> Here is a deep dive that I did with Gemini. This answers two questions: Weight of 0.5 seemed too low to me. This explains that weights need to be low because we are dealing with a large number of inputs (512). If we do a scaled dot product which is sum(multiply(A*B)), if B has mean of 0.5, that means the result might be 256. This is one step. There would be multiple steps that is going to keep exploding this. After we are done with this, we also need to do a gradient calculation. That would also not make sense because the gradients are going to be volatile. To stop the sums from getting huge, the weights must get smaller as the number of inputs get larger.
+
+
+> a further deep dive on the algorithms available for weight initialization of nn.Linear and when to use them is present in the link
+[Weight Initialization](https://gemini.google.com/app/d91673816e6cae90)
+
+
+We add the linear layer now to improve on the first interation.
+
+```{python}
+
+class SelfAttention_v2(nn.Module):
+    def __init__(self, d_in, d_out, qkv_bias=False):
+        super().__init__()
+        self.W_query = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_key   = nn.Linear(d_in, d_out, bias=qkv_bias)
+        self.W_value = nn.Linear(d_in, d_out, bias=qkv_bias)
+
+    def forward(self, x):
+        keys = self.W_key(x)
+        queries = self.W_query(x)
+        values = self.W_value(x)
+        attn_scores = queries @ keys.T
+        attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
+        context_vec = attn_weights @ values
+        return context_vec
+
+torch.manual_seed(789)
+sa_v2 = SelfAttention_v2(d_in, d_out)
+print(sa_v2(inputs))
+```
+
+## Translator's Learnings from this step
+Now, the translator has learned that not all relationships are equal. By introducing $W_q$, $W_k$, and $W_v$, they’ve developed three distinct mental frameworks: What am I looking for? (Query), What do I offer to others? (Key), and What is the actual meaning? (Value). They are no longer just looking at neighbors; they are actively learning which connections are the most important for understanding the "soul" of the sentence. There is one hack that the translator is using right now. It has a look up to future words.
+
+---
+
+# Causal Attention
+Causal Attention is a type of self-attention that only considers previous and current inputs in the sequence, ensuring the temporal order of text generation.
+
+
+Causal Attention builds on the idea of self-attention. It imprves self attention by only considering only the previous and current inputs in a sequence when processing any given token when computing the attention scores. It masks the future tokens. This is fairly simple add on. We can just zero out all the values of the upper triangles of the attention weight matrix. 
+
+## The steps are the following:
+- Calculate Attention scores
+- Apply SoftMax and get attention weights
+- Mask with 0 above the diagonal
+- Normalize the rows of the masked attention scores
+
+Implementing this pretty much the same way as before. We will do small codes with one go, then we will formalize with a class
+
+```{python}
+# First two steps combined
+queries = sa_v2.W_query(inputs)
+
+keys = sa_v2.W_key(inputs)
+
+attnn_scores = queries @ keys.T
+attn_weights = torch.softmax(attn_scores/ keys.shape[-1]** 0.5, dim = -1)
+
+print(attn_weights)
+
+# Third step - this looks a whole lot complex but is rather simple. If you only think about the values that tril is generating.
+context_length = attn_scores.shape[0]
+masked_simple = torch.tril(torch.ones(context_length,context_length))
+print(masked_simple)
+
+# Fourth step
+row_sums = masked_simple.sum(dim=-1, keepdim=True)
+masked_simple_norm = masked_simple/row_sums
+print(masked_simple_norm)
+```
+
+This is a pretty neat implementation which hits our objective of causal attention model right on the head. However, there is a room for a few improvements primarily from a mathematical standpoint. 
+1. Use negative infinity to get rid of that extra normalization at step 4. The whole idea of step 4 was normalize all the values left after zeroing upper traingle of the matrix.When we use negative infinity with softmax the output is 0 and 
+2. Dropouts addition to avoid overfitting - This is a technique where randomly selected hidden layer inputs are ignored during **training**. This avoids overfitting by making sure that the model does not rely heavily on a specific set of hidden layer inputs. Dropouts is only used during training and not inference.
+
+We can combine all of this in one go and create our final class. We will also make it work with batches.
+
+```{python}
+batch = torch.stack((inputs,inputs), dim = 0)
+print(batch.shape) ## The shape now must be 2 * 6 * 3 which is 2 items in the batch. 6 tokens in each batch. Each token with an embedding size of 3
+
+class CausalAttention(nn.Module):
+    def __init__(self, d_in, d_out, context_length, dropout, qkv_bias=False):
+        super().__init__()
+        self.d_out = d_out
+        self.W_query = nn.Linear(d_in,d_out,bias = qkv_bias)
+        self.W_key = nn.Linear(d_in,d_out,bias = qkv_bias)
+        self.W_value = nn.Linear(d_in,d_out,bias = qkv_bias)
+        self.dropout = nn.Dropout(dropout) # The input here indicates the percentage of values in the matrix that must be zero
+
+        # This tells pytorch that these weights are non trainable so no gradient-descent for them. The mask is saved in state_dict and is loaded/saced with the model
+        self.register_buffer(
+            'mask',
+            torch.triu(torch.ones(context_length,context_length),diagonal=1)
+        ) # Will take this in a bit
+
+    def forward(self, x):
+        b, num_tokens, d_in = x.shape # This is the reason that we do not need to initialize the d_in. d_in is derived from an object of the class
+
+        # Same step as the previous loop
+        # Shape of x = 2,6,3
+        # Shape of key, query, value is 2,6,2
+        keys = self.W_key(x) 
+        queries = self.W_query(x)
+        values = self.W_value(x)
+
+        # Pretty much the same as the previous step. This is just doing transformations so that keys merge properly.
+        # Shape of attention scores is 2,6,6
+        # Keys.transpose essentially means switching the 1st dimenion with the second. so the dimesion is now 2,2,6
+        # queries (2,6,2) @ keys.transpose(1,2) (2,2,6) ==> (2,6,6)
+        # this is because torch considers everythin after the last two dimesnions as batch. A better way to say this would be anything the matrix multipllication here is 6,2 @ 2,6 --> 6,6 and then there are two batches in each.
+
+        attn_scores = queries @ keys.transpose(1,2)
+        
+        # This is making sure that all the values that are masked are now 
+        # Fill elemts of the tensor with value where mask is true. The shape of the mask must be broadcastable
+        attn_scores.masked_fill_(self.mask.bool()[:num_tokens, :num_tokens],-torch.inf)
+
+        # This is the same step as before.
+        attn_weights = torch.softmax(attn_scores/keys.shape[-1]**0.5, dim = -1)
+
+        # Droput we had discussed
+        # Zeroes the values of the matrix at random. the shape of the matrix is the same
+
+        attn_weights = self.dropout(attn_weights)
+
+        # This the same step as before.
+        # attn_weights dim = (2,6,6). values dim (2,6,2) --> 2,6,2
+        context_vec = attn_weights @ values
+
+        return context_vec
+```
+
+The wraps up Causal Attention. Causal attention is the base on which the multi- headed attention is based on. Causal Attention also known as masked attention is a specialized form of self-attention. It restricts a model to only review previous and current inputs in a sequence when processing any given token when computing attention scores. 
+
+## Translator's Learnings from this step
+Our translator is now writing a book. They’ve learned a vital rule: no spoilers. By masking the future, the translator forces themselves to generate the story one word at a time, using only what has been "said" so far. This discipline ensures the translation flows logically from start to finish, preventing the model from 'cheating' by looking at the end of the sentence before it has even started the beginning.
+
+---
+
+# Multi-Headed Attention
+The term multi-headed attention refers to dividing the attention mechanism into multiple heads each operating indepedent. Here a single causal attention module can be considered single-head attention, where these is only one set of attention weights processing the input sequentially.
+
+The main idea is to run the attention mechanism multiple times with different, learned linear projects.
+
+```{python}
+class MultiHeadAttentionWrapper(nn.Module):
+    def __init__(self, d_in, d_out, context_length, dropout, num_heads, qkv_bias=False):
+        super().__init__()
+        # Defines the number of Causal Attention Modules
+        self.heads = nn.ModuleList(
+            [CausalAttention(d_in, d_out, context_length, dropout, qkv_bias)
+            for _ in range(num_heads)]
+            )
+    # Concatenates the declaration from before
+    def forward(self,x):
+        return torch.cat([head(x) for head in self.heads], dim = -1)
+```
+
+This is precisely what a multi-headed attention is. 
+
+```{python}
+torch.manual_seed(123)
+context_length = batch.shape[1] #This is the number of tokens
+
+d_in, d_out = 3,2
+
+mha = MultiHeadAttentionWrapper(
+    d_in, d_out, context_length, 0.0, num_heads=2 
+)
+
+context_vecs = mha(batch)
+
+print(context_vecs)
+print("contex_vecs.shape:", context_vecs.shape)
+```
+
+
+The shape of the output vector is now controlled by the number of Attention heads.
+
+Currently, the implementation is sequential. We need to parallelize this. We can do this with Linear Algebra. We need to concatenate these attention weights and then do matrix multiplication at once. 
+
+
+```{python}
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_in, d_out, context_length, dropout, num_heads, qkv_bias=False):
+        super().__init__()
+
+        assert(d_out %num_heads == 0), "d_out be divisible by the num_heads" # Why do we need to do this?
+
+        self.d_out = d_out
+        self.num_heads = num_heads
+        self.head_dim = d_out // num_heads # Reduces the projection dimension to match the desired output dim
+
+        # In mulit-headed attention, we don't actually create several seperate linear layers for each head. Instead we perform one large matrix multiplication and then slice the result into smaller for each head. If d_out is not divisible by number of heads, we would end up with fractional dimensions or uneven heads. To mitigate this,we could use padding which can be totally avoided
+
+        self.W_query = nn.Linear(d_in,d_out,bias=qkv_bias) 
+        self.W_key = nn.Linear(d_in,d_out,bias=qkv_bias)
+        self.W_value = nn.Linear(d_in,d_out,bias=qkv_bias)
+
+        # Uses a linear layer to combine individual head outputs
+        self.out_proj = nn.Linear(d_out, d_out)
+        self.dropout = nn.Dropout(dropout)
+
+        self.register_buffer(
+            "mask",
+            torch.triu(torch.ones(context_length, context_length), diagonal=1)
+        )
+
+    def forward(self,x):
+        # We assume number of heads(num_heads) to 4
+        # Assuming output dimensions(d_out) to 8
+        # Dimensions assuming: 5,6,3 <==> (batch, token length, embedding vector)
+        b, num_tokens, d_in = x.shape
+
+        # Dimension output (5,6,3) * (3,8) --> (5,6,8)
+        keys = self.W_key(x)
+        queries = self.W_query(x)
+        values = self.W_value(x)
+
+        # We implicitly split the matrix by adding a num_heads dimension, then we unroll the last dimension
+        # (batch, num_tokens, d_out) --> (b, num_tokens, num_heads, head_dim)
+
+        # (5,6,8) --> (5,6,4,2)        
+        keys = keys.view(b, num_tokens,self.num_heads, self.head_dim)
+        values = values.view(b, num_tokens, self.num_heads, self.head_dim)
+        queries = queries.view(b, num_tokens, self.num_heads, self.head_dim)
+
+        # Transposes from shape (b, num_tokens, num_heads, head_dim) --> (b, num_heads, num_tokens, head_dim)
+        # (5,6,4,2) --> (5,4,6,2)
+        keys = keys.transpose(1,2)
+        queries = queries.transpose(1,2)
+        values = values.transpose(1,2)
+
+        # Can we not combine view and step to one step, view should be able to do it?
+        #  View changes how we interpret the memory. In this case it asking the interpretation of 8 vector of dim 1 to 4 rows and 1 column.
+        # Transpose changes the physical order. When we move the num_heads dimesnio, we are effectively asking to group all tokens for a single head together
+
+        # Computes dot product for each head
+        # (5,4,6,2) @ (5,4,2, 6) --> 5,4,6,6
+        attn_scores = queries @ keys.transpose(2,3)
+
+        # Masks truncated to the number of tokens
+        # (6,6)
+        mask_bool = self.mask[:num_tokens,:num_tokens].bool()
+
+        # uses masks to fill the attention scores
+        # This will broadcast 6 ,6 across 
+        attn_scores.masked_fill_(mask_bool, -torch.inf)
+
+        attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim = -1)
+        
+        attn_weights = self.dropout(attn_weights)
+
+
+        # (5,4,6,6) @ (5,4,6,2) --> (5,4,6,2).T --> (5,6,4,2)
+        context_vec = (attn_weights @ values).transpose(1,2)
+        # Combines heads where self.d_out = self.num_heads * self.head_dim
+        # (5,6,4,2) --> (5,6,8) We are doing the unroll here
+        # here contiguous().view() is asking to do the same thing as before but instead of the previous 8 --> 4,2, here it is asking to interpret this as 4,2 to 8
+        # After the transpose the data in memory is not longer lined up in a single row ergo not contiguous
+        # View has the requirement for the data to be in a contiguous block to work
+        # Calling .contiguis shuffles the physical memory to match the transposed shape so that it can flatten out.
+        context_vec = context_vec.contiguous().view(b, num_tokens, self.d_out)
+
+        # Adding an optional linear projection. This is not strictly necessary but is commonly used in many LLM Architectures
+        context_vec = self.out_proj(context_vec)
+
+        return context_vec
+
+```
+
+This completes the whole chapter of Coding Attention Mechanism
+
+---
+
+# Summarizing thoughts
+Multi-headed attention is the engine which powers the Transformers.
+Multi-Headed Attention is like a committtee of experts reading the same sentence. Each expert looks for different structures within the sentence simultaneously.
+Single headed focusses on synactic relationship. 
+By projecting the input into different subspaces the model can capture a more rich "context vector" than a single attention pass could.
+
+We start by taking **linear Projections** with our input over *Q, K , V* matrices. In MHA we split these into N distinct heads. Each head performs Scaled Dot Product Attention independently. This is where each expert learns in different subspaces in parallel. Because the each head's calculation is independent, it is highly efficient to compute on GPUs.
+We finally stitch the results of all heads back together and pass them through the final linear layer $W_{o}$. This is re-integration the findings of our committee of experts into a single representation. The final linear layer is important as it glues different experts perscpectives together. The model now learns and weighs these experts into the final output
+
+## Going back to translator
+
+Finally, our single translator has become a full editorial team. One expert focuses on the tense of the verbs, another tracks the gender of the pronouns, and a third looks for poetic metaphors. By working in parallel, they catch nuances that a single mind would miss. They then sit down together (the final linear projection) to merge their individual notes into one perfect, polished masterpiece.
