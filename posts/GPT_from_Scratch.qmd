@@ -1,0 +1,466 @@
+---
+title: "Implementing a GPT model from scratch to generate text"
+subtitle: "Learning Notes from LLMs from Scratch"
+author: "Pratyush Sinha"
+date: last-modified
+categories: [Learning, Python, Book-Notes]
+description: "A summary of my learnings and code implementations from Chapter 04 of the book."
+
+# This section connects Quarto to your uv environment
+jupyter: python3 
+
+execute:
+  echo: true          # Shows your code in the output
+  warning: false      # Keeps the document clean from library warnings
+  freeze: auto        # Only re-renders when you change the file
+  cache: true         # Speeds up rendering for code-heavy notes
+
+format:
+  html:
+    toc: true         # Adds a Table of Contents on the right
+    toc-depth: 3      # How many heading levels to show in TOC
+    code-fold: show   # Allows readers to toggle code visibility (starts as shown)
+    code-copy: true   # Adds a copy button to your code blocks
+    number-sections: true
+---
+
+One idea that has stuck with me while working with these Transformers is that they are algorithms with many moving components. To understand why a particular component exists, we need to understand the experimentation process behind it. It is imperative that we understand the moving parts involved in the algorithm first; we can worry about the experimentation bit later. 
+
+Think of it from a sorting algorithm perspective: there are many sorting algorithms out there. We gradually evolved from one kind of sorting algorithm to another through rapid experimentation. We could think of Transformers in the same way—we started out with translation tasks using architectures like RNNs and gradually shifted to Transformers, which represent a more advanced form of sequence processing. If we spend too much time on the history of every tiny component right now, we would be in a constant "experimentation phase." I think to learn Transformers, you don't necessarily need that history right now. That is something we can take up once we've gone through the entire exercise of creating a Transformer from scratch.
+
+
+A quick summary of what we have learned so far:
+Large Language Models are large deep learning neural networks. Transformers are the core blocks on which LLMs are built. The core idea behind Transformers is multi-headed attention.
+
+In the previous section, we worked on our understanding of Attention models. We learned how Multi-Headed Attention is a combination of self-attention and causal attention. We also learned how multi-headed attention is the engine of the Transformer models. In this section, we are going to build on that and implement the remaining components. The end objective of this chapter is to develop a working model which takes input text and returns output text based on the Transformer architecture.
+
+To start, let's define all the components of the Transformer to clearly see what other components require our attention.
+
+![Transformers Block](link)
+
+```{mermaid}
+graph TD
+    %% Input Section
+    Input(["Every effort moves you"]) --> Tokenized[Tokenized text]
+    
+    subgraph GPT ["GPT model"]
+        direction TB
+        
+        %% Initial Embeddings
+        Tokenized --> TE[Token embedding layer]
+        TE --> PE[Positional embedding layer]
+        PE --> Drop1[Dropout]
+
+        %% Transformer Block Subgraph
+        subgraph TransformerBlock ["Transformer block (Repeated 12 times)"]
+            direction TB
+            
+            %% First Residual Connection
+            Drop1 --> LN1[LayerNorm 1]
+            LN1 --> MHA[Masked multi-head attention]
+            MHA --> Drop2[Dropout]
+            Drop2 --> Add1((+))
+            
+            %% Residual Line 1
+            Drop1 -- "Residual" --- Add1
+
+            %% Second Residual Connection
+            Add1 --> LN2[LayerNorm 2]
+            LN2 --> FF[Feed forward]
+            FF --> Drop3[Dropout]
+            Drop3 --> Add2((+))
+            
+            %% Residual Line 2
+            Add1 -- "Residual" --- Add2
+        end
+
+        %% Final Output Layers
+        Add2 --> FLN[Final LayerNorm]
+        FLN --> Linear[Linear output layer]
+    end
+
+    %% Output Tensor
+    Linear --> Tensor["<b>A 4 x 50,257-dimensional tensor</b><br/>[[ -0.0055, ..., -0.4747],<br/>[ 0.2663, ..., -0.4224],<br/>[ 1.1146, ..., 0.0276],<br/>[ -0.8239, ..., -0.3993]]"]
+
+    %% Explanatory Note
+    Tensor -.-> Goal["<b>Goal:</b> Convert back to text<br/>(Last row represents 'forward')"]
+
+    %% Styling
+    classDef blueFill fill:#88ccee,stroke:#333,stroke-width:1px;
+    classDef greyFill fill:#e0e0e0,stroke:#333,stroke-width:1px;
+    classDef darkFill fill:#555,color:#fff,stroke:#333,stroke-width:1px;
+    
+    class TransformerBlock blueFill;
+    class GPT,Tokenized,TE,PE,Drop1,LN1,LN2,FF,Drop2,Drop3,FLN,Linear,Tensor greyFill;
+    class MHA darkFill;
+
+```
+
+With this block, we get a clear picture of all the components needed to build a GPT-2 model. We will build this model with a backbone which lays out all the components of the model. We then fill this backbone with all the relevant code.
+
+```{mermaid}
+graph LR
+    subgraph Core ["Core Components"]
+        direction TB
+        B2["2 Layer normalization"]
+        B3["3 GELU activation"]
+        B4["4 Feed forward network"]
+        B5["5 Shortcut connections"]
+    end
+
+    subgraph Integration
+        B6["6 Transformer block"]
+        B7["7 Final GPT architecture"]
+    end
+
+    subgraph Initial ["Initial Phase"]
+        B1["1 GPT backbone"]
+    end
+
+    %% Connections
+    B2 --> B6
+    B3 --> B6
+    B4 --> B6
+    B5 --> B6
+    B6 --> B7
+
+    %% Styling
+    style Core fill:none,stroke:#ccc
+    style Integration fill:#e1f5fe,stroke:#01579b
+    style Initial fill:none,stroke:#ccc
+
+```
+
+Before we start building, we need to define the arguments required for these components and a full-fledged Transformer block to run.
+
+## Defining the configuration for GPT-2 class of models
+
+```{python}
+GPT_CONFIG_124M = {
+    "vocab_size": 50257, # Vocabulary_Size
+    "context_length": 1024, # Context Length
+    "emb_dim": 768, # Embedding dimension
+    "n_heads": 12, # Number of Attention Heads 
+    "n_layers": 12, # Number of layers
+    "drop_rate": 0.1, # DropOut Rate
+    "qkv_bias": False  # Query-Key-Value Bias
+}
+
+```
+
+**Defining these variables:**
+
+* **vocab_size**: This refers to the vocabulary of 50,257 words as per the tokenizer (BPE).
+* **context_length**: The maximum number of input tokens the model can handle via positional embeddings.
+* **emb_dim**: The dimensionality of each token vector projection.
+* **n_heads**: The number of attention heads in the multi-head attention mechanism.
+* **n_layers**: The number of Transformer blocks in the model.
+* **drop_rate**: The intensity of the dropout mechanism to prevent overfitting.
+* **qkv_bias**: This determines the bias vector of the linear layers in the multi-head attention. We disabled this in the previous chapter.
+
+# Building the GPT Backbone
+
+This backbone gives an overall structure to the model.
+
+```{python}
+import torch
+import torch.nn as nn
+
+class DummyGPTModel(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.tok_emb = nn.Embedding(cfg["vocab_size"], cfg['emb_dim'])
+        self.pos_emb = nn.Embedding(cfg["context_length"], cfg['emb_dim'])
+        self.drop_emb = nn.Dropout(cfg["drop_rate"])
+        self.trf_blocks = nn.Sequential(
+            *[DummyTransformerBlock(cfg)
+            for _ in range(cfg["n_layers"])]
+        )
+        self.final_norm = DummyLayerNorm(cfg["emb_dim"])
+        self.out_head = nn.Linear(
+            cfg["emb_dim"],cfg["vocab_size"],bias = False
+        )
+    
+    def forward(self,in_idx):
+        batch_size, seq_len = in_idx.shape
+        tok_embeds = self.tok_emb(in_idx)
+        pos_embeds = self.pos_emb(torch.arange(seq_len, device=in_idx.device))
+
+        x = tok_embeds + pos_embeds
+        x = self.drop_emb(x)
+        x = self.trf_blocks(x)
+        x = self.final_norm(x)
+        logits = self.out_head(x)
+        return logits 
+
+class DummyTransformerBlock(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+
+    def forward(self, x):
+        return x
+
+class DummyLayerNorm(nn.Module):
+    def __init__(self, normalized_shape, eps = 1e-5):
+        super().__init__()
+
+    def forward(self, x):
+        return x
+
+```
+
+There are three classes we have defined here. These form the backbone of the GPT model and are used multiple times.
+
+```{python}
+import tiktoken
+
+tokenizer = tiktoken.get_encoding("gpt2")
+batch = []
+txt1 = "Every effort moves you"
+txt2 = "Every day holds a"
+
+batch.append(torch.tensor(tokenizer.encode(txt1)))
+batch.append(torch.tensor(tokenizer.encode(txt2)))
+batch = torch.stack(batch, dim=0)
+print(batch)
+
+torch.manual_seed(123)
+model = DummyGPTModel(GPT_CONFIG_124M)
+logits = model(batch)
+print("Output shape:", logits.shape)
+print(logits)
+
+```
+
+The output tensor has two rows corresponding to the two text samples. There are 4 tokens for each text, and finally, there are 50,257-dimensional vectors.
+
+# Normalizing Activations with Layer Normalization
+
+Why do we need to normalize in the first place? The answer is usually the same:
+
+> Training Neural Networks with many layers can be challenging due to problems like vanishing or exploding gradients. These problems lead to unstable dynamics and make it difficult for the network to effectively adjust its weights, meaning the learning process struggles to find parameters that minimize the loss function.
+
+This explanation repeats in almost every book I read. Let's dive deeper into it. The idea of vanishing or exploding gradients leading to unstable dynamics is easy to digest—this is Calculus 101. If the gradient (the slope) is too high, the algorithm has a hard time stepping toward the minima and may not land on a stable point. Conversely, if the slope is too small, the step is too tiny for significant change, and it takes too long to reach the minima.
+
+My main question was: how does training lead to this?
+
+Neural Networks are directed computation graphs.
+Input ---> Computation Graph ---> Output
+
+The main job of the network is to use weights to minimize an error metric. These weights are optimized during training. Because the graph is directional, computing the gradient for the first layer requires the chain rule. If there are ten layers, the first layer's gradient involves a product of ten differentials. If these differentials are less than 1 (as with many activation functions), multiplying them ten times results in a tiny number—hence, vanishing gradients.
+
+The same applies to exploding gradients: large gradients multiplied repeatedly don't just grow linearly; they compound exponentially like interest.
+
+One strategy to improve stability is Layer Normalization. It adjusts the activations of a layer to have a mean of 0 and a variance of 1. This adjustment speeds up the convergence to effective weights and ensures reliable training. In GPT-2, layer normalization is applied before and after the multi-head attention module.
+
+Let's see how layer normalization works with a small tensor before filling in our class.
+
+```{python}
+torch.manual_seed(123)
+batch_example = torch.randn(2,5)
+
+layer = nn.Sequential(nn.Linear(5,6), nn.ReLU()) 
+out = layer(batch_example)
+
+mean = out.mean(dim=-1, keepdim=True)
+var = out.var(dim=-1, keepdim=True)
+print("Mean: ", mean)
+print("Variance: ", var)
+
+# After normalization
+out_norm = (out-mean)/torch.sqrt(var)
+mean = out_norm.mean(dim=-1,keepdim=True)
+var = out_norm.var(dim = -1, keepdim=True)
+
+print("Normalized Layer Outputs:", out_norm)
+print("Mean:", mean) 
+print("Variance:", var)
+
+```
+
+Now we create the class.
+
+```{python}
+class LayerNorm(nn.Module):
+    def __init__(self, emb_dim):
+        super().__init__()
+        self.eps = 1e-5 
+        self.scale = nn.Parameter(torch.ones(emb_dim)) 
+        self.shift = nn.Parameter(torch.zeros(emb_dim))
+
+    def forward(self,x):
+        mean = x.mean(dim=-1, keepdim=True)
+        var = x.var(dim=-1, keepdim=True, unbiased=False) 
+        norm_x = (x-mean)/torch.sqrt(var + self.eps)
+        return self.scale*norm_x + self.shift
+
+```
+
+# Implementing a Feed-Forward Network with GELU Activations
+
+GELU stands for Gaussian Error Linear Unit. It looks similar to ReLU (), but mathematically, it is the product of  and the cumulative distribution function (CDF) of a standard normal distribution:
+
+
+
+GELU is like a "confidence booster." If  is high, confidence is high, and the CDF multiplies it by nearly 1. If  is low, the model is less confident, and the CDF multiplies it by a smaller number.
+
+```{python}
+class GELU(nn.Module):
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self,x):
+        return 0.5 * x * (1 + torch.tanh(
+            torch.sqrt(torch.tensor(2/torch.pi))* (x + 0.044715 * torch.pow(x,3))
+        ))
+
+```
+
+Now we implement the feed-forward neural network.
+
+```{python}
+class FeedForward(nn.Module):
+    def __init__(self,cfg):
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(cfg["emb_dim"],4*cfg["emb_dim"]),
+            GELU(),
+            nn.Linear(4*cfg["emb_dim"], cfg["emb_dim"])
+        )
+
+    def forward(self,x):
+        return self.layers(x)
+
+```
+
+# Adding Shortcut Connections
+
+Shortcut (or Skip/Residual) connections mitigate vanishing gradients. They create an alternative path for the gradient to flow by skipping one or more layers, adding the output of one layer to the output of a later layer.
+
+```{python}
+class ExampleDeepNeuralNetwork(nn.Module):
+    def __init__(self, layer_sizes, use_shortcut):
+        super().__init__()
+        self.use_shortcut = use_shortcut
+        self.layers = nn.ModuleList([
+            nn.Sequential(nn.Linear(layer_sizes[0], layer_sizes[1]), GELU()),
+            nn.Sequential(nn.Linear(layer_sizes[1], layer_sizes[2]), GELU()),
+            nn.Sequential(nn.Linear(layer_sizes[2], layer_sizes[3]), GELU()),
+            nn.Sequential(nn.Linear(layer_sizes[3], layer_sizes[4]), GELU()),
+            nn.Sequential(nn.Linear(layer_sizes[4], layer_sizes[5]), GELU())
+        ])
+
+    def forward(self,x):
+        for layer in self.layers:
+            layer_output = layer(x)
+            if self.use_shortcut and x.shape == layer_output.shape:
+                x = x + layer_output
+            else:
+                x = layer_output
+        return x
+
+```
+
+# Connecting Attention & Linear Layers in Transformer Blocks
+
+We have now captured all the components of the GPT-2 architecture. Let's fill in the actual `TransformerBlock`:
+
+```{python}
+from attention import MultiHeadAttention 
+
+class TransformerBlock(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.att = MultiHeadAttention(
+            d_in = cfg["emb_dim"],
+            d_out = cfg["emb_dim"],
+            context_length = cfg["context_length"],
+            num_heads = cfg["n_heads"],
+            dropout = cfg['drop_rate'],
+            qkv_bias = cfg["qkv_bias"]
+        ) 
+
+        self.ff = FeedForward(cfg) 
+        self.norm1 = LayerNorm(cfg["emb_dim"])
+        self.norm2 = LayerNorm(cfg["emb_dim"])
+        self.drop_shortcut = nn.Dropout(cfg["drop_rate"])
+
+    def forward(self,x):
+        # MHA section
+        shortcut = x
+        x = self.norm1(x) 
+        x = self.att(x) 
+        x = self.drop_shortcut(x) 
+        x = x + shortcut 
+        
+        # Feedforward section
+        shortcut = x 
+        x = self.norm2(x) 
+        x = self.ff(x) 
+        x = self.drop_shortcut(x)
+        x = x + shortcut 
+        return x
+
+```
+
+# Coding the GPT Model
+
+Time to stitch everything together.
+
+```{python}
+class GPTModel(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.tok_emb = nn.Embedding(cfg["vocab_size"],cfg["emb_dim"])
+        self.pos_emb = nn.Embedding(cfg["context_length"],cfg["emb_dim"])
+        self.drop_emb = nn.Dropout(cfg["drop_rate"])
+
+        self.trf_blocks = nn.Sequential(
+            *[TransformerBlock(cfg) for _ in range(cfg["n_layers"])]
+        )
+        self.final_norm = LayerNorm(cfg["emb_dim"])
+        self.out_head = nn.Linear(
+            cfg["emb_dim"],cfg["vocab_size"],bias=False
+        )
+
+    def forward(self,in_idx):
+        batch_size, seq_len = in_idx.shape
+        tok_embeds = self.tok_emb(in_idx)
+        pos_embeds = self.pos_emb(torch.arange(seq_len, device=in_idx.device))
+        x = tok_embeds + pos_embeds
+        x = self.drop_emb(x)
+        x = self.trf_blocks(x)
+        x = self.final_norm(x)
+        logits = self.out_head(x)
+        return logits
+
+```
+
+# Generating Text
+
+The model converts input text to an output tensor. We now need to generate text by selecting tokens based on probability distributions.
+
+```{python}
+def generate_text_simple(model,idx,max_new_tokens,context_size): 
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:,-context_size:] 
+        with torch.no_grad():
+            logits = model(idx_cond) 
+        
+        logits = logits[:,-1,:] 
+        probas = torch.softmax(logits, dim=-1)
+        idx_next = torch.argmax(probas, dim=-1, keepdim=True) 
+        idx = torch.cat((idx,idx_next), dim=1) 
+
+    return idx
+
+```
+
+# Summarizing Thoughts
+
+In this chapter, we implemented the full end-to-end architecture of a GPT-2 model. As we’ve seen, GPT has multiple moving parts from an architectural standpoint that must work in harmony.
+
+We started by defining a configuration file that serves as the blueprint. From there, we built the Transformer block, which houses the two primary engines: **Multi-Head Attention** and **Feed-Forward networks**. We also explored how deep networks are prone to vanishing or exploding gradients and saw how techniques like **Shortcut Connections**, **Layer Normalization**, and **GELU activations** work in tandem to stop this phenomenon. Finally, we learned to decode the output text using the tokenizer.
+
+## Perhaps in the next blog, we can go top-down on the GPT-2 architecture or dive into one of the foundational papers.
+
