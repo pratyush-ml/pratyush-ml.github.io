@@ -1,1 +1,55 @@
-/* css styles */
+/* Modern Typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  line-height: 1.6 !important;
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Card Styling for Grid Listings */
+.quarto-grid-item {
+  border-radius: 12px !important;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+.quarto-grid-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+  border-color: #2c3e50 !important;
+}
+
+.quarto-grid-item .listing-item-img-container {
+  border-top-left-radius: 11px !important;
+  border-top-right-radius: 11px !important;
+  overflow: hidden !important;
+}
+
+/* Header Enhancements */
+.navbar {
+  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.title {
+  font-weight: 700 !important;
+  letter-spacing: -0.5px !important;
+}
+
+/* Dark Mode Overrides */
+[data-quarto-color-scheme="dark"] .quarto-grid-item {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-quarto-color-scheme="dark"] .quarto-grid-item:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+  border-color: #ecf0f1 !important;
+}

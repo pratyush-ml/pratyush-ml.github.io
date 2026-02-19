@@ -3,7 +3,8 @@ title: ""
 listing:
   contents: posts
   sort: "date desc"
-  type: table
+  type: grid
+  image-height: 150px
   categories: true
   sort-ui: true
   filter-ui: true

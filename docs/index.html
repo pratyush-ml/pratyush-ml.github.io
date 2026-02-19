@@ -44,9 +44,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-80f6653e4bad1240590acd7234152a3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="site_libs/bootstrap/bootstrap-dark-0d4a9d19931feb4fee1ddab4b2489000.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-80f6653e4bad1240590acd7234152a3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -84,9 +84,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -348,7 +348,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div><div class="category" data-category="Qm9vay1Ob3Rlcw==">Book-Notes <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TGVhcm5pbmc=">Learning <span class="quarto-category-count">(2)</span></div><div class="category" data-category="bGVhcm5pbmdz">learnings <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bGlmZQ==">life <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TW92aWUlMjBSZXZpZXdz">Movie Reviews <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bXVzaW5ncw==">musings <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGVyc29uYWwlMjBFeHBlcmllbmNlcw==">Personal Experiences <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(2)</span></div><div class="category" data-category="V2Vla2x5JTIwVXBkYXRlcw==">Weekly Updates <span class="quarto-category-count">(2)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(8)</span></div><div class="category" data-category="Qm9vay1Ob3Rlcw==">Book-Notes <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TGVhcm5pbmc=">Learning <span class="quarto-category-count">(3)</span></div><div class="category" data-category="bGVhcm5pbmdz">learnings <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bGlmZQ==">life <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TW92aWUlMjBSZXZpZXdz">Movie Reviews <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bXVzaW5ncw==">musings <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGVyc29uYWwlMjBFeHBlcmllbmNlcw==">Personal Experiences <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(3)</span></div><div class="category" data-category="V2Vla2x5JTIwVXBkYXRlcw==">Weekly Updates <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
@@ -360,21 +360,21 @@ window.Quarto = {
 
 
 
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
 <div class="listing-actions-group">
    <div class="input-group input-group-sm quarto-listing-sort">
     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
       <option value="" disabled="" selected="" hidden="">Order By</option>
       <option value="index" data-direction="asc">Default</option>
+      <option value="listing-title" data-direction="asc">
+        Title
+      </option>
       <option value="listing-date-sort" data-direction="asc">
         Date - Oldest
       </option>
       <option value="listing-date-sort" data-direction="desc">
         Date - Newest
-      </option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
       </option>
       <option value="listing-author" data-direction="asc">
         Author
@@ -386,119 +386,244 @@ window.Quarto = {
       <input type="text" class="search form-control" placeholder="Filter">
     </div>
 </div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1771481786000" data-listing-file-modified-sort="1771481786399" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4814">
+<a href="./posts/Pretraining.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts/Pretraining_files/figure-html/cell-14-output-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Pretraining on unlabeled data
+</h5>
+<div class="listing-categories">
 
-<th>
-<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
-</th>
+<div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
 
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
 
-<th>
-<a class="sort" data-sort="listing-author" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Author</a>
-</th>
+<div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
 
-</tr>
-</thead>
-<tbody class="list">
+</div>
+<div class="card-text listing-description delink">
+<p>A summary of my learnings and code implementations from Chapter 05 of the book.</p>
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Feb 19, 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1770569305000" data-listing-file-modified-sort="1770569305158" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3353">
+<a href="./posts/GPT_from_Scratch.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts/link.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Implementing a GPT model from scratch to generate text
+</h5>
+<div class="listing-categories">
 
-<tr data-index="0" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1770567895000" data-listing-file-modified-sort="1770567895277" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3353" data-listing-title-sort="Implementing a GPT model from scratch to generate text" data-listing-filename-sort="GPT_from_Scratch.qmd">
-<td>
-<span class="listing-date">Feb 8, 2026</span>
-</td>
-<td>
-<a href="./posts/GPT_from_Scratch.html" class="title listing-title">Implementing a GPT model from scratch to generate text</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
 
-</tr>
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
 
-<tr data-index="1" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1769942570000" data-listing-file-modified-sort="1769942570845" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5320" data-listing-title-sort="Chapter 03: Coding Attention Mechanisms" data-listing-filename-sort="Attention_Mechanisms.qmd">
-<td>
-<span class="listing-date">Feb 1, 2026</span>
-</td>
-<td>
-<a href="./posts/Attention_Mechanisms.html" class="title listing-title">Chapter 03: Coding Attention Mechanisms</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
 
-</tr>
+</div>
+<div class="card-text listing-description delink">
+<p>A summary of my learnings and code implementations from Chapter 04 of the book.</p>
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Feb 8, 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1769942570000" data-listing-file-modified-sort="1769942570845" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5320">
+<a href="./posts/Attention_Mechanisms.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Chapter 03: Coding Attention Mechanisms
+</h5>
+<div class="listing-categories">
 
-<tr data-index="2" data-categories="TW92aWUlMjBSZXZpZXdz" data-listing-date-sort="1744050600000" data-listing-file-modified-sort="1769940623114" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="492" data-listing-title-sort="Movie Review: Nayak - the Real hero by Satyajeet Ray" data-listing-filename-sort="Movie Review -  Nayak The Hero by Satyajeet Ray.qmd">
-<td>
-<span class="listing-date">Apr 8, 2025</span>
-</td>
-<td>
-<a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="title listing-title">Movie Review: Nayak - the Real hero by Satyajeet Ray</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
 
-</tr>
+<div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
 
-<tr data-index="3" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmUlMkNsZWFybmluZ3M=" data-listing-date-sort="1743273000000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="388" data-listing-title-sort="Weekly Updates - 13/2025" data-listing-filename-sort="Weekly Updates - 13.qmd">
-<td>
-<span class="listing-date">Mar 30, 2025</span>
-</td>
-<td>
-<a href="./posts/Weekly Updates - 13.html" class="title listing-title">Weekly Updates - 13/2025</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
 
-</tr>
+</div>
+<div class="card-text listing-description delink">
+<p>A summary of my learnings and code implementations from Chapter 03 of the book.</p>
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Feb 1, 2026
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="3" data-categories="TW92aWUlMjBSZXZpZXdz" data-listing-date-sort="1744050600000" data-listing-file-modified-sort="1769940623114" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="492">
+<a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Movie Review: Nayak - the Real hero by Satyajeet Ray
+</h5>
+<div class="listing-categories">
 
-<tr data-index="4" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmU=" data-listing-date-sort="1742668200000" data-listing-file-modified-sort="1769940531259" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="477" data-listing-title-sort="Weekly Updates - 12/2025" data-listing-filename-sort="Weekly Updates - 12.qmd">
-<td>
-<span class="listing-date">Mar 23, 2025</span>
-</td>
-<td>
-<a href="./posts/Weekly Updates - 12.html" class="title listing-title">Weekly Updates - 12/2025</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('TW92aWUlMjBSZXZpZXdz'); return false;">Movie Reviews</div>
 
-</tr>
+</div>
+<div class="card-text listing-description delink">
+I am a swucker for movies. I don’t like these rowdy movies - Saiyaara, Houseful 5. These are the kind of movies. I don’t think movies should be crass. They should be…
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Apr 8, 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="4" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmUlMkNsZWFybmluZ3M=" data-listing-date-sort="1743273000000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="388">
+<a href="./posts/Weekly Updates - 13.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Weekly Updates - 13/2025
+</h5>
+<div class="listing-categories">
 
-<tr data-index="5" data-categories="bXVzaW5ncyUyQ2xpZmU=" data-listing-date-sort="1739039400000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="523" data-listing-title-sort="Why even bother with a blog?" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Feb 9, 2025</span>
-</td>
-<td>
-<a href="./posts/welcome/index.html" class="title listing-title">Why even bother with a blog?</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('V2Vla2x5JTIwVXBkYXRlcw=='); return false;">Weekly Updates</div>
 
-</tr>
+<div class="listing-category" onclick="window.quartoListingCategory('bGlmZQ=='); return false;">life</div>
 
-<tr data-index="6" data-categories="UGVyc29uYWwlMjBFeHBlcmllbmNlcw==" data-listing-date-sort="1736361000000" data-listing-file-modified-sort="1769940749003" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1009" data-listing-title-sort="A Hopeful Guide to Navigating Spinal Injury: Our Family's Experience at ISIC" data-listing-filename-sort="ISIC.qmd">
-<td>
-<span class="listing-date">Jan 9, 2025</span>
-</td>
-<td>
-<a href="./posts/ISIC.html" class="title listing-title">A Hopeful Guide to Navigating Spinal Injury: Our Family’s Experience at ISIC</a>
-</td>
-<td>
-<span class="listing-author">Pratyush Sinha</span>
-</td>
+<div class="listing-category" onclick="window.quartoListingCategory('bGVhcm5pbmdz'); return false;">learnings</div>
 
-</tr>
+</div>
+<div class="card-text listing-description delink">
+After contemplating my 10-year corporate journey for several months, I’ve come to an unexpected realization. When I started, I believed that dedicating a decade to my…
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Mar 30, 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="5" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmU=" data-listing-date-sort="1742668200000" data-listing-file-modified-sort="1769940531259" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="477">
+<a href="./posts/Weekly Updates - 12.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Weekly Updates - 12/2025
+</h5>
+<div class="listing-categories">
 
-</tbody>
-</table>
+<div class="listing-category" onclick="window.quartoListingCategory('V2Vla2x5JTIwVXBkYXRlcw=='); return false;">Weekly Updates</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bGlmZQ=='); return false;">life</div>
+
+</div>
+<div class="card-text listing-description delink">
+I have been away lately. Having a new born is not easy. My wife* had a baby last year :-) and the first 6 months were really demanding for her. Maternity leave was an easy…
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Mar 23, 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="6" data-categories="bXVzaW5ncyUyQ2xpZmU=" data-listing-date-sort="1739039400000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="523">
+<a href="./posts/welcome/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Why even bother with a blog?
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('bXVzaW5ncw=='); return false;">musings</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bGlmZQ=='); return false;">life</div>
+
+</div>
+<div class="card-text listing-description delink">
+It is 2025, AI which can match humans is surely upon us. Every day we have breakthroughs in AI which would put careers to end.
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Feb 9, 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="7" data-categories="UGVyc29uYWwlMjBFeHBlcmllbmNlcw==" data-listing-date-sort="1736361000000" data-listing-file-modified-sort="1769940749003" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1009">
+<a href="./posts/ISIC.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+A Hopeful Guide to Navigating Spinal Injury: Our Family’s Experience at ISIC
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UGVyc29uYWwlMjBFeHBlcmllbmNlcw=='); return false;">Personal Experiences</div>
+
+</div>
+<div class="card-text listing-description delink">
+My father has had two major surgeries in the neck at the Indian Spinal Injury Center, and both have been successful. But this post isn’t just about that. I want this post to…
+</div>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Pratyush Sinha
+</div>
+<div class="listing-date">
+Jan 9, 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+</div>
 <div class="listing-no-matching d-none">No matching items</div>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
