@@ -1,0 +1,708 @@
+---
+title: "Pretraining on unlabeled data"
+subtitle: "Learning Notes from LLMs from Scratch"
+author: "Pratyush Sinha"
+date: last-modified
+categories: [Learning, Python, Book-Notes]
+description: "A summary of my learnings and code implementations from Chapter 05 of the book."
+
+# This section connects Quarto to your uv environment
+jupyter: python3 
+
+execute:
+  echo: true          # Shows your code in the output
+  warning: false      # Keeps the document clean from library warnings
+  freeze: auto        # Only re-renders when you change the file
+  cache: true         # Speeds up rendering for code-heavy notes
+
+format:
+  html:
+    toc: true         # Adds a Table of Contents on the right
+    toc-depth: 3      # How many heading levels to show in TOC
+    code-fold: show   # Allows readers to toggle code visibility (starts as shown)
+    code-copy: true   # Adds a copy button to your code blocks
+    number-sections: true
+---
+
+In the previous chapter, we learnt how to build a GPT model from scratch. In this chapter, we learn how to train the model and eventually load the OpenAI weights.
+
+I have structured this post a bit differently than the book; applying a machine learning perspective helped me see patterns that made a new layout feel more intuitive. Although I’m using GPT-2 as the primary example, this structure holds up for other models as well.
+
+---
+
+# The Structure of Training a Deep Learning Model
+
+Let's start by defining the structure:
+
+* You need a **training loop** to iterate over the data multiple times. These are called **epochs**, where 1 epoch means 1 whole pass at the data.
+* We iterate over **batches**, which are small splits of the data. A batch in one epoch may not be the same as the batch in another (if we shuffle), but the batch will always have the same shape.
+* **Reset gradients:** Before we calculate the loss for each batch, we need to reset the loss gradients from the previous batch iteration.
+* **Forward pass** to calculate loss for the batch.
+* **Backward pass** to calculate loss gradients.
+* **Update model weights** using those gradients.
+* Check training and validation losses.
+
+---
+
+## There are some obvious questions here:
+
+**Q: How do we define training and validation set?**
+**A:** We define training and validation sets using a single split. It's important to note that the validation set is **not** the training set—the model never learns from it directly. The reason I mention this distinction is that we do not re-sample the validation set over and over again; it stays static. Think of the validation set as a "hold-out" exam that you do not feed the model during the training of weights.
+
+**Q: How do we calculate loss?**
+**A:** We use a metric called **Cross Entropy Loss**. This is the same metric we use for calculating the batch loss during optimization. However, the metrics we use to *judge* performance might be different. In an ML model, we need a "math heavy" loss metric (something smooth that we can calculate gradients over) when we are optimizing our algorithm, and an "intuitive" metric (like Accuracy) when we are just measuring performance. Think about Cross Entropy loss as the engine for optimization, while things like F1-Score or Accuracy are the dashboard gauges—they are great for humans to read, but not suitable for calculating gradients.
+
+**Q: What is Cross Entropy Loss?**
+**A:** Cross Entropy Loss is a way to calculate the difference between two probability distributions. Technically, it is measured as the negative logarithm of the predicted probability for the correct class. In simpler terms, if the model predicts a low probability for the actual answer, the Cross Entropy loss shoots up high.
+
+**Q: If this is supervised learning, what is the $y$ variable?**
+**A:** The  variable is the token sequence shifted by 1. Think of this like a forecasting problem: we have a $y$ variable (the target) that we are trying to predict, which leads our current input value by 1 step. This is often called "Next Token Prediction." With each new token predicted, we append this new token to our sequence to generate the next one.
+
+Enough talk, let's build this structure step by step.
+
+# Implementing the training loop for GPT
+
+This is going to be a step by step process, where we start with the inner most loop and then add batch and epochs:
+- Defining Training & Valdiation Sets
+- Defining the $X$ and $y$ variables
+- Defining Cross-Entropy loss
+- Create a loop for batches with loss
+- Create a loop for epoch
+
+We should define a few constants which we are going to use across our model training. This is similar to the config file we had defined in the previous Chapter except the context length is significantly shorter. Larger Context length implies shorter memory requirements.
+```{python}
+import torch
+from gpt import GPTModel
+
+GPT_CONFIG_124M = {
+    "vocab_size":50257,
+    "context_length":256,
+    "emb_dim": 768,
+    "n_heads": 12,
+    "n_layers": 12,
+    "drop_rate": 0.1,
+    "qkv_bias": False
+}
+torch.manual_seed(123)
+model = GPTModel(GPT_CONFIG_124M)
+model.eval()
+```
+
+## Defining training & Validation Sets
+
+We start by loading the data we had downloaded in Chapter 02.
+```{python}
+import tiktoken
+tokenizer = tiktoken.get_encoding("gpt2")
+
+file_path = "the-verdict.txt"
+with open(file_path,"r",encoding="utf-8") as file:
+    text_data = file.read()
+
+total_characters = len(text_data)
+total_tokens = len(tokenizer.encode(text_data))
+print("Character length: ", total_characters) 
+print("Tokens:", total_tokens)
+```
+
+Having loaded the file, we now split this into training and validation set.
+
+```{python}
+train_ratio = 0.9
+
+split_idx = int(train_ratio * total_characters) # 0.9 * 20479 = 18431
+train_data = text_data[:split_idx]
+val_data = text_data[split_idx:]
+```
+
+This is as simple as that. This approach has a few problems. We might be breaking a token mid word. But for now this would suffice.
+
+## Defining the $X$ and $y$ variables
+This is mostly a recap from Chapter 02 of the book. In the last section of Chapter 02, we had created batches of token with the following code. The class GPTDatasetV1 defines the class which gives the structure on how to load the datasets with DataLoader.
+
+The DataLoader using this schema, defined by GPTDatasetV1, loads the datasets.
+
+I am using the same code as Chapter 02 with more comments for clarity.
+
+```{python}
+
+import tiktoken
+# This is the GPTDatasetV1 class
+import torch
+from torch.utils.data import Dataset, DataLoader
+
+
+class GPTDatasetV1(Dataset):
+    def __init__(self, txt, tokenizer, max_length, stride):
+        """
+        txt: Input dataset
+        tokenizer: Tokenizer for encoding text to numbers
+        max_length: Maximum length of tokens to be in a batch
+        stride: When we move from one batch to another, this defines the jump between two successive tokens
+
+        """
+
+        self.input_ids = []
+        self.target_ids = []
+        token_ids = tokenizer.encode(txt) # We encode text with the tokenizer
+
+        for i in range(0, len(token_ids) - max_length, stride): # Max length is the length of each batch aka tokens in each batch
+            input_chunk = token_ids[i: i + max_length]
+            target_chunk = token_ids[i + 1: i + max_length + 1] # This is the target chunk or the y variable
+            # Another thing to note here is that both target and input are of the same length. This is different from forecasting problems
+
+            self.input_ids.append(torch.tensor(input_chunk))
+            self.target_ids.append(torch.tensor(target_chunk))
+
+    def __len__(self):
+        return len(self.input_ids)
+    
+    def __getitem__(self, index):
+        return self.input_ids[index], self.target_ids[index]
+
+
+
+def create_dataloader_v1(txt, batch_size = 4, max_length = 256,
+                         stride = 128, shuffle=True, drop_last = True,
+                         num_workers = 0):
+
+    """
+    batch_size: The number of independent sequences (samples) processed simultaneously in a single training step.
+    max_length: The fixed number of tokens contained within each individual input sequence (also known as the context window).
+    shuffle: Randomizes the order of the prepared chunks at the start of every epoch to prevent the model from learning the document's sequence.
+    drop_last: Discards the final batch if it contains fewer samples than the specified batch_size, ensuring consistent tensor shapes for the GPU.
+    num_workers: The number of additional CPU subprocesses used to parallelize the data loading and preprocessing to keep the GPU fed.
+    """
+    tokenizer = tiktoken.get_encoding("gpt2")
+
+    dataset = GPTDatasetV1(txt, tokenizer,max_length,stride)
+
+    dataloader = DataLoader(dataset=dataset,
+                            batch_size=batch_size,
+                            shuffle=shuffle,
+                            drop_last=drop_last,
+                            num_workers=num_workers)
+    
+    return dataloader
+```
+
+Here is a back of the envelope calculation to help visualize this. This helped me immensely make sense of all the components
+
+
+**Assumption:**
+- We have 3000 tokens.
+- BPE tokenizer is being used to have the same tokenizer
+
+**Calculations:**
+
+Dataset Variable Calculations:
+Total Tokens(N) = 3000
+Max Length(L) = 256
+Stride(S) = 128
+Stop point(N-L): 3000 - 256 = 2744
+
+Range starting from 0
+Indices for the dataset variable are: 0, 128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 1408, 1536, 1664, 1792, 1920, 2048, 2176, 2304, 2432, 2560, 2688.
+
+This marks the end of loop because anything beyond that would that the max length(256) would not be filled.
+
+2688 + 256 = 2934. The remaining 66 tokens are not used anywhere in our calculations. We could use these tokens with padding or special tokens for closing the loop. But for now we ignore this.
+
+Dataset Size: 22 samples (Chunks)
+
+DataLoader Variable Calculations:
+Total Samples: 22
+Batch_size = 4
+Calculation: 22/4 = 5 with a remainder of 2
+
+There are a total of 5 batches now. Drop_last = True means that would mean that the last 2 would be discarded. This is done to maximize GPU utilization.
+With shuffle = False, batches would be picked in the same order in which they were present in the Dataset. Here 0,1,2,3 represent the chunk order.
+Batch 1: Samples [0,1,2,3]
+Batch 2: Samples [4,5,6,7]
+Batch 3: Samples [8, 9, 10, 11]
+Batch 4: Samples [12,13,14,15]
+Batch 5: Samples [16,17,18,19]
+
+If we set shuffle = True, the batch gets filled just not in the serialized order of the Dataset Variable. Shuffling helps in avoid correlations as sequential chunks are highly correlated. If we do not shuffle, the model might memorize the general patters.
+Batch 1: Samples [0,16,13,6]
+Batch 2: Samples [4,5,9,7]
+Batch 3: Samples [8, 3, 11, 17]
+Batch 4: Samples [12,2,14,18]
+Batch 5: Samples [16,10,15,19]
+
+
+With this we have defined the $X$ and $y$ variables in a clear way.
+We can now use this in our analysis.
+
+```{python}
+train_loader = create_dataloader_v1(
+    train_data,
+    batch_size = 2,
+    max_length = GPT_CONFIG_124M["context_length"],
+    stride = GPT_CONFIG_124M["context_length"],
+    drop_last = True,
+    shuffle = True,
+    num_workers = 0
+)
+
+val_loader = create_dataloader_v1(
+    val_data,
+    batch_size = 2, # In practice, batch sizes, could go up to 1024.
+    max_length = GPT_CONFIG_124M["context_length"],
+    stride = GPT_CONFIG_124M["context_length"],
+    drop_last = True,
+    shuffle = True,
+    num_workers = 0
+)
+
+print("Train Loader:")
+for x, y in train_loader:
+    print(x.shape, y.shape)
+
+print("Validation Loader")
+for x, y in val_loader:
+    print(x.shape, y.shape)
+
+```
+
+## Defining Cross Entropy loss
+We now move to create the cross-entropy loss function for a batch. We calculate losses at batch level.
+
+```{python}
+def calc_loss_batch(input_batch, target_batch, model, device):
+    input_batch = input_batch.to(device)
+    target_batch = target_batch.to(device)
+    logits = model(input_batch) # The output is logits here. 
+    # logits.flatten(0,1) means that we flatten [batch,sequence_length,tokenizer_vocab_size] to [(batch * sequence_length),tokenizer_vocab_size]
+    # target_batch.flatten flattens [batch, sequence_length] to [batch * sequence_length]
+    loss = torch.nn.functional.cross_entropy(logits.flatten(0,1), target_batch.flatten())
+    
+    return loss
+```
+
+We now calculate the training and validation sets.
+
+```{python}
+def calc_loss_loader(data_loader, model, device, num_batches = None):
+    total_loss = 0
+    if len(data_loader) == 0:
+        return float("nan")
+    elif num_batches is None:
+        num_batches = len(data_loader)
+    else:
+        num_batches = min(num_batches, len(data_loader)) # this reduces the number of batches to the total number of batches in the data loader
+    for i, (input_batch,target_batch) in enumerate(data_loader):
+        if i<num_batches:
+            loss = calc_loss_batch(
+                input_batch, target_batch, model, device
+            )
+            total_loss += loss.item() # Summing the loss for each batch
+        else:
+            break
+    return total_loss/num_batches # Average loss over all batches
+```
+
+This is a generic function that works for both training and validation loss. Ideally, the validation loss should be higher than the training loss, but both should be decreasing as we increase the number of epochs.
+
+It iterates over all batches, calculates the total loss across all batches and calculates the average. We use num_batches to use a smnall number of batches to speed up the evaluation during model training.
+
+We will now calculate thee loss for both training and validation. Ideally the values should be significantly high.
+
+
+```{python}
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+with torch.no_grad():
+    train_loss = calc_loss_loader(train_loader,model,device)
+    val_loss = calc_loss_loader(train_loader, model, device)
+
+print("Training loss", train_loss)
+print("Validation loss", val_loss)
+```
+
+We should not see training and validation loss only as stand alone metrics but losses over epochs. 
+
+> One idea that I am still not able to wrap my head around is how do we generate the sequence length tokens in one go.
+
+## Creating a training loop for epochs and batch
+
+The goal here is to create two loops: Iterate over epochs(make multiple passes at the data), Iterate over batches.
+There would be a lot of new components that we introduce here which we need to introduce in one more iteration. What are the parameters that we are going to need to make this function work:
+- model: The model which is going to be used
+- train_loader, val_loader: Training dataset in DataLoader Object, Validation dataset in DataLoader object
+- device: CPU or GPU
+- num_epochs: Total passes at the whole data we want our model to make
+- optimizer: An optimizer that helps us adjust weights
+
+
+
+```{python}
+
+def train_model_simple(model, train_loader, val_loader, optimizer,device, num_epochs, eval_freq, eval_iter, start_context, tokenizer):
+    # Initialize training, validation losses. Also tracking the total tokens seen as a result of this
+    train_losses, val_losses, track_tokens_seen = [], [], []
+
+    tokens_seen,global_step = 0, -1
+    
+    for epoch in range(num_epochs): # Epoch training loop
+        model.train()
+        for input_batch, target_batch in train_loader:
+            optimizer.zero_grad() # We reset the loss gradients from the previous batch iteration
+            loss = calc_loss_batch(input_batch, target_batch,model, device)
+            loss.backward() # We calculat the loss gradients
+            optimizer.step() # Update model weights using loss gradients
+            tokens_seen += input_batch.numel()
+            global_step += 1
+
+            if global_step % eval_freq == 0:
+                train_loss, val_loss = evaluate_model(model, train_loader, val_loader, device, eval_iter)
+                train_losses.append(train_loss)
+                val_losses.append(val_loss)
+                track_tokens_seen.append(tokens_seen)
+                print(f"Ep {epoch +1} (Step {global_step:06d}):"
+                f"Train loss {train_loss:.3f},"
+                f"Val loss {val_loss:.3f}")
+
+        generate_and_print_sample(model,tokenizer,  device, start_context) # Prints sample text after each epoch. Great for sense checks.
+    return train_losses, val_losses, track_tokens_seen
+```
+
+Let's build all the remaining functions that we need. We start with building the evaluate model that returns training and validation loss. It take the model as an input because we need to change the model to inference model and change it back to training mode at the end. This is also we have a conditional parameter to avoid calculating training and validation losses after each batch calculation.
+
+```{python}
+def evaluate_model(model, train_loader, val_loader,device, eval_iter):
+    model.eval()
+    with torch.no_grad(): # This tells the model to stop calculating gradients.
+        train_loss = calc_loss_loader(
+            train_loader,model, device, num_batches = eval_iter
+        )
+        val_loss = calc_loss_loader(val_loader, model, device, num_batches=eval_iter)
+    model.train()
+    return train_loss, val_loss
+```
+
+We will now improve on the generate and print simple which helps us visualize what the model has generater for a sense checks. We will create text to token mapping and an inverse function. These were all defined in the previous chapter.
+
+```{python}
+from gpt import generate_text_simple
+
+
+def text_to_token_ids(text, tokenizer):
+    encoded = tokenizer.encode(text, allowed_special = {'<|endoftext|>'})
+    encoded_tensor = torch.tensor(encoded).unsqueeze(0)
+    return encoded_tensor
+
+def token_ids_to_text(token_ids, tokenizer):
+    flat = token_ids.squeeze(0)
+    return tokenizer.decode(flat.tolist())
+
+
+def generate_and_print_sample(model, tokenizer, device, start_context):
+    model.eval()
+    context_size = model.pos_emb.weight.shape[0]
+    encoded = text_to_token_ids(start_context, tokenizer).to(device)
+    with torch.no_grad():
+        token_ids = generate_text_simple(model=model, idx=encoded, max_new_tokens=50, context_size = context_size)
+
+    decoded_text = token_ids_to_text(token_ids, tokenizer)
+    print(decoded_text.replace("\n","")) # We do this to generate more compact text.
+    model.train()
+```
+
+
+We are only left with one other component to complete our training loop - The optimizer.
+Below code creates an optimizer AdamW(Adam with Weight Decay) and calls the training loop.
+
+```{python}
+torch.manual_seed(123)
+model = GPTModel(GPT_CONFIG_124M)
+model.to(device)
+optimizer = torch.optim.AdamW(
+    model.parameters(),
+    lr = 0.0004,
+    weight_decay = 0.1
+)
+num_epochs = 20
+train_losses, val_losses, tokens_seen = train_model_simple(
+    model, train_loader,val_loader,optimizer, device,
+    num_epochs=num_epochs, eval_freq=5, eval_iter = 5,
+    start_context="Every effort moves you", tokenizer = tokenizer
+)
+```
+
+This tells us that as the model goes through multiple epochs, the training loss decreases but the validation does not decrease as much.
+
+Looking at training and validation losses over epochs is incredibly hard. 
+We should create a plot to visualize it a little better.
+
+```{python}
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
+    fig, ax1 = plt.subplots(figsize=(5,3))
+    ax1.plot(epochs_seen, train_losses, label="Training Loss")
+    ax1.plot(epochs_seen, val_losses,linestyle="-",label="Validation Loss")
+
+    ax1.set_xlabel("Epochs")
+    ax1.set_ylabel("Loss")
+    ax1.legend(loc="upper right")
+    ax1.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax2 = ax1.twiny()
+    ax2.plot(tokens_seen, train_losses, alpha=0)
+    ax2.set_xlabel("Tokens seen")
+    fig.tight_layout()
+    plt.show()
+
+epochs_tensor = torch.linspace(0,num_epochs,len(train_losses))
+plot_losses(epochs_tensor,tokens_seen, train_losses, val_losses)
+```
+
+This plot shows the divergence between training and validation losses. The validation loss being higher than the training data indicates that the model is overfiting on the training data. 
+
+This closes the training loop. We started out with a general purpose guide on training a deep learning model and then built a specific GPT-2 version of the training loop. We build specific components that helped us train and look at the training and validation data with its specific losses. We now move to something very specific to LLMs.
+
+# Decoding Strategies for an LLM Output
+The GPT2 model that we decoded is based on the maximum probability of the softmax(logits). This is a greedy search approach and seems logical but is the reason for the models to be robotic and repititve.
+
+To avoid the repitition loop, the book suggest a few strategies:
+- Temperature Scaling
+- Top K Sampling
+- Modifying the text generation function
+- Top-P Sampling
+- Beam Search
+
+We now go through these 1 by 1.
+
+## Temperature Scaling
+Temperature works by adding a probabilistic selection process to the next-token generation task. In the greedy approach(generate_text_simple) we sample the token with the highest probability. To generate text with more variety, we replace argmax with a function that samples from a probability distribution.
+
+Illustrating this below to reduce the fluff. We start with a dictionary and its reverse map.
+
+We introduce a next_token_logits which we assume is the logits output from the GPT2 model for "every effort moves you". We then implement the greedy algorithm that selects the maximum probability after softmaxing over the logits.
+
+```{python}
+vocab = {
+    "closer": 0,
+    "every": 1,
+    "effort": 2,
+    "forward": 3,
+    "inches": 4,
+    "moves": 5,
+    "pizza": 6,
+    "toward": 7,
+    "you": 8
+    } 
+
+inverse_vocab = {v: k for k, v in vocab.items()}
+
+next_token_logits = torch.tensor([4.51, 0.89, -1.90, 6.75, 1.63, -1.62, -1.89, 6.28, 1.79])
+
+probas = torch.softmax(next_token_logits, dim=0)
+next_token_id = torch.argmax(probas).item()
+print(inverse_vocab[next_token_id])
+```
+
+The largest logit in the sequence is at 4th. The softmax over the logits would mean that the highest probabilty would be at 4th. Thus, the next token is 4th which in our case is "forward".
+
+We now move to a probabilistic sampling process where we replace the argmax with multinomial sampling.
+
+```{python}
+torch.manual_seed(123)
+next_token_id = torch.multinomial(probas, num_samples=1).item()
+print(inverse_vocab[next_token_id])
+```
+
+This will also print the same output as before - "forward", because multinomial distribution is dependent on the probability score. The way it is different from the Greedy approach is because if we generate multiple samples, we would see a probability distribution instead of a single word upfront.
+
+```{python}
+def print_sampled_tokens(probas):
+    torch.manual_seed(123)
+    sample = [torch.multinomial(probas, num_samples=1).item() for i in range(1_000)]
+    sample_ids = torch.bincount(torch.tensor(sample))
+    for i, freq in enumerate(sample_ids):
+        print(f"{freq} x {inverse_vocab[i]}")
+
+print_sampled_tokens(probas)
+
+```
+
+This allows some variation on the text. 
+We could improve on this by adding a temperature scaling which is a fancy description for dividing the logits by a number greater than 0.
+
+
+```{python}
+def softmax_with_temperature(logits, temperature):
+    scaled_logits = logits/temperature
+    return torch.softmax(scaled_logits, dim=0)
+```
+
+Temperatures greater than 1 would result in a more uniform distribution of token probabilities and temperatures smaller than 1 will result in sharper or peaky distribution.
+Here is a plot that illustrates the temperatures impact:
+
+
+```{python}
+temperatures = [1,0.1,5]
+scaled_probas = [softmax_with_temperature(next_token_logits,T) for T in temperatures]
+
+x = torch.arange(len(vocab))
+
+bar_width = 0.15
+
+fix, ax = plt.subplots(figsize=(5,3))
+
+for i,T in enumerate(temperatures):
+    rects = ax.bar(x + i * bar_width, scaled_probas[i],
+    bar_width, label = f"Temperature = {T}")
+ax.set_ylabel("Probabibility")
+ax.set_xticks(x)
+ax.set_xticklabels(vocab.keys(),rotation=90)
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+This is pretty much in line with what we had discussed. The smaller the temperature the more sharper the distribtution. Using a temperature of 1 means no temperature scaling.
+
+## Top-k Sampling
+
+Top-k Sampling works by restrict the sampled tokens to the top-k most likely tokkens and exclude all other tokens from the selection process by masking their probability scores. This relies on the softmax of negative infinity is zero.
+
+```{python}
+top_k = 3
+top_logits, top_pos = torch.topk(next_token_logits, top_k)
+print("Top logits:", top_logits)
+print("Top positions:", top_pos)
+
+```
+
+This gives us the top 3 tokens based on their logits values. We now create the masking of the tokens.
+
+```{python}
+new_logits = torch.where(
+    condition=next_token_logits < top_logits[-1], # identify the logits less than top 3
+    input=torch.tensor(float('-inf')), # Replace those less than the criteria with -inf
+    other=next_token_logits # Retains the original logits for all other tokens
+)
+
+print(new_logits)
+
+topk_probas = torch.softmax(new_logits, dim=0)
+
+print(topk_probas)
+```
+
+We get a three non zero probabilities as a result of this. We can now apply temperature scaling and multinominal functions on top of this.
+
+## Modify the text generation function
+
+We can move to create a single text generation function that combines the two approaches discussed earlier.
+
+```{python}
+def generate(model, idx, max_new_tokens, context_size, temperature=0.0, top_k = None, eos_id=None):
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:,-context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+        logits = logits[:,-1,:]
+        if top_k is not None:
+            top_logits,_ = torch.topk(logits, top_k)
+            min_val = top_logits[:,-1]
+            logits = torch.where(
+                logits < min_val,
+                torch.tensor(float('-inf')).to(logits.device),
+                logits
+            )
+        if temperature > 0.0:
+            logits = logits / temperature
+            probs = torch.softmax(logits, dim = -1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+        else:
+            idx_next = torch.argmax(logits, dim=-1, keepdim=True)
+        if idx_next == eos_id:
+            break
+        idx = torch.cat((idx, idx_next), dim=1)
+    return idx
+
+
+torch.manual_seed(123)
+token_ids = generate(model=model,
+idx=text_to_token_ids("Every effort moves you", tokenizer),
+max_new_tokens=14,
+context_size=GPT_CONFIG_124M["context_length"],
+top_k=25,
+temperature=1.4
+)
+
+print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
+```
+
+This function shows how can we use all the three approaches in one go.
+
+We finally have tokens being generated from the models. We can proceed to saving these model weights.
+
+# Loading and saving model weights
+
+We have trained a pretty bad model which is functional. We can save and reload the model  with the following:
+
+```{python}
+torch.save(model.state_dict(),"model.pth")
+
+model = GPTModel(GPT_CONFIG_124M)
+model.load_state_dict(torch.load("model.pth", map_location=device))
+model.eval()
+
+```
+
+This only saves the model weights. We can also save optimizer states.
+
+```{python}
+torch.save({
+    "model_state_dict": model.state_dict(),
+    "optimizer_state_dict": optimizer.state_dict()
+},
+"model_and_optimizer.pth"
+)
+
+checkpoint = torch.load("model_and_optimizer.pth", map_location=device)
+model = GPTModel(GPT_CONFIG_124M)
+model.load_state_dict(checkpoint["model_state_dict"])
+
+optimizer = torch.optim.AdamW(model.parameters(), lr = 5e-4, weight_decay=0.1)
+optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
+model.train()
+```
+
+
+This saves and loads our optimizers and model weights.
+
+I really like the "Backward Walk" concept—it feels very much like an engineer taking a machine apart to see exactly how the gears mesh. However, you're right; the draft is a bit heavy on the "meta" commentary about your process.
+
+To keep it snappy and maintain your **practitioner-focused tone**, we can condense your intent into three high-leverage focus areas. This frames your next steps as a targeted investigation rather than a long to-do list.
+
+Here is a tighter version of your closing:
+
+---
+
+# Final Thoughts: Closing the Loop
+
+In this chapter, we moved from the architecture of a GPT model to a functional training pipeline. We’ve seen how the  variable (the target) is simply the input shifted by one, and how a few lines of decoding logic can turn raw probability into something that resembles human speech.
+
+However, seeing the code run is only half the battle. To truly understand the "why" behind the "how," I’m taking a temporary step back from the book to perform a **"Backward Walk"**—tracing the pipeline from the training loop all the way back to the tokenizer. My goal is to bridge the gap between foundational theory and the modern reality of LLM development.
+
+Here are the three things I am focusing on next:
+
+## 1. The Hardware Reality (Compute & FLOPs)
+
+Training isn’t just about logic; it’s about physics. I want to calculate the **FLOPs (Floating Point Operations)** required for a training run and understand how hardware constraints—like VRAM and memory bandwidth—dictate the design of the training loop.
+
+## 2. Scaling Laws & Parameter Math
+
+The relationship between model size (parameters) and dataset size (tokens) isn't arbitrary. I want to explore the **mathematical scaling laws** that determine whether a model is "compute-optimal" and how these ratios have shifted from the original GPT-2 days to the modern reasoning models of today.
+
+## 3. The "Closed-Loop" Audit
+
+Because this model is small enough to be transparent, I want to track a single batch of data from the **tokenizer's sub-word embeddings** through the **attention layers** to the **final logits**. Mapping the exact transformation of parameters at each step will help formalize my intuition before moving on to more complex architectures.
+
+By deconstructing the pipeline from the inside out, I’m not just learning to build a model—I’m learning to optimize the engine.
+
