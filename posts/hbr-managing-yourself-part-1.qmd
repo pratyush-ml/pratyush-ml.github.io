@@ -35,9 +35,9 @@ It is one thing to look into a foggy future with acuity and chart the course cor
 ## Personal Note:
 What stood out most to me was the idea of intentionally creating a culture, especially the parallel between organizational culture and a family’s own culture at home. The article’s strongest takeaways for me were the importance of avoiding the marginal cost mistake and practicing humility in its truest sense.
 
----
+
 # Managing Oneself
-[Managing Oneself][https://www.thecompleteleader.org/sites/default/files/imce/Managing%20Oneself_Drucker_HBR.pdf]
+[Managing Oneself](https://www.thecompleteleader.org/sites/default/files/imce/Managing%20Oneself_Drucker_HBR.pdf)
 ## Part 1: Finding Your Strengths & Managing Yourself
 
 ### Discovering Your Strengths through Feedback Analysis
@@ -49,7 +49,7 @@ What stood out most to me was the idea of intentionally creating a culture, espe
 - Concentrate on your strengths and place yourself where they can produce maximum results.
 - Work continuously on improving your strengths and acquiring new skills as identified by the analysis.
 - **Overcome Intellectual Arrogance:** Do not let expertise in one area breed contempt for other fields. Being bright is never a substitute for actual knowledge.
----
+
 ## Part 2: The Core Questions for an Excellent Life
 
 To build a life of excellence, you must deeply understand the answers to these five questions:
@@ -66,7 +66,7 @@ To build a life of excellence, you must deeply understand the answers to these f
     - Combine your strengths, work style, and values to find the right environment. Fitting into the right environment transforms you from an acceptable employee into a star performer.
 5. **What can I contribute?**
     - Instead of waiting to be told what to do, look at what the situation requires and decide how you can make the greatest organizational impact based on your strengths, style, and values.
----
+
 ## Part 3: Responsibility for Relationships
 Achieving anything meaningful requires working effectively with others. Managing yourself means taking full responsibility for relationships, which consists of two parts:
 - **Accepting Individual Differences:** Accept that your co-workers are individuals who will insist on behaving like human beings. They have their own strengths, values, and ways of getting things done. To be effective, you must learn and respect how they work.

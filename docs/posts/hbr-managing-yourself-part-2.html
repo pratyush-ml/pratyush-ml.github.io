@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pratyush Sinha">
+<meta name="dcterms.date" content="2026-05-19">
+
+<title>HBR On Managing Yourself: Delegation, Monkeys &amp; AI Agents (Part 2 of 2) – Pratyush Sinha</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-0d4a9d19931feb4fee1ddab4b2489000.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Pratyush Sinha</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ayushiyerji"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pratyush20p/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">HBR On Managing Yourself: Delegation, Monkeys &amp; AI Agents (Part 2 of 2)</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Book-Notes</div>
+                <div class="quarto-category">learnings</div>
+                <div class="quarto-category">Team management</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Pratyush Sinha </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="the-evolution-of-delegation-from-humans-to-ai-agents-hbr-series---part-2-of-2" class="level1">
+<h1>The Evolution of Delegation: From Humans to AI Agents (HBR Series - Part 2 of 2)</h1>
+</section>
+<section id="management-time-whos-got-the-monkey" class="level1">
+<h1>Management Time: Who’s Got the Monkey?</h1>
+<p><a href="https://nkr.sg02.websolutionsbeta.com/wp-content/uploads/2021/03/Management-Time-Whos-Got-The-Monkey.pdf">Management Time: Who’s Got the Monkey?</a> ### Definition of a Monkey In management theory, a <strong>monkey</strong> is a metaphor for the next move or responsibility in a problem-solving sequence. When a problem is brought to a manager and the manager accepts the responsibility for finding a solution, the monkey is considered to have leaped from the subordinate’s back to the manager’s. The core objective of this framework is to keep the monkey on the subordinate’s back, ensuring that the next move remains their responsibility while the manager provides guidance and oversight.</p>
+<section id="managing-monkeys-and-developing-initiative" class="level3">
+<h3 class="anchored" data-anchor-id="managing-monkeys-and-developing-initiative">Managing Monkeys and Developing Initiative</h3>
+<p>The accumulation of monkeys must be avoided so that a manager’s real job—fulfilling their own boss’s mandate and helping generate business results—is not compromised. If too many monkeys are taken on, time to handle core responsibilities is lost. To avoid accumulating monkeys, subordinates’ initiative must be developed. For example, when an employee tries to hand over a problem, they should be required to recommend and implement a solution. They can either take action and brief the manager immediately, or act and report the outcome at a regular update. When employees are encouraged to handle their own monkeys, new skills are acquired, and the manager’s time is liberated to do their own job. ### Idea in Practice - <strong>Make an appointment to deal with monkeys:</strong> Avoid discussing any monkeys on an ad-hoc basis. For example, when passing a subordinate in the hallway, the proper seriousness won’t be conveyed. Instead, schedule an appointment to discuss the issue. - <strong>Specify the level of initiative:</strong> Employees can exercise five levels of initiative in handling on-the-job problems. From the lowest to the highest, the levels are: 1. Wait until told what to do. 2. Ask what to do. 3. Recommend an action, then with approval, implement it. 4. Take independent action, but advise at once. 5. Take independent action and update through routine procedures. - <strong>Outlaw levels 1 and 2:</strong> When an employee brings a problem, the use of level 1 or 2 is outlawed. An assigned level 3, 4, or 5 must be agreed upon for the monkey. No more than 15 minutes should be taken to discuss the problem. - <strong>Agree on the status update:</strong> After deciding how to proceed, a time and place must be agreed upon where the employee will give a progress report. - <strong>Examine motives:</strong> Some managers secretly worry that if subordinates are encouraged to take more initiative, the manager will appear less strong, more vulnerable, and less useful. Instead, a sense of security must be developed that frees the manager to relinquish direct control and support employee growth. - <strong>Develop employee skills:</strong> Employees try to hand over monkeys when they lack the desire or the ability to handle them. Employees must be helped to develop the needed problem-solving skills. It is initially more time-consuming than tackling problems directly, but time is saved in the long run. - <strong>Foster trust:</strong> Developing employee initiative requires a trusting relationship between the manager and subordinates. If failure is feared, monkeys will keep being brought to the manager rather than worked on to solve the problems. To promote trust, reassurance must be given that it is safe to make mistakes.</p>
+</section>
+<section id="the-care-and-feeding-of-monkeys" class="level3">
+<h3 class="anchored" data-anchor-id="the-care-and-feeding-of-monkeys">The Care and Feeding of Monkeys</h3>
+<ul>
+<li><strong>Rule 1:</strong> Monkeys should be fed or shot. Otherwise, they will starve to death and valuable time will be wasted on post-mortems or attempted resurrections.</li>
+<li><strong>Rule 2:</strong> The monkey population should be kept below the maximum number the manager has time to feed. Subordinates will find time to work as many monkeys as the manager finds time to feed, but no more. It should not take more than 5 to 15 minutes to properly feed a maintained monkey.</li>
+<li><strong>Rule 3:</strong> Monkeys should be fed by appointment only. Starving monkeys should not have to be hunted down and fed on a catch-as-catch-can basis.</li>
+<li><strong>Rule 4:</strong> Monkeys should be fed face-to-face or by telephone, but never by email. Documenting may add to the feeding process, but it cannot take the place of feeding.</li>
+<li><strong>Rule 5:</strong> Every monkey must have an assigned next feeding time and an agreed degree of initiative. These may be revised at any time by mutual consent, but must never be allowed to become vague or indefinite. Otherwise, the monkey will either starve to death or wind up back on the manager’s back. ## Personal Note: ### Key Learnings: The Core Principles of Monkey Management Based on the original framework, I see <strong>Monkey Management</strong> as fundamentally an exercise in <strong>mastering the discipline of delegation</strong>. It addresses a critical managerial trap: the phenomenon of <em>reverse delegation</em>. This occurs when a manager inadvertently accepts accountability for a subordinate’s task, allowing the “monkey” to leap from the employee’s back to their own. To me, the framework teaches that true delegation is not merely assigning a task; it is the deliberate management of <strong>initiative and accountability</strong>. By setting strict boundaries around when and how problems are discussed, managers can protect their own time, foster self-reliance, and unlock their team’s potential.</li>
+</ul>
+</section>
+<section id="the-evolution-delegating-to-autonomous-ai-agents" class="level3">
+<h3 class="anchored" data-anchor-id="the-evolution-delegating-to-autonomous-ai-agents">The Evolution: Delegating to Autonomous AI Agents</h3>
+<p>When the discussion shifts from human subordinates to AI agents, the fundamental rules of delegation do not change—but the execution does. Delegating to AI is less like traditional task assignment and more like <strong>gardening</strong>. In a traditional setup, a manager builds and micromanages a rigid workflow. In an agentic ecosystem, that manager plants the seeds—objectives and constraints—lets the agents execute autonomously (“let them cook”), and steps back to observe. The role shifts from directing every step to monitoring the health of the system, pruning away unproductive logic branches, and identifying behavioral anomalies (“diseases”). Because AI agents can generate hundreds of sub-tasks and iterations at machine speed, successful delegation requires a specialized framework. The classic monkey delegation rules map surprisingly well to managing an AI workforce using modern technical tools.</p>
+</section>
+<section id="a-technical-playbook-for-ai-agent-delegation" class="level3">
+<h3 class="anchored" data-anchor-id="a-technical-playbook-for-ai-agent-delegation">A Technical Playbook for AI Agent Delegation</h3>
+<section id="defining-the-boundaries-of-authority-levels-of-initiative" class="level4">
+<h4 class="anchored" data-anchor-id="defining-the-boundaries-of-authority-levels-of-initiative">1. Defining the Boundaries of Authority (Levels of Initiative)</h4>
+<p>Effective delegation requires clarity on how much autonomy the delegate holds. In the monkey framework, Levels 1 (wait until told) and 2 (ask what to do) are outlawed. The same applies to AI. To prevent agents from constantly stalling or spamming notifications, they must be programmed to operate at higher tiers of initiative. - <strong>Delegation Framework:</strong> Force the agent to analyze the problem and formulate a recommendation before pausing for input (Level 3), or give it the authority to execute and report back instantly (Levels 4 and 5). - <strong>The Phase Tools:</strong> - <strong>LangGraph / CrewAI:</strong> These orchestration frameworks allow you to explicitly code human-in-the-loop (HITL) breakpoints. You can program an agent to require a structural “thumbs-up” via a CLI or Slack integration before executing a high-risk tool (Level 3 delegation). - <strong>AutoGPT / BabyAGI:</strong> Best used for setting high-level objective vectors where the agent autonomously breaks down its own task list and executes it without intermediate intervention (Level 5 delegation).</p>
+</section>
+<section id="establishing-observability-the-feeding-appointment" class="level4">
+<h4 class="anchored" data-anchor-id="establishing-observability-the-feeding-appointment">2. Establishing Observability (The Feeding Appointment)</h4>
+<p>In human management, you delegate by scheduling structured alignment meetings rather than having ad-hoc, casual conversations in hallways. With AI, you cannot pass an agent in a physical hallway, but you <em>can</em> fall into the trap of constantly monitoring raw terminal logs, which wastes your valuable time. - <strong>Delegation Framework:</strong> Establish automated execution tracing. Instead of micromanaging the process, you review a structured visual summary of the agent’s logic at set evaluation checkpoints. - <strong>The Phase Tools:</strong> - <strong>LangSmith / LangFuse:</strong> These are specialized LLM observability platforms. They capture every step the agent took, which prompts were triggered, the latency, token costs, and exactly where the logic branched. This serves as your “delegation review meeting.” - <strong>Phoenix (Arize) / Weights &amp; Biases:</strong> Used to trace the execution graphs of highly complex agentic workflows, allowing you to instantly audit whether an agent is looping or losing its alignment.</p>
+</section>
+<section id="standardizing-quality-gates-the-status-update" class="level4">
+<h4 class="anchored" data-anchor-id="standardizing-quality-gates-the-status-update">3. Standardizing Quality Gates (The Status Update)</h4>
+<p>When delegating, you must agree on a clear time, place, and objective metric for a progress report. With AI, this status update is continuous, programmatic, and gate-kept by automated quality assurance layers. - <strong>Delegation Framework:</strong> The agent reports its outcome directly to a validation framework. If the outcome passes your pre-defined behavioral tests, the work is promoted; if it fails, the monkey is flagged for refinement without you having to manually fix the code. - <strong>The Phase Tools:</strong> - <strong>Guardrails AI / Llama Guard:</strong> Structural tools that validate the agent’s output in real-time against specific criteria (e.g., checking for code safety, data leakage, or formatting errors). - <strong>DeepEval / Promptfoo:</strong> Unit testing frameworks built specifically for LLMs. They automatically grade delegated agent outputs based on correctness, tone, and alignment before the task is considered successfully closed.</p>
+</section>
+<section id="upskilling-the-asset-pruning-development" class="level4">
+<h4 class="anchored" data-anchor-id="upskilling-the-asset-pruning-development">4. Upskilling the Asset (Pruning &amp; Development)</h4>
+<p>If a human employee fails to handle a delegated task, a poor manager takes the task back, while a good manager trains the employee. When an AI agent fails a behavioral test, the manager should resist the urge to manually rewrite its code. Instead, the better response is to upgrade its capabilities and “prune” its errors. - <strong>Delegation Framework:</strong> Update the system instructions, fine-tuning datasets, or the agent’s contextual knowledge base so it can handle the problem autonomously next time. - <strong>The Phase Tools:</strong> - <strong>LlamaIndex / Pinecone (RAG Management):</strong> If the agent lacks the specific domain knowledge to solve a delegated problem, you update its Retrieval-Augmented Generation (RAG) pipeline to give it better reference data. - <strong>OpenAI or Anthropic Developer Consoles:</strong> Used for prompt engineering and managing fine-tuning datasets. When an agent drifts, you clip that branch by injecting negative execution examples directly into its core model architecture. #### 5. Creating a Blast Radius (Fostering Trust) True delegation requires trust. For humans, trust means knowing it is safe to make mistakes without facing catastrophic penalties. For AI agents, trust means creating a secure, restricted technical environment where they can fail safely without breaking production databases or draining company funds.</p>
+<ul>
+<li><strong>Delegation Framework:</strong> Give the agent full autonomy to execute commands, but rigidly restrict its practical capabilities to an isolated container.</li>
+<li><strong>The Phase Tools:</strong>
+<ul>
+<li><strong>E2B Sandbox / Fly.io:</strong> Secure, isolated cloud runtimes where AI agents can execute arbitrary code, run terminal scripts, and test out creative solutions completely safely.</li>
+<li><strong>Token Budgeting / Rate Limiters (via LiteLLM):</strong> Tools integrated into your API gateways that cap the maximum financial spend per agent run, ensuring a runaway logic loop never turns into a major financial liability.</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="framework-architecture-reference" class="level3">
+<h3 class="anchored" data-anchor-id="framework-architecture-reference">Framework Architecture Reference</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 39%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Delegation Phase</strong></th>
+<th><strong>Human Management Objective</strong></th>
+<th><strong>AI Agent Tooling Stack</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Initiative Level</strong></td>
+<td>Prevent dependency; establish clear autonomy boundaries.</td>
+<td><strong>LangGraph / CrewAI</strong> (Human-in-the-loop breakpoints)</td>
+</tr>
+<tr class="even">
+<td><strong>Feeding Appointment</strong></td>
+<td>Review problem-solving logic through structured channels.</td>
+<td><strong>LangSmith / LangFuse</strong> (Execution tracing &amp; LLM observability)</td>
+</tr>
+<tr class="odd">
+<td><strong>Status Update</strong></td>
+<td>Validate the final outcome against objective metrics.</td>
+<td><strong>Guardrails AI / DeepEval</strong> (Automated validation gates)</td>
+</tr>
+<tr class="even">
+<td><strong>Skill Development</strong></td>
+<td>Prune systemic errors and upgrade internal capability.</td>
+<td><strong>LlamaIndex / Fine-tuning datasets</strong> (RAG &amp; Prompt engineering)</td>
+</tr>
+<tr class="odd">
+<td><strong>Fostering Trust</strong></td>
+<td>Create a psychological/technical safe space to fail.</td>
+<td><strong>E2B Sandboxes / LiteLLM</strong> (Secure execution &amp; cost caps)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="be-a-better-leader-have-a-richer-life" class="level1">
+<h1>Be a Better Leader, Have a Richer Life</h1>
+<section id="the-idea-in-brief" class="level2">
+<h2 class="anchored" data-anchor-id="the-idea-in-brief">The Idea in Brief</h2>
+<p>Life is a zero-sum game: the more you strive to win <strong>in</strong> one dimension, <strong>the</strong> other three dimensions must lose. <strong>These four</strong> dimensions <strong>are</strong> work, yourself, your home, and your community. <strong>Constantly having</strong> to make trades among <strong>these</strong> lives <strong>can</strong> leave you feeling exhausted, unfulfilled, and isolated, and it hurts the people you care about most. To excel in all dimensions of life, use <strong>Stewart Friedman’s</strong> Total Leadership process. <strong>First,</strong> articulate who and what matters most in life, <strong>then</strong> experiment with small changes that enhance your satisfaction and performance in all dimensions.</p>
+</section>
+<section id="idea-in-practice" class="level2">
+<h2 class="anchored" data-anchor-id="idea-in-practice">Idea in Practice</h2>
+<p>Total leadership <strong>mitigates the</strong> range of problems that <strong>stem from</strong> making <strong>trade-offs</strong> among the different dimensions of your life: - Feeling unfulfilled because you’re not doing what you love. - Feeling <strong>inauthentic</strong> because you’re not acting according to your values. - <strong>Feeling</strong> disconnected from the people who matter to you. - Feeling exhausted by trying to keep up with it all.</p>
+<p>To tackle such problems using <strong>T</strong>otal <strong>L</strong>eadership, take these <strong>four</strong> steps: ### 1. Reflect For each <strong>of</strong> the <strong>four</strong> dimensions of life, reflect on how important each is to you, how much time and energy you devote to each, and how satisfied you are in each. <strong>Identify the</strong> discrepancies between what is important to you and how you spend your time and energy. What is your <strong>overall</strong> life satisfaction? ### 2. Brainstorm Possibilities Based on the <strong>insights</strong> you have achieved during <strong>your</strong> reflection, brainstorm a long list of small experiments that help you move closer to greater satisfaction in all <strong>four dimensions</strong>. These are <strong>new ways</strong> of doing things that would carry minimum risk and let you see results <strong>quickly</strong>. For example: - <strong>Turning</strong> off <strong>your</strong> cell phone during family <strong>time</strong> could help you sharpen your focus on the people who <strong>matter</strong> most to you. - Exercising several times a week could give you more energy. - Joining a club with coworkers could help <strong>foster</strong> a friendship with them. - Preparing for the week ahead on Sunday evening could help you sleep better and <strong>enter</strong> the new week refreshed. ### 3. Choose Experiments <strong>Narrow down the</strong> list of experiments you have brainstormed to the <strong>two or</strong> three most <strong>promising ones that</strong> should improve your satisfaction and performance in all dimensions of life. <strong>Choose experiments that are</strong> viewed as positive by the people <strong>who</strong> matter to you <strong>in</strong> every dimension of your life, <strong>and those that would create</strong> the most costly <strong>regrets if you missed the</strong> opportunities. <strong>Position them</strong> to practice skills <strong>you</strong> want to develop and do more of what you want to be doing. ### 4. Measure Progress Develop a scorecard for each experiment you have <strong>chosen</strong>. For example: <strong>What is the</strong> work-life dimension? <strong>What is</strong> the experiment’s <strong>goal</strong>? How will you measure success? And then, what are the <strong>implementation</strong> steps?</p>
+</section>
+<section id="the-three-principles-of-total-leadership" class="level2">
+<h2 class="anchored" data-anchor-id="the-three-principles-of-total-leadership">The Three Principles of Total Leadership</h2>
+<p>The <strong>T</strong>otal <strong>L</strong>eadership process <strong>rests on</strong> three principles: - <strong>Be real:</strong> Act with authenticity by clarifying what’s important. - <strong>Be whole:</strong> Act with integrity by respecting the whole <strong>person</strong>. - <strong>Be innovative:</strong> Act with creativity by experimenting with how things get done.</p>
+<p>When you’re designing experiments, remember to identify the possibilities. Open your mind to <strong>what’s</strong> possible and try to think of as many potential experiments <strong>as</strong> you can, <strong>describing</strong> in a sentence or two what you would do in each.</p>
+<p><strong>Be</strong> cautious <strong>of the</strong> scale of the experiment that you want to design. The experiment shouldn’t be massive, <strong>causing major</strong> shifts in the way you live. Highly ambitious designs usually fail because they are too much to handle. The <strong>best</strong> experiments let you try something new while <strong>minimizing the</strong> inevitable risks associated with <strong>high</strong> stakes. <strong>When the stakes are smaller,</strong> it’s easier to overcome the fear of failure that inhibits <strong>innovation</strong>. <strong>This allows you</strong> to see results, and others <strong>will</strong> take note, which both <strong>inspires</strong> you to go further and builds support from your stakeholders.</p>
+<p>Another benefit of <strong>the</strong> small-win approach <strong>to experimenting</strong> is that it opens <strong>doors</strong> that <strong>would</strong> otherwise be closed. You can see <strong>what</strong> people <strong>invest</strong> in the decision. <strong>You can tell them,</strong> “Let me try this. If it doesn’t work, we’ll go back to the old way or try something different.” By framing change as a trial, resistance is reduced because people are more willing to try something new if they know it is not permanent and if they retain some control over deciding whether the experiment is working according to their performance <strong>expectations</strong>.</p>
+<p><strong>But “small” is a relative term. What might look like a small shift to you could seem like a giant leap to me and vice versa, so don’t get hung up on the word. Furthermore, this isn’t about the scope of the changes. You actually make changes in small steps towards a big idea. So, while the steps in an experiment might be small, the goals are not.</strong></p>
+</section>
+<section id="personal-note" class="level2">
+<h2 class="anchored" data-anchor-id="personal-note">Personal Note:</h2>
+<p>This philosophy of making small, reversible adjustments aligns closely, in my view, with the “Small Bets” framework pioneered by David Vassallo. That community emphasizes low-commitment, highly adaptable changes in which all stakeholders understand that any shift is temporary and easily reversible. I see this approach as especially effective for business teams because it protects day-to-day operations from major disruption while creating a sustainable, long-term win-win across different areas of impact.</p>
+<p>I also believe this methodology becomes even more important in the age of AI. When organizations introduce a new AI-driven customer experience, the disruption to a team’s daily processes can be substantial. Because AI changes how people work so fundamentally, I think these “small bet” principles should be applied directly to technology implementation. Instead of rolling out massive, destabilizing overhauls, framing new AI tools as small, reversible experiments can significantly reduce organizational resistance. It allows teams to adapt at a manageable pace, minimizes operational friction, and gives people a stronger sense of control over changing performance expectations.</p>
+</section>
+</section>
+<section id="what-to-ask-the-person-in-the-mirror" class="level1">
+<h1>What to Ask the Person in the Mirror</h1>
+<p>As managers move higher up the corporate ladder, it often becomes harder to get candid feedback on performance. Without crucial input from bosses and colleagues, they can make mistakes that damage both the organization and their own reputation. The article’s advice is to look inward regularly and ask hard questions: Am I communicating a vision for the business clearly? Am I spending time in ways that reflect my priorities? Do I give direct feedback that people can act on? How do I behave under pressure? The central idea is that asking the right questions matters more than having all the answers. By applying this process, leaders can tackle the challenges that inevitably arise over the course of their careers and create better ways to stay on top of their game.</p>
+<section id="idea-in-practice-1" class="level2">
+<h2 class="anchored" data-anchor-id="idea-in-practice-1">Idea in Practice</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>To address this leadership challenge…</strong></th>
+<th><strong>Ask…</strong></th>
+<th><strong>Because…</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Vision and priorities</strong></td>
+<td>How often do I communicate a vision and key priorities to achieve that vision?</td>
+<td>Employees want to know where the business is going and what they need to focus on in order to help drive the business. As the world changes, they want to know how the vision and priorities might change.</td>
+</tr>
+<tr class="even">
+<td><strong>Managing time</strong></td>
+<td>Does the way I spend my time match my key priorities?</td>
+<td>Tracking your use of time can reveal startling—even horrifying—disconnects between your top priorities and your actions. Such disconnects send confusing messages to employees about your true priorities.</td>
+</tr>
+<tr class="odd">
+<td><strong>Feedback</strong></td>
+<td>Do I give people timely and direct feedback they can act on?</td>
+<td>Employees want truthful, direct, and timely feedback. Retention and productivity improve when employees trust you to raise issues promptly and honestly.</td>
+</tr>
+<tr class="even">
+<td><strong>Succession planning</strong></td>
+<td>Have I identified potential successors?</td>
+<td>It’s important to nurture future leaders who can grow the business. If you haven’t identified possible successors, you’re probably not delegating as much as you should, and you may even be a decision-making bottleneck.</td>
+</tr>
+<tr class="odd">
+<td><strong>Evaluation and alignment</strong></td>
+<td>Am I attuned to business changes that may require shifts in how we run the company?</td>
+<td>All businesses encounter challenges posed by changes; for example, in customers’ needs or the business’s stage of maturity. To determine how best to evolve your business, regularly scan for changes, seek fresh perspectives from talented subordinates, and envision new organizational designs.</td>
+</tr>
+<tr class="even">
+<td><strong>Leading under pressure</strong></td>
+<td>How do I behave under pressure?</td>
+<td>During crises, employees watch you with a microscope—and mimic your behavior. By identifying your unproductive behaviors under pressure (such as blaming others or losing your temper), you can better manage those behaviors and avoid sending unintended messages to employees about how they should behave.</td>
+</tr>
+<tr class="odd">
+<td><strong>Staying true to yourself</strong></td>
+<td>Does my leadership style reflect who I truly am?</td>
+<td>A business career is a marathon, not a sprint. If you’ve adopted a leadership style that doesn’t suit your skills, values, and personality, you’ll wear down.</td>
+</tr>
+</tbody>
+</table>
+<section id="the-seven-leadership-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="the-seven-leadership-challenges">The Seven Leadership Challenges</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 56%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Challenge</strong></th>
+<th><strong>The Questions to Ask</strong></th>
+<th><strong>Why It Matters</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>1. Vision and Priorities</strong></td>
+<td>* How often do I communicate a vision for my business?<br>* Have I identified and communicated three to five key priorities to achieve that vision?<br>* If asked, would my employees be able to articulate the vision and priorities?</td>
+<td>Leaders often fail to adequately communicate their vision in the rush of day-to-day activities, particularly in a way that helps subordinates know where to focus. Employees want to know where the business is going and how that vision might adapt as the world changes.</td>
+</tr>
+<tr class="even">
+<td><strong>2. Managing Time</strong></td>
+<td>* How am I spending my time? Does it match my key priorities?<br>* How are my subordinates spending their time? Does that match the key priorities for the business?</td>
+<td>Leaders must know exactly how time is being spent to ensure alignment with business goals. Tracking time can reveal startling—or even horrifying—disconnects, which send highly confusing messages to employees about what truly matters.</td>
+</tr>
+<tr class="odd">
+<td><strong>3. Feedback</strong></td>
+<td>* Do I give people timely and direct feedback that they can act on?<br>* Do I have five or six junior subordinates who will tell me things I may not want to hear but need to hear?</td>
+<td>Waiting until the year-end review to coach employees can lead to unpleasant surprises and hinder professional development. Company retention and productivity improve when employees trust you to raise issues honestly and without delay.</td>
+</tr>
+<tr class="even">
+<td><strong>4. Succession Planning</strong></td>
+<td>* Have I, at least in my own mind, picked one or more potential successors?<br>* Am I coaching them and giving them challenging assignments?<br>* Am I delegating sufficiently? Have I become a decision-making bottleneck?</td>
+<td>Failing to actively plan for the future prevents proper delegation, turns leaders into decision-making bottlenecks, and risks losing key talent. Nurturing future leaders is vital to growing the business and keeping the organization moving.</td>
+</tr>
+<tr class="odd">
+<td><strong>5. Evaluation and Alignment</strong></td>
+<td>* Am I attuned to business changes that may require shifts in how we run the company?<br>* Is the design of my company still aligned with the key success factors for the business?<br>* If I had to design my business with a clean sheet of paper, how would I design it? How would it differ from the current design?<br>* Should I create a task force of subordinates to answer these questions and make recommendations to me?</td>
+<td>Because the world and businesses constantly evolve (e.g., changes in customer needs or business maturity), leaders must be ready to adapt their organizational design. To successfully evolve, you must regularly scan for changes, seek fresh perspectives, and envision new structures.</td>
+</tr>
+<tr class="even">
+<td><strong>6. Leading Under Pressure</strong></td>
+<td>* What types of events create pressure for me?<br>* How do I behave under pressure?<br>* What signals am I sending my subordinates? Are these signals helpful, or are these undermining the success of my business?</td>
+<td>A leader’s behavior during stressful times is heavily scrutinized by subordinates and deeply impacts the firm’s culture. By recognizing unproductive stress responses (like losing your temper or blaming others), you can better manage your behavior and avoid sending negative, unintended messages.</td>
+</tr>
+<tr class="odd">
+<td><strong>7. Staying True to Yourself</strong></td>
+<td>* Does my leadership style reflect who I truly am? Is it comfortable?<br>* Do I assert myself sufficiently, or have I become tentative?<br>* Am I too politically correct?<br>* Does worry about my next promotion or bonus cause me to pull punches or hesitate to express my views?</td>
+<td>Successful executives develop leadership styles that fit the needs of the business while remaining authentic to their own beliefs, values, and personality. A business career is a marathon, not a sprint; adopting an unnatural style will eventually wear you down.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="personal-note-1" class="level2">
+<h2 class="anchored" data-anchor-id="personal-note-1">Personal Note:</h2>
+<p>While the framework offers a valuable blueprint for future executive roles, I believe it needs a few important calibrations when applied to the realities of an evolving career and day-to-day management. ### 1. The Myth of the Crisis-Only Microscope The text suggests that a leader’s behavior is scrutinized mainly under pressure or during moments of crisis. I see it differently. In practice, signaling is continuous and all-encompassing. Subordinates do not wait for crises; they observe and imitate everyday interactions, routine decisions, and even casual conversations. Small behavioral cues—such as becoming overly tentative or excessively cautious—send constant signals that quietly shape team culture long before any major crisis emerges. ### 2. Shifting from Apologetic Delegation to Direct Authority I also notice a subtle tendency among leaders to sound apologetic or hesitant when assigning work, often out of a desire to remain collaborative. In my view, that posture is unnecessary. Leadership presence is not accidental; it is earned through deliberate effort and affirmed by the people who placed that leader in the role. Recognizing this makes it easier to move away from over-explaining and toward a more direct communication style that respects both the team’s capability and the objective needs of the business. ### 3. Immediate Priorities vs.&nbsp;the 10-Year Horizon I also find that it is easy to get distracted by high-level strategic questions such as macro-level succession planning or total organizational redesign. At my current stage, I see those ideas as more useful archived blueprints for a future horizon—perhaps a decade from now, when managing a much larger group. For now, the immediate and actionable priority lies in the fundamentals: communicating vision and priorities more effectively and mastering the daily discipline of time management.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
