@@ -1,0 +1,116 @@
+---
+title: "HBR On Managing Yourself: Purpose, Strengths & Reclaiming Work (Part 1 of 2)"
+author: "Pratyush Sinha"
+date: "2026-05-19"
+categories: [Book-Notes, life, learnings]
+draft: False
+---
+# Managing Your Career Trajectory in the AI Era (HBR Series - Part 1 of 2)
+
+This was the author’s first book from the HBR series. The book is a collection of articles on how one can manage oneself, offering different points of view intended primarily for managers at all levels, though many of the ideas feel equally relevant in the age of AI.
+The summaries below draw largely from the "Idea in Brief" and "Idea in Practice" sections of each chapter. Several of the articles come across as especially sharp and relevant, and the book itself feels approachable rather than dense.
+
+# How Will You Measure Your Life?
+[How will you measure your life?](https://knowen-production.s3.amazonaws.com/uploads/attachment/file/2772/How-Will-You-Measure-Your-Life-by-Clayton-Christensen.pdf)
+
+It starts off with a broad set of three questions:
+- How can I be sure that I will be happy in my career? This question arose from Frederick Herzberg's assertion that the most powerful motivator isn't money; it is the opportunity to learn, grow in responsibilities, contribute, and be recognized.
+- How can I ensure that my relationship with my spouse and my family becomes an enduring source of happiness?
+- How can I be sure I will stay out of jail?
+The article argues for having a clear sense of purpose; without it, people are likely to fritter away time and energy chasing the most tangible signs of achievement rather than what is truly important. A focus on marginal gains can lead people astray.
+**The marginal cost of doing something wrong "just this once" always seems alluringly low, but you do not see the end result to which that path leads.**
+The key is to define what you stand for and draw the line in a safe place.
+
+## Create a Strategy for Life
+## Allocate Resources: Align your actual spending of time, talent, and energy with your stated priorities.
+## Create a Culture: Designing a deliberate culture sets you up for the long term.
+It is one thing to look into a foggy future with acuity and chart the course corrections that a company must make, but quite another to persuade employees, who might not see the changes ahead, to line up and work cooperatively to take the company in a new direction. For organizations, this alignment depends on two separate dimensions:
+1. The extent to which members of the organization agree on what they want from their participation in the enterprise.
+2. The extent to which they agree on which actions will produce the desired results.
+
+### Critical Takeaways
+- **Avoid the marginal costs mistake:** It is easier to hold to your principles 100% of the time than it is to hold to them 98% of the time.
+- **Remember the importance of humility:** The most humble people generally have a high level of self-esteem. They know who they are and they feel good about who they are. Humility is not defined by self-deprecating behavior or attitudes, but by the esteem with which a person regards others. True humbleness unlocks the opportunity to learn a lot from everyone around you.
+- **Choosing the right yardstick:** In the end, resolve to measure your life by the individuals you have touched and the people you have helped become better.
+## Personal Note:
+What stood out most to me was the idea of intentionally creating a culture, especially the parallel between organizational culture and a family’s own culture at home. The article’s strongest takeaways for me were the importance of avoiding the marginal cost mistake and practicing humility in its truest sense.
+
+---
+# Managing Oneself
+[Managing Oneself][https://www.thecompleteleader.org/sites/default/files/imce/Managing%20Oneself_Drucker_HBR.pdf]
+## Part 1: Finding Your Strengths & Managing Yourself
+
+### Discovering Your Strengths through Feedback Analysis
+
+- **The Method:** Whenever you make a key decision or take a key action, write down what you expect will happen. Compare the actual results with your expectations 9 to 12 months later.
+- **The Timeline:** Practicing this consistently for 2 to 3 years will clearly identify where your strengths lie.
+- **The Outcome:** This method reveals what you are doing (or failing to do) that deprives you of the full benefits of your strengths, and clearly highlights areas where you lack competence.
+### Acting on the Analysis
+- Concentrate on your strengths and place yourself where they can produce maximum results.
+- Work continuously on improving your strengths and acquiring new skills as identified by the analysis.
+- **Overcome Intellectual Arrogance:** Do not let expertise in one area breed contempt for other fields. Being bright is never a substitute for actual knowledge.
+---
+## Part 2: The Core Questions for an Excellent Life
+
+To build a life of excellence, you must deeply understand the answers to these five questions:
+1. **What are my strengths?** (Discovered via feedback analysis)
+2. **How do I work?**
+    - Do you process information best by reading or by listening/discussing?
+    - Do you accomplish more working with others, or working alone?
+    - Do you perform best as a decision-maker, or as an advisor on key matters?
+    - Do you thrive under stress, or do you function optimally in a highly predictable environment?
+3. **What are my values?**
+    - What are your ethics and your most important responsibilities for living a worthy life?
+    - _Note:_ If your organization’s ethics do not resonate with your own values, your career will likely be marked by frustration and poor performance.
+4. **Where do I belong?**
+    - Combine your strengths, work style, and values to find the right environment. Fitting into the right environment transforms you from an acceptable employee into a star performer.
+5. **What can I contribute?**
+    - Instead of waiting to be told what to do, look at what the situation requires and decide how you can make the greatest organizational impact based on your strengths, style, and values.
+---
+## Part 3: Responsibility for Relationships
+Achieving anything meaningful requires working effectively with others. Managing yourself means taking full responsibility for relationships, which consists of two parts:
+- **Accepting Individual Differences:** Accept that your co-workers are individuals who will insist on behaving like human beings. They have their own strengths, values, and ways of getting things done. To be effective, you must learn and respect how they work.
+- **Taking Responsibility for Communication:** Most personality clashes in organizations happen because people do not know what others are doing, how they do it, or what results they expect. The remedy is simple: you must communicate and ask
+---
+## Part 4: Managing the Second Half of Your Life
+As careers elongate, the "second half" of life (spanning 20 to 25 years) requires preparation long before you actually enter it. By the time many executives reach a stable point in their careers or stop climbing the corporate ladder, they need a secondary source of fulfillment. Developing this early ensures you can navigate major setbacks and keep growing.
+### Three Ways to Introduce a Second Career
+1. **Moving Organizations:** This involves taking a second career by simply moving from one type of organization to another.
+2. **Developing a Parallel Career:** Staying in your primary job (full-time, part-time, or consulting) while simultaneously creating or joining a non-profit organization.
+3. **Social Entrepreneurship:** For those who have been highly successful in their first jobs and choose to pivot into social entrepreneurship, continuing to use their lifelong skills but shifting their primary focus toward social impact.
+**There** are two ways to prepare for the second half of your life—**actually, there are three.** **The** first one **is** nothing more than moving from one kind of **organization** to another. This is practically taking a second career. The second way to prepare for the second half of **life** is to develop **a** parallel career. Many people who are very successful in the first **half stay in** the work they have been doing, either on a full-time or part-time or consulting basis, **but** in addition, they create **or join** a non-profit **organization**. The third kind of people **are those** who have been very successful in **their** first jobs, and that's when they decide that they want to **enter** social entrepreneurship, doing what they have been doing all along, but **spending less time** on it.
+
+## Personal Note:
+
+### Re-Inventing the Professional Self: Reflections on Managing Oneself in the Era of AI
+
+I have often approached personal growth with the urgency of a 90-day sprint. When I previously tracked my decisions, I expected clear patterns and definitive results within three months, which led to frustration when progress was not obvious. Reading this reshaped that perspective. Realizing that **feedback analysis** is a steady 2-to-3-year discipline gave me permission to shift from chasing instant validation to committing to a longer practice of tracking my strengths, noticing where intellectual arrogance creates blind spots, and identifying where I truly excel.
+### The Evolution of a Software Career in the AI Age
+From early on, and later in college, my path toward software became clear. Even then, however, I carried a quiet belief that I would not do software forever. I always sensed the need for a second act—some future space to step back, reflect, and pivot.
+Today, that instinct feels especially relevant. As AI rapidly changes the landscape for knowledge workers, waiting until the literal "second half of life" to reinvent oneself no longer feels realistic. AI is not only changing tools; it is accelerating the need to think seriously about alternate or parallel careers much earlier than previous generations did.
+This article reinforced for me that reinvention is not a reckless gamble but a recurring pattern in professional life. People have done this before. For me, **developing a parallel career**—perhaps in the non-profit or social entrepreneurship space while continuing to work in tech—is not merely a hedge against AI automation. It is a practical way to continue growing, learning, and staying relevant.
+### Navigating Work Style: Readers vs. Listeners
+One of my most meaningful takeaways was the distinction between readers and listeners. It felt like a subtle but profound behavioral truth. Understanding whether someone processes the world best through written material or through discussion has a major impact on how that person should position themselves. It also helps explain why some environments feel natural while others feel draining, and why performance under pressure can vary so much.
+### The Missing Piece: Responsibility for Relationships
+Looking back on my career so far, the section on **responsibility for relationships** resonated deeply. I keep seeing two missing elements in professional life:
+1. **Accepting Individual Differences:** Internalizing that coworkers are individuals who will insist on being human, each with their own strengths, values, and ways of getting things done.
+2. **Taking Responsibility for Communication:** Recognizing that many so-called personality clashes are not truly about personality at all. They happen because people do not ask what others are doing, how they work, or what results they expect.
+
+For me, managing oneself means actively working to bridge that communication gap, even when others are not yet doing the same.
+### A Mature Perspective
+
+I believe I would not have appreciated this article in the same way when I was younger. It takes time in the trenches—feeling the friction of corporate life and witnessing technological change firsthand—to fully value these insights. For me, the article served as a reminder that some things simply take time, and that it is better to be patient and consistent than to chase quick wins.
+
+# Reclaim Your Job
+
+Many managers waste time and erode their productivity by grappling with an endless list of demands from others. The article questions why people so often assume those demands are fixed requirements, and how the absence of discussion allows those demands to control their jobs. As a result, many remain trapped in inefficiency. The way out is to recognize opportunities, trust one’s own judgment, and pursue personal goals methodically. To align organizational objectives, priorities, and supporting effort, people must overcome resource constraints by attacking goals strategically, demonstrating success step by step, and developing alternatives to use when Plan A fails.
+The larger promise of the article is that people can make a real difference in their organizations while also building satisfying careers by understanding how they inhibit themselves from strategic action. They can seize control of their jobs rather than letting their jobs control them. The payoff is impressive results for the company and more rewarding work lives.
+
+## Idea in Practice
+To reclaim your job and better support your company's practice, apply three strategies:
+1. **Prioritize demands** to achieve personal and organizational goals quickly. Slow down, and focus your time and attention.
+2. **Liberate resources** to ease resource constraints and secure the backing you need. Attack your goals strategically and be patient; the process can take years.
+3. **Exploit alternatives**, using your expertise to speed past and circumvent potential obstacles to the scope of opportunity for your company and yourself.
+
+## Personal Note:
+This is a very short article, but it stood out to me because of how effectively it used concrete examples to show how goals can be pursued while also building a durable career. I was especially impressed by how concise, focused, and well-directed the article was.
