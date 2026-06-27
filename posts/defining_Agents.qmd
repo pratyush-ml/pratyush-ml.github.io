@@ -150,7 +150,90 @@ The harness is the glue that makes tool calls real. Here is the full cycle:
 5. The harness feeds the result **back to the LLM** as a new message.
 6. The LLM digests the tool output and produces its final answer.
 
-The harness is your code. You write it. It is the loop of "LLM says do X → you do X → you tell the LLM what happened → LLM continues."
+## What the harness actually does
+
+The description above makes the harness sound like a simple pass-through. In practice, the harness is doing a surprising amount of work at each step:
+
+**Argument validation.** The LLM might return arguments that are malformed, missing required fields, or of the wrong type. The harness validates the tool-call request before executing anything. If the LLM calls `get_today_date(format="dd-mm-yyyy")` but your function does not accept a `format` parameter, the harness catches that and returns an error message to the LLM — not a crash.
+
+**Execution.** The harness calls the actual function. This could be a local Python function, an HTTP call to an external API, a database query, or a shell command. The harness is agnostic to what the tool does — it just needs to run it and capture the return value.
+
+**Error handling.** What happens if the function raises an exception? If the external API is down? If the database times out? The harness must catch these failures, format them as readable error messages, and feed them back to the LLM. The LLM can then decide to retry, try a different tool, or tell the user that something went wrong. Without the harness handling errors gracefully, a single API timeout would kill the entire conversation.
+
+**Serialisation.** The function might return a Python object, a pandas DataFrame, a list of dicts, or raw bytes. The harness must serialise that into a string (or a JSON string) that the LLM can read. If the result is too large — say, a database query returning 10,000 rows — the harness must truncate, summarise, or paginate it. The LLM cannot digest raw binary or arbitrarily large payloads.
+
+**Logging and observability.** In production, you want to know which tools were called, with what arguments, how long they took, and what they returned. The harness is the natural place to log all of this. This is not optional — when an agent misbehaves, the harness logs are how you debug it.
+
+**Security and permissions.** The harness is the enforcement point. If a tool can delete files or make payments, the harness is where you add confirmation prompts, rate limits, or permission checks. The LLM should never have direct access to destructive operations — the harness mediates everything.
+
+## A concrete harness implementation
+
+Here is what a minimal harness looks like in Python:
+
+```python
+import json
+
+def get_today_date():
+    from datetime import date
+    return date.today().isoformat()  # e.g., "2026-06-27"
+
+def check_bank_balance():
+    # In reality, this would call your bank's API
+    return {"balance": 54000, "currency": "INR"}
+
+# Registry: maps tool names to actual functions
+TOOLS = {
+    "get_today_date": get_today_date,
+    "check_bank_balance": check_bank_balance,
+}
+
+def run_harness(tool_call):
+    """Execute a single tool-call request from the LLM."""
+    name = tool_call["name"]
+    args = tool_call.get("arguments", {})
+
+    # 1. Validate: does this tool exist?
+    if name not in TOOLS:
+        return json.dumps({"error": f"Unknown tool: {name}"})
+
+    func = TOOLS[name]
+
+    # 2. Execute with error handling
+    try:
+        result = func(**args)
+    except TypeError as e:
+        # Argument mismatch
+        return json.dumps({"error": f"Invalid arguments: {e}"})
+    except Exception as e:
+        # Any other failure
+        return json.dumps({"error": f"Tool execution failed: {e}"})
+
+    # 3. Serialise
+    if isinstance(result, str):
+        return result
+    return json.dumps(result)
+```
+
+And here is how the harness is called in the loop:
+
+```python
+# The LLM returned a tool-call request
+tool_call = {"name": "get_today_date", "arguments": {}}
+
+# The harness executes it
+tool_result = run_harness(tool_call)  # returns "2026-06-27"
+
+# The harness result is appended to the message list
+messages.append({
+    "role": "tool",
+    "name": "get_today_date",
+    "content": tool_result
+})
+
+# The updated message list is sent back to the LLM
+```
+
+The harness is your code. You write it. It is the cycle of "LLM says do X → you validate X → you execute X → you handle errors → you serialise the result → you tell the LLM what happened → LLM continues."
 
 ---
 
@@ -168,7 +251,76 @@ An **agent** is a client-side loop that places the LLM inside an autonomous cycl
 
 In the simplest terms: **an agent is a harness wrapped in a loop.** The harness handles a single tool-call cycle; the agent orchestrates *many* such cycles, driving toward a goal the user stated once.
 
-The most minimal agent you can think of might have just a handful of tools — read a file, search code, run a command — and loop until the task is done. Systems like OpenAI's Codex agent, Devin, and Claude Code are elaborate instances of this same pattern, but the skeleton is always the same: **LLM + tools + harness + loop = agent.**
+## The anatomy of an agent loop
+
+A minimal agent loop in pseudocode:
+
+```python
+def run_agent(user_goal, tools, system_prompt):
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user",   "content": user_goal}
+    ]
+
+    while True:
+        # 1. Call the LLM with the current message list + tool definitions
+        response = llm.chat(messages, tools=tools)
+
+        # 2. Did the LLM return a tool call, or a final answer?
+        if response.has_tool_call():
+            # 3. Harness executes the tool
+            result = run_harness(response.tool_call)
+            # 4. Feed the result back to the LLM
+            messages.append({
+                "role": "tool",
+                "content": result
+            })
+            # Loop continues — LLM will be called again
+        else:
+            # 5. LLM produced a final answer — we are done
+            return response.content
+```
+
+That is the entire skeleton. Every agent framework — LangChain, CrewAI, OpenAI Assistants, Claude Code — is a variation on this `while True` loop with different amounts of scaffolding around it.
+
+## What separates a toy agent from a production agent
+
+The loop above is deceptively simple. In practice, production agents add several layers on top:
+
+**Planning.** Instead of blindly calling tools one at a time, a good agent first generates a plan. It breaks the user's goal into sub-tasks and works through them deliberately. This is not magic — the "plan" is just the LLM producing a structured list of steps in its response, which the agent then follows.
+
+**State tracking (to-do lists).** As the agent works through a multi-step task, it needs to track what it has done and what remains. A common pattern: the LLM generates a to-do list at the start, updates it after each step (marking items complete, adding new ones as it discovers them), and uses it to decide what to do next. This is exactly how Claude Code operates — you can watch it generate and update a checklist as it works.
+
+**Termination conditions.** The `while True` loop needs an exit condition. Options include: the LLM explicitly says "I am done" (returns a response with no tool call), a maximum number of iterations is reached (to prevent infinite loops), or a token/time budget is exhausted. Getting this right is critical — an agent that never terminates is a bug, not a feature.
+
+**Human-in-the-loop checkpoints.** For high-stakes actions (deploying code, making a payment, deleting files), the agent should pause and ask the user for confirmation before the harness executes the tool. Claude Code does this in its plan mode — it presents what it intends to do, asks for approval, and only then proceeds to execute.
+
+**Error recovery.** When a tool call fails (API timeout, permission denied, invalid input), a production agent does not just crash. The LLM reads the error message, reasons about what went wrong, and tries an alternative approach — a different tool, different arguments, or asking the user for help.
+
+## How Claude Code does it: a real-world agent in action
+
+Claude Code is one of the most transparent examples of an agent loop in production. When you give it a task like "refactor the authentication module and add tests," here is what happens:
+
+1. **Plan mode.** Claude Code first enters a planning phase. It reads the relevant files (using its `read_file` tool), understands the codebase, and generates a plan: "I will create a new `AuthManager` class, update the three files that depend on the old module, and write unit tests." It presents this plan to the user and asks for confirmation before doing anything.
+
+2. **To-do generation.** Once approved, it creates a structured to-do list — not in its head, but as an explicit artefact you can see in the terminal:
+   - [ ] Create `AuthManager` class in `auth/manager.py`
+   - [ ] Update `routes/login.py` to use new class
+   - [ ] Update `routes/signup.py` to use new class
+   - [ ] Update `middleware/auth.py`
+   - [ ] Write unit tests in `tests/test_auth.py`
+
+3. **Execution loop.** It works through the to-do list one item at a time. For each item, it may call multiple tools: `read_file` to understand a dependency, `write_file` to create the new class, `run_tests` to verify the change, `grep` to find all references to the old module. Each tool call goes through the harness — Claude Code executes the function, captures the output, and feeds it back to the LLM.
+
+4. **To-do updates.** After completing each item, it marks it done (✓) and sometimes adds new items it discovered along the way (e.g., "fix broken import in `utils.py` that I noticed while editing `routes/login.py`").
+
+5. **Verification.** Before declaring the task complete, it runs the test suite one more time and summarises what it did. If tests fail, it loops back — reads the error, edits the code, re-runs tests — until everything passes or it asks the user for help.
+
+This entire sequence is the agent loop: *plan → generate to-do → execute step → observe result → update to-do → execute next step → ... → verify → done.* Every single action — reading a file, writing code, running tests — is a harness cycle. Claude Code is just a very well-engineered `while` loop around that harness, with planning and state tracking layered on top.
+
+## The takeaway
+
+The most minimal agent you can think of might have just a handful of tools — read a file, search code, run a command — and loop until the task is done. Systems like OpenAI's Codex agent, Devin, and Claude Code are elaborate instances of this same pattern, but the skeleton is always the same: **LLM + tools + harness + loop = agent.** What separates a toy from production is not a different architecture — it is the quality of planning, state tracking, error recovery, and human-in-the-loop checkpoints layered on top of that same loop.
 
 ---
 
@@ -178,9 +330,9 @@ To make everything concrete, let us trace a single scenario end to end. We will 
 
 ## The scenario
 
-You want a personal assistant that can answer: *"How many days until my next mortgage payment is due?"*
+You have a monthly SIP (Systematic Investment Plan) of ₹15,000 that gets auto-debited on the 5th of every month. You want your assistant to answer: *"How many days until my next SIP payment is due?"*
 
-Your mortgage payment is due on the 5th of every month. That is a static fact. But the current date is dynamic — the LLM does not know it. So we will need a tool.
+The SIP due date (5th of every month) and the amount (₹15,000) are static facts. But the current date is dynamic — the LLM does not know it. So we will need a tool.
 
 Let us walk through this in stages, labelling the component that is active at each step.
 
@@ -192,12 +344,12 @@ Before any user message, you set the system message. This defines the persona an
 [
   {
     "role": "system",
-    "content": "You are a personal finance assistant. You help the user track bills and payments. If you need dynamic information (like today's date), use the get_today_date tool. The user's mortgage payment is due on the 5th of every month."
+    "content": "You are a personal finance assistant for Indian users. You help track SIPs, EMIs, and bill payments. If you need dynamic information (like today's date), use the get_today_date tool. If you need to check the user's bank balance, use the check_bank_balance tool. The user has a monthly SIP of ₹15,000 auto-debited on the 5th of every month."
   }
 ]
 ```
 
-> **Component active: System prompt.** The static fact (mortgage due on the 5th) is baked in here. The model provider's own system prompt sits *above* this and is not shown — it governs baseline safety and behaviour.
+> **Component active: System prompt.** The static facts (SIP amount, due date) are baked in here. The model provider's own system prompt sits *above* this and is not shown — it governs baseline safety and behaviour.
 
 ## Stage 2 — The user asks a question (Turn 1)
 
@@ -205,8 +357,8 @@ The user sends their message. The client appends it to the message list:
 
 ```json
 [
-  {"role": "system",    "content": "You are a personal finance assistant. ..."},
-  {"role": "user",      "content": "How many days until my next mortgage payment is due?"}
+  {"role": "system",    "content": "You are a personal finance assistant for Indian users. ..."},
+  {"role": "user",      "content": "How many days until my next SIP payment is due?"}
 ]
 ```
 
@@ -216,7 +368,7 @@ This entire list is sent to the LLM API over HTTP.
 
 ## Stage 3 — The LLM recognises it needs a tool
 
-The LLM reads the system prompt, sees the user's mortgage is due on the 5th, and realises it needs today's date to compute the difference. It does **not** guess or hallucinate a date. Instead, it returns a tool-call request:
+The LLM reads the system prompt, sees the SIP is due on the 5th, and realises it needs today's date to compute the difference. It does **not** guess or hallucinate a date. Instead, it returns a tool-call request:
 
 ```json
 [
@@ -236,7 +388,7 @@ The LLM reads the system prompt, sees the user's mortgage is due on the 5th, and
 
 ## Stage 4 — The harness executes the tool
 
-The client-side code — the **harness** — intercepts the tool-call request. It runs the actual Python function:
+The client-side code — the **harness** — intercepts the tool-call request. It validates the arguments (empty, which is fine since `get_today_date` takes none), runs the actual Python function, and captures the result:
 
 ```python
 def get_today_date():
@@ -244,44 +396,44 @@ def get_today_date():
     return date.today().isoformat()  # e.g., "2026-06-27"
 ```
 
-The harness gets the result (`"2026-06-27"`) and appends it to the message list as a new message with the role `tool`:
+The harness gets the result (`"2026-06-27"`), serialises it into a string, and appends it to the message list as a new message with the role `tool`:
 
 ```json
 [
-  {"role": "system",    "content": "You are a personal finance assistant. ..."},
-  {"role": "user",      "content": "How many days until my next mortgage payment is due?"},
+  {"role": "system",    "content": "You are a personal finance assistant for Indian users. ..."},
+  {"role": "user",      "content": "How many days until my next SIP payment is due?"},
   {"role": "assistant", "content": null, "tool_calls": [{"name": "get_today_date", "arguments": {}}]},
   {"role": "tool",      "name": "get_today_date", "content": "2026-06-27"}
 ]
 ```
 
-> **Component active: Harness.** This is your code. You wrote the function, you executed it, and you captured the output. The LLM had no part in this execution. The harness then sends this updated message list back to the LLM for the next step.
+> **Component active: Harness.** This is your code. You validated the arguments, you executed the function, you serialised the output, and you captured any errors. The LLM had no part in this execution. The harness then sends this updated message list back to the LLM for the next step.
 
 ## Stage 5 — The LLM produces the final answer (Turn 1 completes)
 
-The LLM now sees the full picture: the mortgage is due on the 5th, today is the 27th of June, so the next payment is July 5th. It computes the difference and responds:
+The LLM now sees the full picture: the SIP is due on the 5th, today is the 27th of June, so the next payment is July 5th. It computes the difference and responds:
 
 ```json
 [
-  {"role": "system",    "content": "You are a personal finance assistant. ..."},
-  {"role": "user",      "content": "How many days until my next mortgage payment is due?"},
+  {"role": "system",    "content": "You are a personal finance assistant for Indian users. ..."},
+  {"role": "user",      "content": "How many days until my next SIP payment is due?"},
   {"role": "assistant", "content": null, "tool_calls": [{"name": "get_today_date", "arguments": {}}]},
   {"role": "tool",      "name": "get_today_date", "content": "2026-06-27"},
-  {"role": "assistant", "content": "Your next mortgage payment is due on July 5th. That is 8 days from today."}
+  {"role": "assistant", "content": "Your next SIP payment of ₹15,000 is due on July 5th. That is 8 days from today."}
 ]
 ```
 
-> **Component active: Multi-turn context.** Notice how the entire history — system prompt, user question, tool-call request, tool result, and final answer — is now one growing list. If the user asks a follow-up ("Remind me again next week"), this entire list is resent. The server still remembers nothing on its own.
+> **Component active: Multi-turn context.** Notice how the entire history — system prompt, user question, tool-call request, tool result, and final answer — is now one growing list. If the user asks a follow-up ("Can I reschedule it?"), this entire list is resent. The server still remembers nothing on its own.
 
 ## Stage 6 — What if the user follows up? (Turn 2 and client-side control)
 
-The user asks: *"Can you also check how much I owe on my credit card?"*
+The user asks: *"Can you also check whether I have enough balance for the SIP this month?"*
 
 You, the client, decide what to include in the next request. You could:
 
-- **Send everything** — the full list above plus the new user message. The LLM sees the entire conversation.
-- **Fork** — branch off from Stage 2 with a different question, ignoring the mortgage conversation entirely.
-- **Prune** — drop the tool-call messages and only keep the system prompt + final assistant answer + new user message. The LLM would not know a tool was ever called.
+- **Send everything** — the full list above plus the new user message. The LLM sees the entire conversation and knows the SIP is ₹15,000 due on July 5th.
+- **Fork** — branch off from Stage 2 with a different question, ignoring the SIP conversation entirely.
+- **Prune** — drop the tool-call messages and only keep the system prompt + final assistant answer + new user message. The LLM would still know the answer (₹15,000 on July 5th) but would not know a tool was ever called.
 
 > **Component active: Client-side control.** The server never decides what context to keep. You do. You could even start a completely separate conversation with a different system prompt — the LLM has no idea these two conversations are related.
 
@@ -289,12 +441,12 @@ You, the client, decide what to include in the next request. You could:
 
 In the example above, there was one tool call, one harness execution, and one final answer. That is a **harness cycle** — a single loop iteration.
 
-An **agent** is what happens when you wrap this in an autonomous loop. Imagine the user says: *"Check if my mortgage payment is due this week, and if so, check my bank balance and tell me if I can cover it."*
+An **agent** is what happens when you wrap this in an autonomous loop. Imagine the user says: *"Check if my SIP payment is due this week, and if so, check my bank balance and tell me if I have enough to cover it."*
 
 Now the LLM must:
-1. Call `get_today_date` → harness executes → returns June 27th.
-2. Reason: the 5th is next week → call `check_bank_balance` → harness executes → returns $3,200.
-3. Reason: mortgage is $2,500, balance is $3,200 → produce final answer.
+1. Call `get_today_date` → harness validates, executes, returns June 27th.
+2. Reason: the 5th is next week, SIP is ₹15,000 → call `check_bank_balance` → harness validates, executes, returns ₹54,000.
+3. Reason: ₹15,000 ≤ ₹54,000 → produce final answer: "Your SIP of ₹15,000 is due on July 5th (8 days away) and your balance is ₹54,000. You have sufficient funds."
 
 Each step is a harness cycle. The **agent** is the outer loop that keeps cycling — *LLM reasons → selects tool → harness executes → feed result back → LLM reasons again* — until the user's goal is fully met.
 
