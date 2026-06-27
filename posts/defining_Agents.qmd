@@ -1,89 +1,179 @@
 ---
-title: "Understanding Agents and all jargons around it from first princples"
+title: "Understanding Agents and all the jargon around them from first principles"
 author: "Pratyush Sinha"
 date: "2026-06-14"
 categories: [AI, First Principles]
 draft: True
 ---
 
-# TOC
+# Introduction
 
-So today I want to write about how agents work, and I got this idea directly from one of the blog posts that I was reading from Tidy Tidy Writer. I am not sure who that person is, but the idea behind this is pretty straightforward. I'd like to cover everything that I need to know to build an agent, and to keep the scope limited, I am not going to touch upon how an inference happens, because that's something that we can cover later on. All in clarity, let's start with the discussion. 
+This post is about how agents work. The idea came from a blog post I was reading from *Tidy Writer* — the motivation is straightforward: cover everything you need to know to build an agent, from first principles. To keep the scope manageable, I will not touch upon how inference itself happens. That is a topic for another day.
 
-The first thing that we need to understand before we get started on agents is that agents rely on LLMs, right? We need to understand the evolution of LLMs, from a Q&A bot to how they got these agentic capabilities, and then we will briefly touch upon all the other factors that could be needed.
-Okay, I'll divide this post into a few sections:
-1. LLMs as a Q&A
-2. LLMs interacting with your system
-3. LLMs interacting with an external system that is not your current system
-4. LLMs with tool calls
-5. LLMs with caching and how to make the most out of the LLMs
-I would talk about the LLMs Q&A bot a lot in this post, and then we'll cover the remaining topics later down the line.
+Before we can talk about agents, we need to understand what they are built on top of: LLMs. So we will trace the evolution of LLMs — from a simple Q&A bot all the way to systems with agentic capabilities — and layer in the other concepts (tools, harnesses, caching) along the way.
 
-# QnA Bots
-All right, let's start with LLMs as a Q&A bot. If you think about LLMs when they first came in the first GPT 3.5, which was really mind-blowing, you would get a question and you would get an answer. Now, how would this interaction happen on a terminal, on a client-server interaction, where this communication happens by an HTTP protocol?
+Here is the roadmap:
 
-What are the first principles that govern the HTTP relationship between a client and the server? The first thing that we need to understand is that the client-server interaction with a client is stateless, so any follow-up interactions that you're having on top of this are something that's contained by the client. Okay, with that statement, I think I am making myself clear on where I'm heading, and I hope it may become abundantly clear what the idea behind the API is. 
+1. **LLMs as a Q&A bot** — the stateless HTTP foundation
+2. **Multi-turn conversations** — how context is maintained
+3. **System prompts** — who sets the model's behaviour
+4. **Client-side control** — forking, structured output, and why *you* are in charge
+5. **Caching** — why it is expensive
+6. **Tool calls** — giving the LLM access to functions
+7. **The harness** — who actually executes those tools
+8. **What is an agent?** — tying it all together
 
-The first thing we could think of is that, because every subsequent message needs to, because these are stateless interactions, one question can only be answered once. Once that interaction transaction happens, the server does not know anything about your Q&A answers. The next time you send a question and an answer, the message starts from scratch. The server starts from scratch, and it takes your client interactions as a new interaction. It does not remember anything about your client state. Remember, I am talking about old interactions. A lot of these modern systems now have a lot of session and state management principles, but we are not concerned about that right now. We are only concerned about what are LLMs' capabilities that made us interact with them, okay, great.
+The Q&A bot is the foundation everything else builds on, so we will spend the most time there.
 
-The next step of this evolution is that, when we send multiple messages, that's a turn. One user interaction followed by a 1:1 user response is one set of turns. That's the standard jargon around it. The second jargon that you should be aware of is what happens. How do you interact after that interaction? How do you interact after that happens? You do that by you, the client, passing more information after you have shared your initial list, and that's how JSON will come into the picture, because you send out a string of text. You get a response, which is in a JSON format. In the next interaction, for the server, you send out both the user's previous message and the previous system response, which is now called an assistant response, and then the new user message. Essentially, you are asking the server to continue this conversation after you have had the previous conversations. That is how the server right now knows your LLMQA bot. 
+---
 
-We now move to one part of the interaction that we are dealing with. The other thing is that we have now done subsequent QnA bots. Now think about other things that these LLM providers provide right now. They provide you caching. That is a very expensive way, but even if you stop at this point, you can answer a lot of these questions that you have just by being here.
-1. You can always fork your sessions. At any point in your time in that conversation chain, if you have had multiple interactions, you would want to move out of that loop.
-2. What is the structured output here? You ask the LLM to generate the output in a structured output, but we can cover more of that later. You can ask the output in a particular format. That's also a system that you just ask the LLM to generate, right? Does that break the JSON formatting? No. You get a JSON output in the end. In the next interaction, you again pass out a JSON interaction. This you don't get rid of the JSON and Q interaction. You just get more cleaned UI on top of JSON. That's all that you need to remember, because these interactions are happening on QnA, they are stored somewhere in the form of a JSONL. I think you are already aware of this. We have already discussed that before.
-3. Okay, now think about caching, right? Why is caching expensive? Because you are asking the server to remember a particular set of messages for a longer duration of time, right? Why is that expensive? Okay, I don't have a clear understanding of why that would be an expensive process. My guess is that, because these servers run in a distributed fashion, maintaining a state from the server is an expensive process, and maintaining a state for a GPU-enabled machine is an expensive process. This is my educated guess on why caching is expensive for these models.
-4. The third thing that you need to remember is that you can maintain this context out of the loop, right? Let's say if you have A, B, you're doing a multi-turn conversation. You start with A, you observe answer B, and you observe that, after observation B, you see C. Right now, you can maintain these two separate sets of conversations. You can maintain that fork. That's also something that you need to understand. You can go to the previous conversation at some point in the previous conversation, because now this is a multi-turn conversation, so you have a logical sequence of how this messaging was consumed. The model remembers how step A, step B was executed, so this gives us a clear picture of what is true and what is not true.
-5. Okay, I think I'm clear at this point on how HTTP being an API is being available by an HTTP route governs a lot of these very complex, seemingly complex concepts in an easy fashion.
-6. To recap, what have we actually understood?
-- We've understood why and how a Q&A session works.
-- We've understood why we need to send out the whole message over and over again.
-- We've understood that web caching is an expensive exercise.
-A follow-up to this is that we can not do forking just if you just understand the prompt. You can do forking. You can have multiple conversations in parallel and then choose which of these conversations you have is a better conversation to have with the LLM. You can also think about this: you can also ask the LLM. Let's say if you have had a five-step conversation, you can ask the user. You can jump a few of these conversations if you feel that these conversations are very short and very stateful. What you send to the LLM at a given point is entirely controlled by you. It cannot be controlled by it. It is controlled by the client, so you have full control on what you pass to the LLM, both the assistant as well as the system message.
-7. Now we'll jump on to a few more verbatim-related concepts.
-- The first thing that I want you to remember is that there is a system prompt which is set by these models, so Claude has its own system prompt that defines how it would operate. You would see more guidance in Amanda's GitHub post.
+# LLMs as a Q&A Bot
 
-So that's one.
+When the first GPT 3.5 came out, the interaction was beautifully simple: you ask a question, you get an answer. But to understand *why* agents are interesting, we need to understand the mechanics of that interaction at the protocol level — specifically, how it works over HTTP.
 
-# What is a harness?
+## The HTTP foundation: statelessness
 
-The second one is you can also define how you want the model to be, and that's the system that you set up. Think of that as, in a democratic society or in any society, you think of the top head as the government. The model owner, in a way, defines that model. This does not happen in an open source model, but it does happen in a closed source model. In an open source model, you do not have that control of defining, because you are kind of providing the models in the open. That's kind of the whole point, but you have a system prompt on that system prompt sits a system message, which defines the persona of the message or the type of interaction that your panel has. That's one, and then you start your multi-turn conversation with a user conversation, followed by a system conversation, and then a user conversation, and then an answer conversation. I hope in this process I have made myself abundantly clear why we need to have this Q&A session, alright. 
+The first principle to grasp is that **HTTP is stateless**. Every request from the client to the server is a fresh, self-contained transaction. Once the server responds, it forgets everything about you.
 
+This has a profound implication for LLM APIs: **one question can only be answered in the context of a single request.** The moment that transaction completes, the server retains no memory of your prior Q&A. The next time you send a message, the server starts from scratch.
 
-Let's take one step more. Now that we understand how the model works, we need to understand a critical point which actually gave the model wings and hybrid convert from QNA part to somewhere pointing to a, and that one is a function that is called to use.
-You remember we were having that discussion about QNA. There is a system in place: you have your questions, you get your answers. Okay, great. Now the next step in this logical sequence is you can make, rather than the element thinking about XYZ when you're talking about something detailed and very specific, you know that there is a set of tools that you would need in this process. You would assist your LLM by providing these tools as part of your response, as that step of providing the elements with the tools, and then the LLM choosing the correct tool is called a tool call.
-Now, these younger models are more sophisticated, and they may not need your tool calls exactly, but I think tool calls are here to stay, regardless. That's one of the four points that had convert this human decision to agentic versus.
-Okay, now let's head back to the transition of HTTP architecture. You're giving what is inside this. Think of a tool call as a function. It is as it does that it could give you the current date. You can define it, but it could be as simple as:
-- Remind me on my anniversary.
-- Remind me if today is my anniversary.
-For this to have check, it needs two things:
-1. It needs to know when you, which is a static answer. You don't need to define a tool call.
-2. The second thing is what is today, as we discussed in the tested list, and there's no tool call to define what the current date is for these elements.
-The moment you hit that, the element needs to find what is today's date. Now, once it does, you need to define a function that defines the two days for this. You would define a function in Python which would say that today's date in XYZ format is this. You pass this to the LLM, which processes it and matches your current date, which I will see, and finally it ends up comparing this and then you have a final answer. That was the sole purpose of tool calls.
+> Modern LLM platforms now have session and state management layers on top, but we are not concerned with those here. We care about the *core capability* of the LLM API itself, and that core is stateless.
 
-This may not seem like a huge deal, like, "What's the huge deal?" No, there is a very clear idea which is hiding in plain sight. Tools are just functions written by you to execute, but they did not give them the power to execute those functions. LLMs, right now after that Q&A evolution, have just reached the point of, "Hey, you need to use this XYZ tool right now." The moment you hit this XYZ tool, how do you execute that tool? That entire process of execution is called an "hardness." That's something that you need to understand in this process. That is what an agentic hardness looks like, okay, I think. 
+This single fact — statelessness — is the thread that explains almost every "advanced" concept that follows.
 
+---
 
-We finally understand what a harness is and give more examples of what a harness is. Think of a harness like the LLM selects the tool called "how you executed", which is what the harness is about. The harness is supposed to return the results of the tool call selected by the LLM back to the LLM so that the LLM can have a composite response.
-Let me break it down again:
-1. You ask a question.
-2. You get a response.
-3. You ask another follow-up question.
-4. You get a set of tools from which you need to select the LLM.
-5. The LLM selects the tool, passes it on to the harness.
-6. The harness executes it and returns it back to the LLM.
-7. The LLM digests that entire information in
+# Multi-Turn Conversations
 
-# What are Agents
+If the server forgets everything after each response, how do you have a *conversation*?
 
-I feel that we have talked enough about what hooks are and what tools are, with sufficient demonstration. I would like now to move to what an agent is. I like to define an agent as a client-side loop. An agent is a client-side state machine where the LLM is placed inside an autonomous loop. Instead of answering a question and answering in a single term or in a multi-term, the system evaluates the user's goals and determines the sequence of actions. It evaluates the outcomes of these actions via the harness and loops until the objective is met.
+The answer: **the client is responsible for maintaining context.** You, the client, send the entire conversation history with every new request.
 
-In very, very simple terms, an agent by itself is a loop. It does a lot of things, which tool calls. One of those tool calls is I would not like to go into the codex journey, because the codex journey is huge by itself. Instead, what I would like to focus more on is how the loop works? If you define one class of loop, which is with the harness, you call an LLM. It gets a tool response, and then it closes when it's finally able to churn that to the right. Right now, an agent is a superset of that harness, multiple harnesses, so it's not going to work with just one harness by itself. It's going to work with multiple harnesses, and in the end, whatever user asks as a question, the answer gets returned.
+Here is how it works, step by step:
 
-The most minimal agent that you can think of right now that is in the market is PyAgent, which has just four tools or four calls, right? It has read, grab, XYZ, and 
+1. **Turn 1:** You send your first message. The server responds. Transaction over — the server forgets.
+2. **Turn 2:** You want to ask a follow-up. So you send *both* the previous user message *and* the previous server response (now called the **assistant message**), followed by your new user message. The server reads the full history and continues the conversation.
 
+This back-and-forth — one user message paired with one assistant response — is called a **turn**. A conversation is a sequence of turns, and the entire sequence is resent with every request.
 
-# Tool Implications
+All of this is transmitted as **JSON**. The messages array in the request body contains the ordered list of `{role, content}` pairs. That is the entire mechanism: a growing JSON list of messages, resent each time, because the server has no memory of its own.
 
-So I'd like to pause here and think of the next steps, and before diving deeper into this conversation, I think right now our entire conversation is mature enough to look at possible side tracks. A lot of this popular jargon that we see right now can be just solved with whatever we have learnt in the four-step journey, okay. 
+---
 
+# System Prompts
 
+Before a single user message is sent, there is one more role to understand: the **system prompt**.
+
+There are two layers here:
+
+1. **The model provider's system prompt.** Closed-source models like Claude ship with their own internal system prompt that defines baseline behaviour, safety guidelines, and operating principles. (You can find examples of these on Anthropic's GitHub.) Open-source models, by contrast, give you full control — there is no hidden provider prompt.
+
+2. **Your system message.** On top of the provider's prompt, *you* define a system message that sets the persona, tone, and constraints for your specific use case. Think of the provider's prompt as the constitution and your system message as the local bylaws.
+
+So a complete message list looks like:
+
+```
+[system]    You are a concise assistant that speaks in bullet points.
+[user]      What is the capital of France?
+[assistant] Paris.
+[user]      And its population?
+[assistant] ...
+```
+
+The system message is sent once, at the top of the list, and it persists across every turn because — as we established — the entire list is resent each time.
+
+---
+
+# Client-Side Control: You Are in Charge
+
+Here is a consequence of statelessness that is easy to miss: **because the client controls the message list, the client controls everything.**
+
+The server never decides what context to keep or discard — *you* do. This unlocks several powerful patterns:
+
+## Forking
+
+At any point in a multi-turn conversation, you can **fork**: take the current message list, branch off, and start a parallel conversation from that point. You can run multiple branches simultaneously and pick the one that produced the best results. You can even jump back to an earlier turn and continue from there, ignoring later messages.
+
+The LLM has no say in this. It simply processes whatever list you hand it.
+
+## Structured output
+
+You can ask the LLM to return its answer in a specific format — say, a JSON object with particular fields. This does *not* change the underlying mechanism. The response is still JSON, still part of the same message list, still resent on the next turn. Structured output is just a cleaner contract on top of the existing JSON interaction.
+
+## The takeaway
+
+What you send to the LLM at any given point — the system message, the assistant messages, the user messages, which turns to include or skip — is entirely controlled by the client. This is not a limitation; it is a superpower.
+
+---
+
+# Caching
+
+LLM providers offer **caching**: the ability to store a particular set of messages on the server side so you do not have to resend (and re-pay for) the full context every time.
+
+Why is caching expensive? My educated guess: these inference servers run in a distributed fashion across GPU machines. Maintaining state across a distributed fleet of GPU nodes — keeping KV caches resident in memory, routing subsequent requests to the same node, managing eviction — is computationally and financially costly. You are essentially paying the server to *remember* something it was architected to forget.
+
+For most use cases, you can get by without caching. It becomes important at scale, when you are re-sending large context windows on every turn.
+
+---
+
+# Tool Calls
+
+Everything so far has been pure Q&A: the LLM generates text, you consume it. The next evolutionary step is **tool calls**.
+
+Consider a simple question: *"Is today my anniversary?"*
+
+To answer this, the LLM needs two pieces of information:
+
+1. **Your anniversary date** — a static fact. You can include this in the system prompt or user message. No tool needed.
+2. **Today's date** — dynamic information the LLM does not have. The model has no built-in clock.
+
+This is where tool calls come in. You **define a function** — say, `get_today_date()` in Python — and describe it to the LLM. When the LLM recognises it needs the current date, it **selects that tool** and signals that it wants it called. This act — the LLM choosing from a set of available tools — is called a **tool call**.
+
+The critical thing to understand: **the LLM does not execute the tool.** It merely says, "I want to use tool X with these arguments." The actual execution is someone else's job.
+
+Newer models are increasingly capable of reasoning without explicit tool definitions, but tool calls are here to stay — they are the bridge between the LLM's text world and the real world of computation.
+
+---
+
+# The Harness
+
+So the LLM says, "Call tool X." Who actually runs it?
+
+**You do.** The execution layer that sits between the LLM's tool-call request and the actual function invocation is called the **harness**.
+
+The harness is the glue that makes tool calls real. Here is the full cycle:
+
+1. The user asks a question.
+2. The LLM receives the message (along with the list of available tools).
+3. The LLM decides it needs a tool and returns a **tool-call request** (tool name + arguments).
+4. The **harness** intercepts that request, executes the actual function, and collects the result.
+5. The harness feeds the result **back to the LLM** as a new message.
+6. The LLM digests the tool output and produces its final answer.
+
+The harness is your code. You write it. It is the loop of "LLM says do X → you do X → you tell the LLM what happened → LLM continues."
+
+---
+
+# What Is an Agent?
+
+Now we can define an agent clearly.
+
+An **agent** is a client-side loop that places the LLM inside an autonomous cycle. Instead of a single question-and-answer, the agent:
+
+1. Evaluates the user's goal.
+2. Determines a sequence of actions (which tools to call, in what order).
+3. Calls the harness to execute each action.
+4. Observes the results.
+5. **Loops** until the objective is met.
+
+In the simplest terms: **an agent is a harness wrapped in a loop.** The harness handles a single tool-call cycle; the agent orchestrates *many* such cycles, driving toward a goal the user stated once.
+
+The most minimal agent you can think of might have just a handful of tools — read a file, search code, run a command — and loop until the task is done. Codex and similar systems are elaborate instances of this same pattern, but the skeleton is always the same: **LLM + tools + harness + loop = agent.**
+
+---
+
+# Tool Implications: Where We Go From Here
+
+With this foundation in place — statelessness, multi-turn context, system prompts, client-side control, tool calls, harnesses, and the agent loop — a lot of the popular jargon in the AI space becomes much easier to parse. Many "advanced" concepts are just combinations of the primitives we have covered here.
+
+In the next posts, we will dive deeper into specific agent architectures and real-world implementations.
