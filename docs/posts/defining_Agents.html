@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pratyush Sinha">
+<meta name="dcterms.date" content="2026-06-14">
+
+<title>Understanding Agents and all the jargon around them from first principles – Pratyush Sinha</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-0d4a9d19931feb4fee1ddab4b2489000.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Pratyush Sinha</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/ayushiyerji"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pratyush20p/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Understanding Agents and all the jargon around them from first principles</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">First Principles</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Pratyush Sinha </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 14, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This post is about how agents work. The idea came from a blog post I was reading from <a href="https://tidydesign.substack.com/p/what-is-an-agent">Tidy Design Principles</a> — the motivation is straightforward: cover everything you need to know to build an agent, from first principles. To keep the scope manageable, I will not touch upon how inference itself happens. That is a topic for another day.</p>
+<p>Before we can talk about agents, we need to understand what they are built on top of: LLMs. So we will trace the evolution of LLMs — from a simple Q&amp;A bot all the way to systems with agentic capabilities — and layer in the other concepts (tools, harnesses, caching) along the way.</p>
+<p>Here is the roadmap:</p>
+<ol type="1">
+<li><strong>LLMs as a Q&amp;A bot</strong> — the stateless HTTP foundation</li>
+<li><strong>Multi-turn conversations</strong> — how context is maintained</li>
+<li><strong>System prompts</strong> — who sets the model’s behaviour</li>
+<li><strong>Client-side control</strong> — forking, structured output, and why <em>you</em> are in charge</li>
+<li><strong>Caching</strong> — why it is expensive</li>
+<li><strong>Tool calls</strong> — giving the LLM access to functions</li>
+<li><strong>The harness</strong> — who actually executes those tools</li>
+<li><strong>What is an agent?</strong> — tying it all together</li>
+</ol>
+<p>The Q&amp;A bot is the foundation everything else builds on, so we will spend the most time there.</p>
+<hr>
+</section>
+<section id="llms-as-a-qa-bot" class="level1">
+<h1>LLMs as a Q&amp;A Bot</h1>
+<p>When the first GPT 3.5 came out, the interaction was beautifully simple: you ask a question, you get an answer. But to understand <em>why</em> agents are interesting, we need to understand the mechanics of that interaction at the protocol level — specifically, how it works over HTTP.</p>
+<section id="the-http-foundation-statelessness" class="level2">
+<h2 class="anchored" data-anchor-id="the-http-foundation-statelessness">The HTTP foundation: statelessness</h2>
+<p>The first principle to grasp is that <strong>HTTP is stateless</strong>. Every request from the client to the server is a fresh, self-contained transaction. Once the server responds, it forgets everything about you.</p>
+<p>This has a profound implication for LLM APIs: <strong>one question can only be answered in the context of a single request.</strong> The moment that transaction completes, the server retains no memory of your prior Q&amp;A. The next time you send a message, the server starts from scratch.</p>
+<blockquote class="blockquote">
+<p>Modern LLM platforms now have session and state management layers on top, but we are not concerned with those here. We care about the <em>core capability</em> of the LLM API itself, and that core is stateless.</p>
+</blockquote>
+<p>This single fact — statelessness — is the thread that explains almost every “advanced” concept that follows.</p>
+<p>This is a trimmed version of how the API works. There is a lot that goes on and is beyond the scope of the blog.</p>
+<hr>
+</section>
+</section>
+<section id="multi-turn-conversations" class="level1">
+<h1>Multi-Turn Conversations</h1>
+<p>If the server forgets everything after each response, how do you have a <em>conversation</em>?</p>
+<p>The answer: <strong>the client is responsible for maintaining context.</strong> You, the client, send the entire conversation history with every new request.</p>
+<p>Here is how it works, step by step:</p>
+<ol type="1">
+<li><strong>Turn 1:</strong> You send your first message. The server responds. Transaction over — the server forgets.</li>
+<li><strong>Turn 2:</strong> You want to ask a follow-up. So you send <em>both</em> the previous user message <em>and</em> the previous server response (now called the <strong>assistant message</strong>), followed by your new user message. The server reads the full history and continues the conversation.</li>
+</ol>
+<p>This back-and-forth — one user message paired with one assistant response — is called a <strong>turn</strong>. A conversation is a sequence of turns, and the entire sequence is resent with every request.</p>
+<p>All of this is transmitted as <strong>JSON</strong>. The messages array in the request body contains the ordered list of <code>{role, content}</code> pairs. That is the entire mechanism: a growing JSON list of messages, resent each time, because the server has no memory of its own.</p>
+<hr>
+</section>
+<section id="system-prompts" class="level1">
+<h1>System Prompts</h1>
+<p>Before a single user message is sent, there is one more role to understand: the <strong>system prompt</strong>.</p>
+<p>There are two layers here:</p>
+<ol type="1">
+<li><p><strong>The model provider’s system prompt.</strong> Closed-source models like Claude ship with their own internal system prompt that defines baseline behaviour, safety guidelines, and operating principles. (You can find examples of these on Anthropic’s GitHub.) Open-source models, by contrast, give you full control — there is no hidden provider prompt.</p></li>
+<li><p><strong>Your system message.</strong> On top of the provider’s prompt, <em>you</em> define a system message that sets the persona, tone, and constraints for your specific use case. Think of the provider’s prompt as the constitution and your system message as the local bylaws.</p></li>
+</ol>
+<p>So a complete message list looks like:</p>
+<pre><code>[system]    You are a concise assistant that speaks in bullet points.
+[user]      What is the capital of France?
+[assistant] Paris.
+[user]      And its population?
+[assistant] ...</code></pre>
+<p>The system message sits at the top of the list. Because the entire list is resent on every turn, the system message is effectively persistent — not because the server remembers it, but because you include it every time.</p>
+<hr>
+</section>
+<section id="client-side-control-you-are-in-charge" class="level1">
+<h1>Client-Side Control: You Are in Charge</h1>
+<p>Here is a consequence of statelessness that is easy to miss: <strong>because the client controls the message list, the client controls everything.</strong></p>
+<p>The server never decides what context to keep or discard — <em>you</em> do. This unlocks several powerful patterns:</p>
+<section id="forking" class="level2">
+<h2 class="anchored" data-anchor-id="forking">Forking</h2>
+<p>At any point in a multi-turn conversation, you can <strong>fork</strong>: take the current message list, branch off, and start a parallel conversation from that point. You can run multiple branches simultaneously and pick the one that produced the best results. You can even jump back to an earlier turn and continue from there, ignoring later messages.</p>
+<p>The LLM has no say in this. It simply processes whatever list you hand it.</p>
+</section>
+<section id="structured-output" class="level2">
+<h2 class="anchored" data-anchor-id="structured-output">Structured output</h2>
+<p>You can ask the LLM to return its answer in a specific format — say, a JSON object with particular fields. This does <em>not</em> change the underlying mechanism. The response is still JSON, still part of the same message list, still resent on the next turn. Structured output is just a cleaner contract on top of the existing JSON interaction.</p>
+</section>
+<section id="the-takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="the-takeaway">The takeaway</h2>
+<p>What you send to the LLM at any given point — the system message, the assistant messages, the user messages, which turns to include or skip — is entirely controlled by the client. This is not a limitation; it is a superpower.</p>
+<hr>
+</section>
+</section>
+<section id="caching" class="level1">
+<h1>Caching</h1>
+<p>LLM providers offer <strong>prompt caching</strong> (also called KV cache reuse): the ability to store the computed representation of a message prefix on the server side so that subsequent requests with the same prefix do not have to reprocess it from scratch. You still send the full context every turn — you simply pay less for the cached portion (often around 10% of the normal input cost).</p>
+<p>Why is caching expensive to offer? These inference servers run in a distributed fashion across GPU machines. Maintaining state across a distributed fleet of GPU nodes — keeping KV caches resident in memory, routing subsequent requests to the same node, managing eviction — is computationally and financially costly. The server was architected to be stateless, so any persistent caching layer is an optimisation bolted on top, and providers charge accordingly.</p>
+<p>For most use cases, you can get by without caching. It becomes important at scale, when you are re-sending large context windows on every turn.</p>
+<hr>
+</section>
+<section id="tool-calls" class="level1">
+<h1>Tool Calls</h1>
+<p>Everything so far has been pure Q&amp;A: the LLM generates text, you consume it. The next evolutionary step is <strong>tool calls</strong>.</p>
+<p>Consider a simple question: <em>“Is today my anniversary?”</em></p>
+<p>To answer this, the LLM needs two pieces of information:</p>
+<ol type="1">
+<li><strong>Your anniversary date</strong> — a static fact. You can include this in the system prompt or user message. No tool needed.</li>
+<li><strong>Today’s date</strong> — dynamic information the model weights themselves do not have. The model has no built-in clock. (Some providers, like OpenAI, inject the current date into the system context for their consumer-facing products, but the raw API does not guarantee this.)</li>
+</ol>
+<p>This is where tool calls come in. You <strong>define a function</strong> — say, <code>get_today_date()</code> in Python — and describe it to the LLM. When the LLM recognises it needs the current date, it <strong>selects that tool</strong> and signals that it wants it called. This act — the LLM choosing from a set of available tools — is called a <strong>tool call</strong>.</p>
+<p>The critical thing to understand: <strong>the LLM does not execute the tool.</strong> It merely says, “I want to use tool X with these arguments.” The actual execution is someone else’s job.</p>
+<p>Newer models are better at <em>deciding when</em> to use a tool, but the tools themselves must always be explicitly defined. Tool calls are here to stay — they are the bridge between the LLM’s text world and the real world of computation.</p>
+<hr>
+</section>
+<section id="the-harness" class="level1">
+<h1>The Harness</h1>
+<p>So the LLM says, “Call tool X.” Who actually runs it?</p>
+<p><strong>You do.</strong> The execution layer that sits between the LLM’s tool-call request and the actual function invocation is called the <strong>harness</strong>.</p>
+<p>The harness is the glue that makes tool calls real. Here is the full cycle:</p>
+<ol type="1">
+<li>The user asks a question.</li>
+<li>The LLM receives the message (along with the list of available tools).</li>
+<li>The LLM decides it needs a tool and returns a <strong>tool-call request</strong> (tool name + arguments).</li>
+<li>The <strong>harness</strong> intercepts that request, executes the actual function, and collects the result.</li>
+<li>The harness feeds the result <strong>back to the LLM</strong> as a new message.</li>
+<li>The LLM digests the tool output and produces its final answer.</li>
+</ol>
+<section id="what-the-harness-actually-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-harness-actually-does">What the harness actually does</h2>
+<p>The description above makes the harness sound like a simple pass-through. In practice, the harness is doing a surprising amount of work at each step:</p>
+<p><strong>Argument validation.</strong> The LLM might return arguments that are malformed, missing required fields, or of the wrong type. The harness validates the tool-call request before executing anything. If the LLM calls <code>get_today_date(format="dd-mm-yyyy")</code> but your function does not accept a <code>format</code> parameter, the harness catches that and returns an error message to the LLM — not a crash.</p>
+<p><strong>Execution.</strong> The harness calls the actual function. This could be a local Python function, an HTTP call to an external API, a database query, or a shell command. The harness is agnostic to what the tool does — it just needs to run it and capture the return value.</p>
+<p><strong>Error handling.</strong> What happens if the function raises an exception? If the external API is down? If the database times out? The harness must catch these failures, format them as readable error messages, and feed them back to the LLM. The LLM can then decide to retry, try a different tool, or tell the user that something went wrong. Without the harness handling errors gracefully, a single API timeout would kill the entire conversation.</p>
+<p><strong>Serialisation.</strong> The function might return a Python object, a pandas DataFrame, a list of dicts, or raw bytes. The harness must serialise that into a string (or a JSON string) that the LLM can read. If the result is too large — say, a database query returning 10,000 rows — the harness must truncate, summarise, or paginate it. The LLM cannot digest raw binary or arbitrarily large payloads.</p>
+<p><strong>Logging and observability.</strong> In production, you want to know which tools were called, with what arguments, how long they took, and what they returned. The harness is the natural place to log all of this. This is not optional — when an agent misbehaves, the harness logs are how you debug it.</p>
+<p><strong>Security and permissions.</strong> The harness is the enforcement point. If a tool can delete files or make payments, the harness is where you add confirmation prompts, rate limits, or permission checks. The LLM should never have direct access to destructive operations — the harness mediates everything.</p>
+</section>
+<section id="a-concrete-harness-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="a-concrete-harness-implementation">A concrete harness implementation</h2>
+<p>Here is what a minimal harness looks like in Python:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_today_date():</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> date.today().isoformat()  <span class="co"># e.g., "2026-06-27"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> check_bank_balance():</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># In reality, this would call your bank's API</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"balance"</span>: <span class="dv">54000</span>, <span class="st">"currency"</span>: <span class="st">"INR"</span>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Registry: maps tool names to actual functions</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>TOOLS <span class="op">=</span> {</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"get_today_date"</span>: get_today_date,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"check_bank_balance"</span>: check_bank_balance,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_harness(tool_call):</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Execute a single tool-call request from the LLM."""</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> tool_call[<span class="st">"name"</span>]</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    args <span class="op">=</span> tool_call.get(<span class="st">"arguments"</span>, {})</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. Validate: does this tool exist?</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> name <span class="kw">not</span> <span class="kw">in</span> TOOLS:</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> json.dumps({<span class="st">"error"</span>: <span class="ss">f"Unknown tool: </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>})</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    func <span class="op">=</span> TOOLS[name]</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. Execute with error handling</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> func(<span class="op">**</span>args)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">TypeError</span> <span class="im">as</span> e:</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Argument mismatch</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> json.dumps({<span class="st">"error"</span>: <span class="ss">f"Invalid arguments: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>})</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Any other failure</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> json.dumps({<span class="st">"error"</span>: <span class="ss">f"Tool execution failed: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>})</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. Serialise</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(result, <span class="bu">str</span>):</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> result</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> json.dumps(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And here is how the harness is called in the loop:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The LLM returned a tool-call request</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tool_call <span class="op">=</span> {<span class="st">"name"</span>: <span class="st">"get_today_date"</span>, <span class="st">"arguments"</span>: {}}</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The harness executes it</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>tool_result <span class="op">=</span> run_harness(tool_call)  <span class="co"># returns "2026-06-27"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The harness result is appended to the message list</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>messages.append({</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"role"</span>: <span class="st">"tool"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"name"</span>: <span class="st">"get_today_date"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"content"</span>: tool_result</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># The updated message list is sent back to the LLM</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The harness is your code. You write it. It is the cycle of “LLM says do X → you validate X → you execute X → you handle errors → you serialise the result → you tell the LLM what happened → LLM continues.”</p>
+<hr>
+</section>
+</section>
+<section id="what-is-an-agent" class="level1">
+<h1>What Is an Agent?</h1>
+<p>Now we can define an agent clearly.</p>
+<p>An <strong>agent</strong> is a client-side loop that places the LLM inside an autonomous cycle. Instead of a single question-and-answer, the agent:</p>
+<ol type="1">
+<li>Evaluates the user’s goal.</li>
+<li>Determines a sequence of actions (which tools to call, in what order).</li>
+<li>Calls the harness to execute each action.</li>
+<li>Observes the results.</li>
+<li><strong>Loops</strong> until the objective is met.</li>
+</ol>
+<p>In the simplest terms: <strong>an agent is a harness wrapped in a loop.</strong> The harness handles a single tool-call cycle; the agent orchestrates <em>many</em> such cycles, driving toward a goal the user stated once.</p>
+<section id="the-anatomy-of-an-agent-loop" class="level2">
+<h2 class="anchored" data-anchor-id="the-anatomy-of-an-agent-loop">The anatomy of an agent loop</h2>
+<p>A minimal agent loop in pseudocode:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_agent(user_goal, tools, system_prompt):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    messages <span class="op">=</span> [</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: system_prompt},</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"role"</span>: <span class="st">"user"</span>,   <span class="st">"content"</span>: user_goal}</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 1. Call the LLM with the current message list + tool definitions</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> llm.chat(messages, tools<span class="op">=</span>tools)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 2. Did the LLM return a tool call, or a final answer?</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> response.has_tool_call():</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 3. Harness executes the tool</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            result <span class="op">=</span> run_harness(response.tool_call)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 4. Feed the result back to the LLM</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>            messages.append({</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">"role"</span>: <span class="st">"tool"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"content"</span>: result</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Loop continues — LLM will be called again</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 5. LLM produced a final answer — we are done</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> response.content</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That is the entire skeleton. Every agent framework — LangChain, CrewAI, OpenAI Assistants, Claude Code — is a variation on this <code>while True</code> loop with different amounts of scaffolding around it.</p>
+</section>
+<section id="what-separates-a-toy-agent-from-a-production-agent" class="level2">
+<h2 class="anchored" data-anchor-id="what-separates-a-toy-agent-from-a-production-agent">What separates a toy agent from a production agent</h2>
+<p>The loop above is deceptively simple. In practice, production agents add several layers on top:</p>
+<p><strong>Planning.</strong> Instead of blindly calling tools one at a time, a good agent first generates a plan. It breaks the user’s goal into sub-tasks and works through them deliberately. This is not magic — the “plan” is just the LLM producing a structured list of steps in its response, which the agent then follows.</p>
+<p><strong>State tracking (to-do lists).</strong> As the agent works through a multi-step task, it needs to track what it has done and what remains. A common pattern: the LLM generates a to-do list at the start, updates it after each step (marking items complete, adding new ones as it discovers them), and uses it to decide what to do next. This is exactly how Claude Code operates — you can watch it generate and update a checklist as it works.</p>
+<p><strong>Termination conditions.</strong> The <code>while True</code> loop needs an exit condition. Options include: the LLM explicitly says “I am done” (returns a response with no tool call), a maximum number of iterations is reached (to prevent infinite loops), or a token/time budget is exhausted. Getting this right is critical — an agent that never terminates is a bug, not a feature.</p>
+<p><strong>Human-in-the-loop checkpoints.</strong> For high-stakes actions (deploying code, making a payment, deleting files), the agent should pause and ask the user for confirmation before the harness executes the tool. Claude Code does this in its plan mode — it presents what it intends to do, asks for approval, and only then proceeds to execute.</p>
+<p><strong>Error recovery.</strong> When a tool call fails (API timeout, permission denied, invalid input), a production agent does not just crash. The LLM reads the error message, reasons about what went wrong, and tries an alternative approach — a different tool, different arguments, or asking the user for help.</p>
+</section>
+<section id="how-claude-code-does-it-a-real-world-agent-in-action" class="level2">
+<h2 class="anchored" data-anchor-id="how-claude-code-does-it-a-real-world-agent-in-action">How Claude Code does it: a real-world agent in action</h2>
+<p>Claude Code is one of the most transparent examples of an agent loop in production. When you give it a task like “refactor the authentication module and add tests,” here is what happens:</p>
+<ol type="1">
+<li><p><strong>Plan mode.</strong> Claude Code first enters a planning phase. It reads the relevant files (using its <code>read_file</code> tool), understands the codebase, and generates a plan: “I will create a new <code>AuthManager</code> class, update the three files that depend on the old module, and write unit tests.” It presents this plan to the user and asks for confirmation before doing anything.</p></li>
+<li><p><strong>To-do generation.</strong> Once approved, it creates a structured to-do list — not in its head, but as an explicit artefact you can see in the terminal:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Create <code>AuthManager</code> class in <code>auth/manager.py</code></label></li>
+<li><label><input type="checkbox">Update <code>routes/login.py</code> to use new class</label></li>
+<li><label><input type="checkbox">Update <code>routes/signup.py</code> to use new class</label></li>
+<li><label><input type="checkbox">Update <code>middleware/auth.py</code></label></li>
+<li><label><input type="checkbox">Write unit tests in <code>tests/test_auth.py</code></label></li>
+</ul></li>
+<li><p><strong>Execution loop.</strong> It works through the to-do list one item at a time. For each item, it may call multiple tools: <code>read_file</code> to understand a dependency, <code>write_file</code> to create the new class, <code>run_tests</code> to verify the change, <code>grep</code> to find all references to the old module. Each tool call goes through the harness — Claude Code executes the function, captures the output, and feeds it back to the LLM.</p></li>
+<li><p><strong>To-do updates.</strong> After completing each item, it marks it done (✓) and sometimes adds new items it discovered along the way (e.g., “fix broken import in <code>utils.py</code> that I noticed while editing <code>routes/login.py</code>”).</p></li>
+<li><p><strong>Verification.</strong> Before declaring the task complete, it runs the test suite one more time and summarises what it did. If tests fail, it loops back — reads the error, edits the code, re-runs tests — until everything passes or it asks the user for help.</p></li>
+</ol>
+<p>This entire sequence is the agent loop: <em>plan → generate to-do → execute step → observe result → update to-do → execute next step → … → verify → done.</em> Every single action — reading a file, writing code, running tests — is a harness cycle. Claude Code is just a very well-engineered <code>while</code> loop around that harness, with planning and state tracking layered on top.</p>
+</section>
+<section id="the-takeaway-1" class="level2">
+<h2 class="anchored" data-anchor-id="the-takeaway-1">The takeaway</h2>
+<p>The most minimal agent you can think of might have just a handful of tools — read a file, search code, run a command — and loop until the task is done. Systems like OpenAI’s Codex agent, Devin, and Claude Code are elaborate instances of this same pattern, but the skeleton is always the same: <strong>LLM + tools + harness + loop = agent.</strong> What separates a toy from production is not a different architecture — it is the quality of planning, state tracking, error recovery, and human-in-the-loop checkpoints layered on top of that same loop.</p>
+<hr>
+</section>
+</section>
+<section id="putting-it-all-together-a-worked-example" class="level1">
+<h1>Putting It All Together: A Worked Example</h1>
+<p>To make everything concrete, let us trace a single scenario end to end. We will follow one example through every concept we have covered — statelessness, multi-turn context, system prompts, client-side control, tool calls, the harness, and the agent loop.</p>
+<section id="the-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="the-scenario">The scenario</h2>
+<p>You have a monthly SIP of ₹15,000 that gets auto-debited on the 5th of every month. You want your assistant to answer: <em>“How many days until my next SIP payment is due?”</em></p>
+<p>The SIP due date (5th of every month) and the amount (₹15,000) are static facts. But the current date is dynamic — the LLM does not know it. So we will need a tool.</p>
+<p>Let us walk through this in stages, labelling the component that is active at each step.</p>
+</section>
+<section id="stage-1-the-system-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="stage-1-the-system-prompt">Stage 1 — The system prompt</h2>
+<p>Before any user message, you set the system message. This defines the persona and the ground rules:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"role"</span><span class="fu">:</span> <span class="st">"system"</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"You are a personal finance assistant for Indian users. You help track SIPs, EMIs, and bill payments. If you need dynamic information (like today's date), use the get_today_date tool. If you need to check the user's bank balance, use the check_bank_balance tool. The user has a monthly SIP of ₹15,000 auto-debited on the 5th of every month."</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Component active: System prompt.</strong> The static facts (SIP amount, due date) are baked in here. The model provider’s own system prompt sits <em>above</em> this and is not shown — it governs baseline safety and behaviour.</p>
+</blockquote>
+</section>
+<section id="stage-2-the-user-asks-a-question-turn-1" class="level2">
+<h2 class="anchored" data-anchor-id="stage-2-the-user-asks-a-question-turn-1">Stage 2 — The user asks a question (Turn 1)</h2>
+<p>The user sends their message. The client appends it to the message list:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"system"</span><span class="fu">,</span>    <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"You are a personal finance assistant for Indian users. ..."</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"user"</span><span class="fu">,</span>      <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"How many days until my next SIP payment is due?"</span><span class="fu">}</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This entire list is sent to the LLM API over HTTP.</p>
+<blockquote class="blockquote">
+<p><strong>Component active: Stateless HTTP + multi-turn context.</strong> The server has never seen this user before. Everything the LLM knows comes from this single JSON payload. If this were Turn 2, the list would also contain the previous assistant message — that is how context is maintained.</p>
+</blockquote>
+</section>
+<section id="stage-3-the-llm-recognises-it-needs-a-tool" class="level2">
+<h2 class="anchored" data-anchor-id="stage-3-the-llm-recognises-it-needs-a-tool">Stage 3 — The LLM recognises it needs a tool</h2>
+<p>The LLM reads the system prompt, sees the SIP is due on the 5th, and realises it needs today’s date to compute the difference. It does <strong>not</strong> guess or hallucinate a date. Instead, it returns a tool-call request:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"tool_calls"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"get_today_date"</span><span class="fu">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"arguments"</span><span class="fu">:</span> <span class="fu">{}</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Component active: Tool call.</strong> The LLM chose a tool from the set you defined. It did not execute anything — it merely signalled, “I need to call <code>get_today_date</code>.” The tool definition (name, description, expected parameters) was provided by you alongside the message list when you made the API request.</p>
+</blockquote>
+</section>
+<section id="stage-4-the-harness-executes-the-tool" class="level2">
+<h2 class="anchored" data-anchor-id="stage-4-the-harness-executes-the-tool">Stage 4 — The harness executes the tool</h2>
+<p>The client-side code — the <strong>harness</strong> — intercepts the tool-call request. It validates the arguments (empty, which is fine since <code>get_today_date</code> takes none), runs the actual Python function, and captures the result:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_today_date():</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> date.today().isoformat()  <span class="co"># e.g., "2026-06-27"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The harness gets the result (<code>"2026-06-27"</code>), serialises it into a string, and appends it to the message list as a new message with the role <code>tool</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"system"</span><span class="fu">,</span>    <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"You are a personal finance assistant for Indian users. ..."</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"user"</span><span class="fu">,</span>      <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"How many days until my next SIP payment is due?"</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> <span class="dt">"tool_calls"</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span><span class="dt">"name"</span><span class="fu">:</span> <span class="st">"get_today_date"</span><span class="fu">,</span> <span class="dt">"arguments"</span><span class="fu">:</span> <span class="fu">{}}</span><span class="ot">]</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"tool"</span><span class="fu">,</span>      <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"get_today_date"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"2026-06-27"</span><span class="fu">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Component active: Harness.</strong> This is your code. You validated the arguments, you executed the function, you serialised the output, and you captured any errors. The LLM had no part in this execution. The harness then sends this updated message list back to the LLM for the next step.</p>
+</blockquote>
+</section>
+<section id="stage-5-the-llm-produces-the-final-answer-turn-1-completes" class="level2">
+<h2 class="anchored" data-anchor-id="stage-5-the-llm-produces-the-final-answer-turn-1-completes">Stage 5 — The LLM produces the final answer (Turn 1 completes)</h2>
+<p>The LLM now sees the full picture: the SIP is due on the 5th, today is the 27th of June, so the next payment is July 5th. It computes the difference and responds:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"system"</span><span class="fu">,</span>    <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"You are a personal finance assistant for Indian users. ..."</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"user"</span><span class="fu">,</span>      <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"How many days until my next SIP payment is due?"</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span> <span class="dt">"tool_calls"</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span><span class="dt">"name"</span><span class="fu">:</span> <span class="st">"get_today_date"</span><span class="fu">,</span> <span class="dt">"arguments"</span><span class="fu">:</span> <span class="fu">{}}</span><span class="ot">]</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"tool"</span><span class="fu">,</span>      <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"get_today_date"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"2026-06-27"</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span><span class="dt">"role"</span><span class="fu">:</span> <span class="st">"assistant"</span><span class="fu">,</span> <span class="dt">"content"</span><span class="fu">:</span> <span class="st">"Your next SIP payment of ₹15,000 is due on July 5th. That is 8 days from today."</span><span class="fu">}</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>Component active: Multi-turn context.</strong> Notice how the entire history — system prompt, user question, tool-call request, tool result, and final answer — is now one growing list. If the user asks a follow-up (“Can I reschedule it?”), this entire list is resent. The server still remembers nothing on its own.</p>
+</blockquote>
+</section>
+<section id="stage-6-what-if-the-user-follows-up-turn-2-and-client-side-control" class="level2">
+<h2 class="anchored" data-anchor-id="stage-6-what-if-the-user-follows-up-turn-2-and-client-side-control">Stage 6 — What if the user follows up? (Turn 2 and client-side control)</h2>
+<p>The user asks: <em>“Can you also check whether I have enough balance for the SIP this month?”</em></p>
+<p>You, the client, decide what to include in the next request. You could:</p>
+<ul>
+<li><strong>Send everything</strong> — the full list above plus the new user message. The LLM sees the entire conversation and knows the SIP is ₹15,000 due on July 5th.</li>
+<li><strong>Fork</strong> — branch off from Stage 2 with a different question, ignoring the SIP conversation entirely.</li>
+<li><strong>Prune</strong> — drop the tool-call messages and only keep the system prompt + final assistant answer + new user message. The LLM would still know the answer (₹15,000 on July 5th) but would not know a tool was ever called.</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>Component active: Client-side control.</strong> The server never decides what context to keep. You do. You could even start a completely separate conversation with a different system prompt — the LLM has no idea these two conversations are related.</p>
+</blockquote>
+</section>
+<section id="stage-7-what-makes-this-an-agent" class="level2">
+<h2 class="anchored" data-anchor-id="stage-7-what-makes-this-an-agent">Stage 7 — What makes this an agent?</h2>
+<p>In the example above, there was one tool call, one harness execution, and one final answer. That is a <strong>harness cycle</strong> — a single loop iteration.</p>
+<p>An <strong>agent</strong> is what happens when you wrap this in an autonomous loop. Imagine the user says: <em>“Check if my SIP payment is due this week, and if so, check my bank balance and tell me if I have enough to cover it.”</em></p>
+<p>Now the LLM must: 1. Call <code>get_today_date</code> → harness validates, executes, returns June 27th. 2. Reason: the 5th is next week, SIP is ₹15,000 → call <code>check_bank_balance</code> → harness validates, executes, returns ₹54,000. 3. Reason: ₹15,000 ≤ ₹54,000 → produce final answer: “Your SIP of ₹15,000 is due on July 5th (8 days away) and your balance is ₹54,000. You have sufficient funds.”</p>
+<p>Each step is a harness cycle. The <strong>agent</strong> is the outer loop that keeps cycling — <em>LLM reasons → selects tool → harness executes → feed result back → LLM reasons again</em> — until the user’s goal is fully met.</p>
+<blockquote class="blockquote">
+<p><strong>Component active: Agent loop.</strong> The agent is not a new API feature. It is a client-side <code>while</code> loop around the harness: “keep going until the LLM says it is done.”</p>
+</blockquote>
+</section>
+<section id="recap-which-component-does-what" class="level2">
+<h2 class="anchored" data-anchor-id="recap-which-component-does-what">Recap: which component does what</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>What it does</th>
+<th>Who controls it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>System prompt</strong></td>
+<td>Sets persona, static facts, and ground rules</td>
+<td>You (the client)</td>
+</tr>
+<tr class="even">
+<td><strong>Message list</strong></td>
+<td>The full conversation history, resent every turn</td>
+<td>You (the client)</td>
+</tr>
+<tr class="odd">
+<td><strong>Tool call</strong></td>
+<td>The LLM’s decision to use a function</td>
+<td>The LLM</td>
+</tr>
+<tr class="even">
+<td><strong>Harness</strong></td>
+<td>Executes the function and feeds the result back</td>
+<td>You (the client)</td>
+</tr>
+<tr class="odd">
+<td><strong>Agent loop</strong></td>
+<td>Cycles LLM → tool → harness → LLM until the goal is met</td>
+<td>You (the client)</td>
+</tr>
+</tbody>
+</table>
+<p>The LLM’s only real power is <em>choosing</em> which tool to call and <em>reasoning</em> about the results. Everything else — the context, the execution, the loop — is your code. That is what “client-side” means, and that is why the harness and the agent loop are not part of the LLM itself.</p>
+<hr>
+</section>
+</section>
+<section id="tool-implications-where-we-go-from-here" class="level1">
+<h1>Tool Implications: Where We Go From Here</h1>
+<p>With this foundation in place — statelessness, multi-turn context, system prompts, client-side control, tool calls, harnesses, and the agent loop — a lot of the popular jargon in the AI space becomes much easier to parse. Many “advanced” concepts are just combinations of the primitives we have covered here.</p>
+<p>In the next posts, we will dive deeper into specific agent architectures and real-world implementations.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
