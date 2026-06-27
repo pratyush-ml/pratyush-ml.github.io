@@ -8,7 +8,7 @@ draft: False
 
 # Introduction
 
-This post is about how agents work. The idea came from a blog post I was reading from *Tidy Writer* — the motivation is straightforward: cover everything you need to know to build an agent, from first principles. To keep the scope manageable, I will not touch upon how inference itself happens. That is a topic for another day.
+This post is about how agents work. The idea came from a blog post I was reading from *[[Tidy Design Principles]]*(https://tidydesign.substack.com/p/what-is-an-agent) — the motivation is straightforward: cover everything you need to know to build an agent, from first principles. To keep the scope manageable, I will not touch upon how inference itself happens. That is a topic for another day.
 
 Before we can talk about agents, we need to understand what they are built on top of: LLMs. So we will trace the evolution of LLMs — from a simple Q&A bot all the way to systems with agentic capabilities — and layer in the other concepts (tools, harnesses, caching) along the way.
 
@@ -40,6 +40,8 @@ This has a profound implication for LLM APIs: **one question can only be answere
 > Modern LLM platforms now have session and state management layers on top, but we are not concerned with those here. We care about the *core capability* of the LLM API itself, and that core is stateless.
 
 This single fact — statelessness — is the thread that explains almost every "advanced" concept that follows.
+
+This is a trimmed version of how the API works. There is a lot that goes on and is beyond the scope of the blog.
 
 ---
 
