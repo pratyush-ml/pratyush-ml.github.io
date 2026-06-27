@@ -80,7 +80,7 @@ So a complete message list looks like:
 [assistant] ...
 ```
 
-The system message is sent once, at the top of the list, and it persists across every turn because — as we established — the entire list is resent each time.
+The system message sits at the top of the list. Because the entire list is resent on every turn, the system message is effectively persistent — not because the server remembers it, but because you include it every time.
 
 ---
 
@@ -108,9 +108,9 @@ What you send to the LLM at any given point — the system message, the assistan
 
 # Caching
 
-LLM providers offer **caching**: the ability to store a particular set of messages on the server side so you do not have to resend (and re-pay for) the full context every time.
+LLM providers offer **prompt caching** (also called KV cache reuse): the ability to store the computed representation of a message prefix on the server side so that subsequent requests with the same prefix do not have to reprocess it from scratch. You still send the full context every turn — you simply pay less for the cached portion (often around 10% of the normal input cost).
 
-Why is caching expensive? My educated guess: these inference servers run in a distributed fashion across GPU machines. Maintaining state across a distributed fleet of GPU nodes — keeping KV caches resident in memory, routing subsequent requests to the same node, managing eviction — is computationally and financially costly. You are essentially paying the server to *remember* something it was architected to forget.
+Why is caching expensive to offer? These inference servers run in a distributed fashion across GPU machines. Maintaining state across a distributed fleet of GPU nodes — keeping KV caches resident in memory, routing subsequent requests to the same node, managing eviction — is computationally and financially costly. The server was architected to be stateless, so any persistent caching layer is an optimisation bolted on top, and providers charge accordingly.
 
 For most use cases, you can get by without caching. It becomes important at scale, when you are re-sending large context windows on every turn.
 
@@ -125,13 +125,13 @@ Consider a simple question: *"Is today my anniversary?"*
 To answer this, the LLM needs two pieces of information:
 
 1. **Your anniversary date** — a static fact. You can include this in the system prompt or user message. No tool needed.
-2. **Today's date** — dynamic information the LLM does not have. The model has no built-in clock.
+2. **Today's date** — dynamic information the model weights themselves do not have. The model has no built-in clock. (Some providers, like OpenAI, inject the current date into the system context for their consumer-facing products, but the raw API does not guarantee this.)
 
 This is where tool calls come in. You **define a function** — say, `get_today_date()` in Python — and describe it to the LLM. When the LLM recognises it needs the current date, it **selects that tool** and signals that it wants it called. This act — the LLM choosing from a set of available tools — is called a **tool call**.
 
 The critical thing to understand: **the LLM does not execute the tool.** It merely says, "I want to use tool X with these arguments." The actual execution is someone else's job.
 
-Newer models are increasingly capable of reasoning without explicit tool definitions, but tool calls are here to stay — they are the bridge between the LLM's text world and the real world of computation.
+Newer models are better at *deciding when* to use a tool, but the tools themselves must always be explicitly defined. Tool calls are here to stay — they are the bridge between the LLM's text world and the real world of computation.
 
 ---
 
@@ -168,7 +168,7 @@ An **agent** is a client-side loop that places the LLM inside an autonomous cycl
 
 In the simplest terms: **an agent is a harness wrapped in a loop.** The harness handles a single tool-call cycle; the agent orchestrates *many* such cycles, driving toward a goal the user stated once.
 
-The most minimal agent you can think of might have just a handful of tools — read a file, search code, run a command — and loop until the task is done. Codex and similar systems are elaborate instances of this same pattern, but the skeleton is always the same: **LLM + tools + harness + loop = agent.**
+The most minimal agent you can think of might have just a handful of tools — read a file, search code, run a command — and loop until the task is done. Systems like OpenAI's Codex agent, Devin, and Claude Code are elaborate instances of this same pattern, but the skeleton is always the same: **LLM + tools + harness + loop = agent.**
 
 ---
 
