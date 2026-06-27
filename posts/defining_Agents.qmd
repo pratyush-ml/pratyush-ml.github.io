@@ -3,7 +3,7 @@ title: "Understanding Agents and all the jargon around them from first principle
 author: "Pratyush Sinha"
 date: "2026-06-14"
 categories: [AI, First Principles]
-draft: True
+draft: False
 ---
 
 # Introduction
@@ -330,7 +330,7 @@ To make everything concrete, let us trace a single scenario end to end. We will 
 
 ## The scenario
 
-You have a monthly SIP (Systematic Investment Plan) of ₹15,000 that gets auto-debited on the 5th of every month. You want your assistant to answer: *"How many days until my next SIP payment is due?"*
+You have a monthly SIP of ₹15,000 that gets auto-debited on the 5th of every month. You want your assistant to answer: *"How many days until my next SIP payment is due?"*
 
 The SIP due date (5th of every month) and the amount (₹15,000) are static facts. But the current date is dynamic — the LLM does not know it. So we will need a tool.
 
