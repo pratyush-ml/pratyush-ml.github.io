@@ -172,6 +172,148 @@ The most minimal agent you can think of might have just a handful of tools — r
 
 ---
 
+# Putting It All Together: A Worked Example
+
+To make everything concrete, let us trace a single scenario end to end. We will follow one example through every concept we have covered — statelessness, multi-turn context, system prompts, client-side control, tool calls, the harness, and the agent loop.
+
+## The scenario
+
+You want a personal assistant that can answer: *"How many days until my next mortgage payment is due?"*
+
+Your mortgage payment is due on the 5th of every month. That is a static fact. But the current date is dynamic — the LLM does not know it. So we will need a tool.
+
+Let us walk through this in stages, labelling the component that is active at each step.
+
+## Stage 1 — The system prompt
+
+Before any user message, you set the system message. This defines the persona and the ground rules:
+
+```json
+[
+  {
+    "role": "system",
+    "content": "You are a personal finance assistant. You help the user track bills and payments. If you need dynamic information (like today's date), use the get_today_date tool. The user's mortgage payment is due on the 5th of every month."
+  }
+]
+```
+
+> **Component active: System prompt.** The static fact (mortgage due on the 5th) is baked in here. The model provider's own system prompt sits *above* this and is not shown — it governs baseline safety and behaviour.
+
+## Stage 2 — The user asks a question (Turn 1)
+
+The user sends their message. The client appends it to the message list:
+
+```json
+[
+  {"role": "system",    "content": "You are a personal finance assistant. ..."},
+  {"role": "user",      "content": "How many days until my next mortgage payment is due?"}
+]
+```
+
+This entire list is sent to the LLM API over HTTP.
+
+> **Component active: Stateless HTTP + multi-turn context.** The server has never seen this user before. Everything the LLM knows comes from this single JSON payload. If this were Turn 2, the list would also contain the previous assistant message — that is how context is maintained.
+
+## Stage 3 — The LLM recognises it needs a tool
+
+The LLM reads the system prompt, sees the user's mortgage is due on the 5th, and realises it needs today's date to compute the difference. It does **not** guess or hallucinate a date. Instead, it returns a tool-call request:
+
+```json
+[
+  {
+    "role": "assistant",
+    "tool_calls": [
+      {
+        "name": "get_today_date",
+        "arguments": {}
+      }
+    ]
+  }
+]
+```
+
+> **Component active: Tool call.** The LLM chose a tool from the set you defined. It did not execute anything — it merely signalled, "I need to call `get_today_date`." The tool definition (name, description, expected parameters) was provided by you alongside the message list when you made the API request.
+
+## Stage 4 — The harness executes the tool
+
+The client-side code — the **harness** — intercepts the tool-call request. It runs the actual Python function:
+
+```python
+def get_today_date():
+    from datetime import date
+    return date.today().isoformat()  # e.g., "2026-06-27"
+```
+
+The harness gets the result (`"2026-06-27"`) and appends it to the message list as a new message with the role `tool`:
+
+```json
+[
+  {"role": "system",    "content": "You are a personal finance assistant. ..."},
+  {"role": "user",      "content": "How many days until my next mortgage payment is due?"},
+  {"role": "assistant", "content": null, "tool_calls": [{"name": "get_today_date", "arguments": {}}]},
+  {"role": "tool",      "name": "get_today_date", "content": "2026-06-27"}
+]
+```
+
+> **Component active: Harness.** This is your code. You wrote the function, you executed it, and you captured the output. The LLM had no part in this execution. The harness then sends this updated message list back to the LLM for the next step.
+
+## Stage 5 — The LLM produces the final answer (Turn 1 completes)
+
+The LLM now sees the full picture: the mortgage is due on the 5th, today is the 27th of June, so the next payment is July 5th. It computes the difference and responds:
+
+```json
+[
+  {"role": "system",    "content": "You are a personal finance assistant. ..."},
+  {"role": "user",      "content": "How many days until my next mortgage payment is due?"},
+  {"role": "assistant", "content": null, "tool_calls": [{"name": "get_today_date", "arguments": {}}]},
+  {"role": "tool",      "name": "get_today_date", "content": "2026-06-27"},
+  {"role": "assistant", "content": "Your next mortgage payment is due on July 5th. That is 8 days from today."}
+]
+```
+
+> **Component active: Multi-turn context.** Notice how the entire history — system prompt, user question, tool-call request, tool result, and final answer — is now one growing list. If the user asks a follow-up ("Remind me again next week"), this entire list is resent. The server still remembers nothing on its own.
+
+## Stage 6 — What if the user follows up? (Turn 2 and client-side control)
+
+The user asks: *"Can you also check how much I owe on my credit card?"*
+
+You, the client, decide what to include in the next request. You could:
+
+- **Send everything** — the full list above plus the new user message. The LLM sees the entire conversation.
+- **Fork** — branch off from Stage 2 with a different question, ignoring the mortgage conversation entirely.
+- **Prune** — drop the tool-call messages and only keep the system prompt + final assistant answer + new user message. The LLM would not know a tool was ever called.
+
+> **Component active: Client-side control.** The server never decides what context to keep. You do. You could even start a completely separate conversation with a different system prompt — the LLM has no idea these two conversations are related.
+
+## Stage 7 — What makes this an agent?
+
+In the example above, there was one tool call, one harness execution, and one final answer. That is a **harness cycle** — a single loop iteration.
+
+An **agent** is what happens when you wrap this in an autonomous loop. Imagine the user says: *"Check if my mortgage payment is due this week, and if so, check my bank balance and tell me if I can cover it."*
+
+Now the LLM must:
+1. Call `get_today_date` → harness executes → returns June 27th.
+2. Reason: the 5th is next week → call `check_bank_balance` → harness executes → returns $3,200.
+3. Reason: mortgage is $2,500, balance is $3,200 → produce final answer.
+
+Each step is a harness cycle. The **agent** is the outer loop that keeps cycling — *LLM reasons → selects tool → harness executes → feed result back → LLM reasons again* — until the user's goal is fully met.
+
+> **Component active: Agent loop.** The agent is not a new API feature. It is a client-side `while` loop around the harness: "keep going until the LLM says it is done."
+
+## Recap: which component does what
+
+| Component | What it does | Who controls it |
+|---|---|---|
+| **System prompt** | Sets persona, static facts, and ground rules | You (the client) |
+| **Message list** | The full conversation history, resent every turn | You (the client) |
+| **Tool call** | The LLM's decision to use a function | The LLM |
+| **Harness** | Executes the function and feeds the result back | You (the client) |
+| **Agent loop** | Cycles LLM → tool → harness → LLM until the goal is met | You (the client) |
+
+The LLM's only real power is *choosing* which tool to call and *reasoning* about the results. Everything else — the context, the execution, the loop — is your code. That is what "client-side" means, and that is why the harness and the agent loop are not part of the LLM itself.
+
+---
+
 # Tool Implications: Where We Go From Here
 
 With this foundation in place — statelessness, multi-turn context, system prompts, client-side control, tool calls, harnesses, and the agent loop — a lot of the popular jargon in the AI space becomes much easier to parse. Many "advanced" concepts are just combinations of the primitives we have covered here.
