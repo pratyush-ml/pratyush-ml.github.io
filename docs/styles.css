@@ -207,6 +207,10 @@ h1.title {
 }
 
 /* --- Article & Post Title Block (title → date → summary, like the reference) --- */
+header#title-block-header:empty {
+  display: none !important;
+}
+
 header#title-block-header {
   margin-top: 0 !important;
   margin-bottom: 3rem !important;
