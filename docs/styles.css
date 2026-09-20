@@ -98,16 +98,26 @@ body.nav-fixed {
   padding-top: 0 !important;
 }
 
+#quarto-header,
+#quarto-header.headroom,
+#quarto-header.fixed-top,
 .navbar {
   position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
   background: transparent !important;
   border-bottom: none !important;
   box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.navbar {
   padding-top: 3rem !important;
   padding-bottom: 0 !important;
   margin-bottom: 3.5rem !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 .navbar > .container-fluid {
