@@ -1,0 +1,33 @@
+/*-- scss:defaults --*/
+
+// Minimalist Dark Theme (inspired by sunilpai.dev)
+$body-bg: #1c1d1c !default;
+$body-color: #d5d1c8 !default;
+$link-color: #8fc4d0 !default;
+$link-hover-color: #8fb4d8 !default;
+
+$font-family-sans-serif: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-monospace: "JetBrains Mono", "Roboto Mono", ui-monospace, Menlo, Monaco, Consolas, monospace !default;
+
+$primary: #8fb4d8 !default;
+$secondary: #96928a !default;
+$success: #5eb083 !default;
+$info: #8fc4d0 !default;
+$warning: #e09f53 !default;
+$danger: #d96868 !default;
+$light: #262726 !default;
+$dark: #f3efe6 !default;
+
+$border-color: #494741 !default;
+
+$headings-color: #f3efe6 !default;
+$headings-font-weight: 700 !default;
+
+$navbar-bg: #1c1d1c !default;
+$navbar-fg: #d5d1c8 !default;
+$navbar-hl: #8fb4d8 !default;
+
+$code-color: #e2ded5 !default;
+$code-bg: rgba(255, 255, 255, 0.06) !default;
+
+/*-- scss:rules --*/

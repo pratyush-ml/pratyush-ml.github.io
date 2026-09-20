@@ -3,13 +3,11 @@ title: ""
 listing:
   contents: posts
   sort: "date desc"
-  type: grid
-  image-height: 150px
+  type: default
   categories: true
-  sort-ui: true
-  filter-ui: true
+  sort-ui: false
+  filter-ui: false
+  feed: true
 page-layout: article
 title-block-banner: false
 ---
-
-

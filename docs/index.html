@@ -39,14 +39,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2a0be0ecbb873640deff2ed6e0b7d2e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-97d93582dcad461f6ca65e4704ead289.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f2a0be0ecbb873640deff2ed6e0b7d2e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-0d4a9d19931feb4fee1ddab4b2489000.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-6880ed074553c1a0fa64c043348b85a1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-367a75f9eedfd4093df56aa81a279ff7.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-6880ed074553c1a0fa64c043348b85a1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -84,9 +84,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-subtitle','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -103,6 +103,7 @@ ul.task-list li input[type="checkbox"] {
     }
   })
   </script>
+<style>html{ scroll-behavior: smooth; }</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -135,7 +136,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="styles.css">
-</head>
+<link rel="alternate" type="application/rss+xml" title="Pratyush Sinha" href="index.xml" data-external="1"></head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -319,6 +320,10 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -360,41 +365,21 @@ window.Quarto = {
 
 
 
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title" data-direction="asc">
-        Title
-      </option>
-      <option value="listing-date-sort" data-direction="asc">
-        Date - Oldest
-      </option>
-      <option value="listing-date-sort" data-direction="desc">
-        Date - Newest
-      </option>
-      <option value="listing-author" data-direction="asc">
-        Author
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="QmlvdGVjaCUyQ0FJJTJDT25jb2xvZ3klMkNHZW5vbWljcw==" data-listing-date-sort="1789842600000" data-listing-file-modified-sort="1789906436895" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="22" data-listing-word-count-sort="4398">
+<div class="thumbnail"><a href="./posts/under-the-hood-first-phase-3-cancer-vaccine.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/under-the-hood-first-phase-3-cancer-vaccine.html" class="no-external">Under the Hood of the First Phase 3 Personalized Cancer Vaccine</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/under-the-hood-first-phase-3-cancer-vaccine.html" class="no-external">From Biopsy to Bespoke Vial: How mRNA and Machine Learning Combined to Pass Phase 3</a>
 </div>
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="QmlvdGVjaCUyQ0FJJTJDT25jb2xvZ3klMkNHZW5vbWljcw==" data-listing-date-sort="1789842600000" data-listing-file-modified-sort="1789906436895" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="22" data-listing-word-count-sort="4398">
-<a href="./posts/under-the-hood-first-phase-3-cancer-vaccine.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Under the Hood of the First Phase 3 Personalized Cancer Vaccine
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('QmlvdGVjaA=='); return false;">Biotech</div>
@@ -406,28 +391,34 @@ Under the Hood of the First Phase 3 Personalized Cancer Vaccine
 <div class="listing-category" onclick="window.quartoListingCategory('R2Vub21pY3M='); return false;">Genomics</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/under-the-hood-first-phase-3-cancer-vaccine.html" class="no-external">
 <p>How mRNA technology and machine learning algorithms combined to pass Phase 3 clinical trials for the world’s first personalized cancer vaccine.</p>
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/under-the-hood-first-phase-3-cancer-vaccine.html" class="no-external">
 <div class="listing-date">
 Sep 20, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="1" data-categories="QUklMkNGaXJzdCUyMFByaW5jaXBsZXM=" data-listing-date-sort="1781375400000" data-listing-file-modified-sort="1782578501549" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4879">
+<div class="thumbnail"><a href="./posts/defining_Agents.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/defining_Agents.html" class="no-external">Understanding Agents and all the jargon around them from first principles</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/defining_Agents.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="QUklMkNGaXJzdCUyMFByaW5jaXBsZXM=" data-listing-date-sort="1781375400000" data-listing-file-modified-sort="1782578501549" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4879">
-<a href="./posts/defining_Agents.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Understanding Agents and all the jargon around them from first principles
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
@@ -435,28 +426,34 @@ Understanding Agents and all the jargon around them from first principles
 <div class="listing-category" onclick="window.quartoListingCategory('Rmlyc3QlMjBQcmluY2lwbGVz'); return false;">First Principles</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/defining_Agents.html" class="no-external">
 This post is about how agents work. The idea came from a blog post I was reading from Tidy Design Principles — the motivation is straightforward: cover everything you need…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/defining_Agents.html" class="no-external">
 <div class="listing-date">
 Jun 14, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="2" data-categories="Qm9vay1Ob3RlcyUyQ2xpZmUlMkNsZWFybmluZ3M=" data-listing-date-sort="1779129000000" data-listing-file-modified-sort="1782562892860" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2111">
+<div class="thumbnail"><a href="./posts/hbr-managing-yourself-part-1.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/hbr-managing-yourself-part-1.html" class="no-external">HBR On Managing Yourself: Purpose, Strengths &amp; Reclaiming Work (Part 1 of 2)</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/hbr-managing-yourself-part-1.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="2" data-categories="Qm9vay1Ob3RlcyUyQ2xpZmUlMkNsZWFybmluZ3M=" data-listing-date-sort="1779129000000" data-listing-file-modified-sort="1782562892860" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2111">
-<a href="./posts/hbr-managing-yourself-part-1.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-HBR On Managing Yourself: Purpose, Strengths &amp; Reclaiming Work (Part 1 of 2)
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
@@ -466,28 +463,34 @@ HBR On Managing Yourself: Purpose, Strengths &amp; Reclaiming Work (Part 1 of 2)
 <div class="listing-category" onclick="window.quartoListingCategory('bGVhcm5pbmdz'); return false;">learnings</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/hbr-managing-yourself-part-1.html" class="no-external">
 This was the author’s first book from the HBR series. The book is a collection of articles on how one can manage oneself, offering different points of view int/modelended…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/hbr-managing-yourself-part-1.html" class="no-external">
 <div class="listing-date">
 May 19, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="3" data-categories="Qm9vay1Ob3RlcyUyQ2xlYXJuaW5ncyUyQ1RlYW0lMjBtYW5hZ2VtZW50" data-listing-date-sort="1779129000000" data-listing-file-modified-sort="1779213080556" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="33" data-listing-word-count-sort="6525">
+<div class="thumbnail"><a href="./posts/hbr-managing-yourself-part-2.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/hbr-managing-yourself-part-2.html" class="no-external">HBR On Managing Yourself: Delegation, Monkeys &amp; AI Agents (Part 2 of 2)</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/hbr-managing-yourself-part-2.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="3" data-categories="Qm9vay1Ob3RlcyUyQ2xlYXJuaW5ncyUyQ1RlYW0lMjBtYW5hZ2VtZW50" data-listing-date-sort="1779129000000" data-listing-file-modified-sort="1779213080556" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="33" data-listing-word-count-sort="6525">
-<a href="./posts/hbr-managing-yourself-part-2.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-HBR On Managing Yourself: Delegation, Monkeys &amp; AI Agents (Part 2 of 2)
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
@@ -497,28 +500,34 @@ HBR On Managing Yourself: Delegation, Monkeys &amp; AI Agents (Part 2 of 2)
 <div class="listing-category" onclick="window.quartoListingCategory('VGVhbSUyMG1hbmFnZW1lbnQ='); return false;">Team management</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/hbr-managing-yourself-part-2.html" class="no-external">
 Management Time: Who’s Got the Monkey? ### Definition of a Monkey In management theory, a <strong>monkey</strong> is a metaphor for the next move or responsibility in a problem-solving…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/hbr-managing-yourself-part-2.html" class="no-external">
 <div class="listing-date">
 May 19, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="4" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1771481786000" data-listing-file-modified-sort="1771481786399" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4814">
+<div class="thumbnail"><a href="./posts/Pretraining.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/Pretraining.html" class="no-external">Pretraining on unlabeled data</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/Pretraining.html" class="no-external">Learning Notes from LLMs from Scratch</a>
 </div>
-<div class="g-col-1" data-index="4" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1771481786000" data-listing-file-modified-sort="1771481786399" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4814">
-<a href="./posts/Pretraining.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="posts/Pretraining_files/figure-html/cell-14-output-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Pretraining on unlabeled data
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
@@ -528,28 +537,34 @@ Pretraining on unlabeled data
 <div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/Pretraining.html" class="no-external">
 <p>A summary of my learnings and code implementations from Chapter 05 of the book.</p>
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/Pretraining.html" class="no-external">
 <div class="listing-date">
 Feb 19, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="5" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1770569305000" data-listing-file-modified-sort="1770569305158" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3353">
+<div class="thumbnail"><a href="./posts/GPT_from_Scratch.html" class="no-external">
+
+<p class="card-img-top"><img src="posts/link.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/GPT_from_Scratch.html" class="no-external">Implementing a GPT model from scratch to generate text</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/GPT_from_Scratch.html" class="no-external">Learning Notes from LLMs from Scratch</a>
 </div>
-<div class="g-col-1" data-index="5" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1770569305000" data-listing-file-modified-sort="1770569305158" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3353">
-<a href="./posts/GPT_from_Scratch.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="posts/link.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Implementing a GPT model from scratch to generate text
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
@@ -559,28 +574,34 @@ Implementing a GPT model from scratch to generate text
 <div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/GPT_from_Scratch.html" class="no-external">
 <p>A summary of my learnings and code implementations from Chapter 04 of the book.</p>
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/GPT_from_Scratch.html" class="no-external">
 <div class="listing-date">
 Feb 8, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="6" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1769942570000" data-listing-file-modified-sort="1769942570845" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5320">
+<div class="thumbnail"><a href="./posts/Attention_Mechanisms.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/Attention_Mechanisms.html" class="no-external">Chapter 03: Coding Attention Mechanisms</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/Attention_Mechanisms.html" class="no-external">Learning Notes from LLMs from Scratch</a>
 </div>
-<div class="g-col-1" data-index="6" data-categories="TGVhcm5pbmclMkNQeXRob24lMkNCb29rLU5vdGVz" data-listing-date-sort="1769942570000" data-listing-file-modified-sort="1769942570845" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5320">
-<a href="./posts/Attention_Mechanisms.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Chapter 03: Coding Attention Mechanisms
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
@@ -590,55 +611,67 @@ Chapter 03: Coding Attention Mechanisms
 <div class="listing-category" onclick="window.quartoListingCategory('Qm9vay1Ob3Rlcw=='); return false;">Book-Notes</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/Attention_Mechanisms.html" class="no-external">
 <p>A summary of my learnings and code implementations from Chapter 03 of the book.</p>
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/Attention_Mechanisms.html" class="no-external">
 <div class="listing-date">
 Feb 1, 2026
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="7" data-categories="TW92aWUlMjBSZXZpZXdz" data-listing-date-sort="1744050600000" data-listing-file-modified-sort="1769940623114" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="492">
+<div class="thumbnail"><a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="no-external">Movie Review: Nayak - the Real hero by Satyajeet Ray</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="7" data-categories="TW92aWUlMjBSZXZpZXdz" data-listing-date-sort="1744050600000" data-listing-file-modified-sort="1769940623114" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="492">
-<a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Movie Review: Nayak - the Real hero by Satyajeet Ray
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('TW92aWUlMjBSZXZpZXdz'); return false;">Movie Reviews</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="no-external">
 I am a swucker for movies. I don’t like these rowdy movies - Saiyaara, Houseful 5. These are the kind of movies. I don’t think movies should be crass. They should be…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/Movie Review -  Nayak The Hero by Satyajeet Ray.html" class="no-external">
 <div class="listing-date">
 Apr 8, 2025
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="8" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmUlMkNsZWFybmluZ3M=" data-listing-date-sort="1743273000000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="388">
+<div class="thumbnail"><a href="./posts/Weekly Updates - 13.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/Weekly Updates - 13.html" class="no-external">Weekly Updates - 13/2025</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/Weekly Updates - 13.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="8" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmUlMkNsZWFybmluZ3M=" data-listing-date-sort="1743273000000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="388">
-<a href="./posts/Weekly Updates - 13.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Weekly Updates - 13/2025
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('V2Vla2x5JTIwVXBkYXRlcw=='); return false;">Weekly Updates</div>
@@ -648,28 +681,34 @@ Weekly Updates - 13/2025
 <div class="listing-category" onclick="window.quartoListingCategory('bGVhcm5pbmdz'); return false;">learnings</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/Weekly Updates - 13.html" class="no-external">
 After contemplating my 10-year corporate journey for several months, I’ve come to an unexpected realization. When I started, I believed that dedicating a decade to my…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/Weekly Updates - 13.html" class="no-external">
 <div class="listing-date">
 Mar 30, 2025
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="9" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmU=" data-listing-date-sort="1742668200000" data-listing-file-modified-sort="1769940531259" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="477">
+<div class="thumbnail"><a href="./posts/Weekly Updates - 12.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/Weekly Updates - 12.html" class="no-external">Weekly Updates - 12/2025</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/Weekly Updates - 12.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="9" data-categories="V2Vla2x5JTIwVXBkYXRlcyUyQ2xpZmU=" data-listing-date-sort="1742668200000" data-listing-file-modified-sort="1769940531259" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="477">
-<a href="./posts/Weekly Updates - 12.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Weekly Updates - 12/2025
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('V2Vla2x5JTIwVXBkYXRlcw=='); return false;">Weekly Updates</div>
@@ -677,28 +716,34 @@ Weekly Updates - 12/2025
 <div class="listing-category" onclick="window.quartoListingCategory('bGlmZQ=='); return false;">life</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/Weekly Updates - 12.html" class="no-external">
 I have been away lately. Having a new born is not easy. My wife* had a baby last year :-) and the first 6 months were really demanding for her. Maternity leave was an easy…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/Weekly Updates - 12.html" class="no-external">
 <div class="listing-date">
 Mar 23, 2025
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="10" data-categories="bXVzaW5ncyUyQ2xpZmU=" data-listing-date-sort="1739039400000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="523">
+<div class="thumbnail"><a href="./posts/welcome/index.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/welcome/index.html" class="no-external">Why even bother with a blog?</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/welcome/index.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="10" data-categories="bXVzaW5ncyUyQ2xpZmU=" data-listing-date-sort="1739039400000" data-listing-file-modified-sort="1769940531260" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="523">
-<a href="./posts/welcome/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Why even bother with a blog?
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('bXVzaW5ncw=='); return false;">musings</div>
@@ -706,46 +751,53 @@ Why even bother with a blog?
 <div class="listing-category" onclick="window.quartoListingCategory('bGlmZQ=='); return false;">life</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/welcome/index.html" class="no-external">
 It is 2025, AI which can match humans is surely upon us. Every day we have breakthroughs in AI which would put careers to end.
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/welcome/index.html" class="no-external">
 <div class="listing-date">
 Feb 9, 2025
 </div>
+<div class="listing-author">
+Pratyush Sinha
+</div>
+</a>
 </div>
 </div>
-</div></a>
+<div class="quarto-post image-right" data-index="11" data-categories="UGVyc29uYWwlMjBFeHBlcmllbmNlcw==" data-listing-date-sort="1736361000000" data-listing-file-modified-sort="1769940749003" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1009">
+<div class="thumbnail"><a href="./posts/ISIC.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/ISIC.html" class="no-external">A Hopeful Guide to Navigating Spinal Injury: Our Family’s Experience at ISIC</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/ISIC.html" class="no-external"></a>
 </div>
-<div class="g-col-1" data-index="11" data-categories="UGVyc29uYWwlMjBFeHBlcmllbmNlcw==" data-listing-date-sort="1736361000000" data-listing-file-modified-sort="1769940749003" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1009">
-<a href="./posts/ISIC.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-A Hopeful Guide to Navigating Spinal Injury: Our Family’s Experience at ISIC
-</h5>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('UGVyc29uYWwlMjBFeHBlcmllbmNlcw=='); return false;">Personal Experiences</div>
 
 </div>
-<div class="card-text listing-description delink">
+<div class="delink listing-description"><a href="./posts/ISIC.html" class="no-external">
 My father has had two major surgeries in the neck at the Indian Spinal Injury Center, and both have been successful. But this post isn’t just about that. I want this post to…
+</a></div>
 </div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Pratyush Sinha
-</div>
+<div class="metadata">
+<a href="./posts/ISIC.html" class="no-external">
 <div class="listing-date">
 Jan 9, 2025
 </div>
+<div class="listing-author">
+Pratyush Sinha
 </div>
+</a>
 </div>
-</div></a>
 </div>
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
@@ -836,7 +888,7 @@ Jan 9, 2025
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/pratyush-ml\.github\.io");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1164,8 +1216,33 @@ Jan 9, 2025
   });
   </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Pratyush Sinha</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="./index.html">
+<p>Home</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="./about.html">
+<p>About</p>
+</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
 
 
 
 
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

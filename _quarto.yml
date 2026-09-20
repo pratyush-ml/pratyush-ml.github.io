@@ -4,20 +4,30 @@ project:
 
 website:
   title: "Pratyush Sinha"
+  site-url: "https://pratyush-ml.github.io"
   navbar:
     left:
-      - about.qmd
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: About
     right:
       - icon: github
         href: https://github.com/ayushiyerji
       - icon: linkedin
         href: https://www.linkedin.com/in/pratyush20p/
+  page-footer:
+    left: "© 2026 Pratyush Sinha"
+    right:
+      - text: "Home"
+        href: index.qmd
+      - text: "About"
+        href: about.qmd
+
 format:
   html:
     theme:
-      light: cosmo
-      dark: darkly
+      light: [cosmo, theme-light.scss]
+      dark: [darkly, theme-dark.scss]
     css: styles.css
-
-
-
+    smooth-scroll: true
