@@ -2,7 +2,7 @@
    Minimalist Editorial Theme (inspired by sunilpai.dev)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap');
 
 /* --- Theme Color Variables --- */
 :root {
@@ -47,11 +47,11 @@ html {
 body {
   background-color: var(--theme-bg) !important;
   color: var(--theme-text) !important;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   line-height: 1.75 !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: radial-gradient(circle at 50% -10rem, var(--theme-glow), transparent 30rem) !important;
+  background-image: radial-gradient(circle at 50% -10rem, var(--theme-glow), transparent 28rem) !important;
   background-repeat: no-repeat !important;
   background-size: 100% 36rem !important;
   min-height: 100vh;
@@ -88,14 +88,26 @@ body {
   margin-right: auto;
 }
 
-/* --- Header / Navigation Bar --- */
+/* Fullcontent pages (posts): single 48rem column, like sunilpai.dev */
+body.fullcontent #quarto-content {
+  max-width: 48rem !important;
+}
+
+/* --- Header / Navigation (static editorial header, not a fixed bar) --- */
+body.nav-fixed {
+  padding-top: 0 !important;
+}
+
 .navbar {
-  background-color: var(--theme-bg) !important;
-  border-bottom: 1px dashed var(--theme-divider) !important;
-  padding-top: 1.25rem !important;
-  padding-bottom: 1.25rem !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  position: static !important;
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  padding-top: 3rem !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 3.5rem !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .navbar > .container-fluid {
@@ -104,16 +116,10 @@ body {
   padding-right: 1.5rem !important;
 }
 
-@media (min-width: 1200px) {
-  .navbar > .container-fluid {
-    max-width: 68rem !important;
-  }
-}
-
 .navbar-brand {
   font-weight: 700 !important;
   letter-spacing: -0.035em !important;
-  font-size: 1.2rem !important;
+  font-size: 1.25rem !important;
   color: var(--theme-accent-2) !important;
   text-decoration: none !important;
 }
@@ -124,8 +130,8 @@ body {
 
 .navbar-nav .nav-link {
   font-weight: 500 !important;
-  font-size: 0.925rem !important;
-  color: var(--theme-muted) !important;
+  font-size: 0.875rem !important;
+  color: var(--theme-accent) !important;
   padding: 0.35rem 0.75rem !important;
   transition: color 0.15s ease !important;
 }
@@ -133,6 +139,17 @@ body {
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
   color: var(--theme-accent) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+}
+
+/* Dotted separators between nav items, like the reference */
+@media (min-width: 992px) {
+  .navbar-nav .nav-item + .nav-item {
+    border-left: 1px dotted var(--theme-divider) !important;
+    margin-left: 0.75rem !important;
+    padding-left: 0.75rem !important;
+  }
 }
 
 .quarto-color-scheme-toggle,
@@ -189,38 +206,29 @@ h1.title {
   margin-bottom: 0.4em !important;
 }
 
-/* --- Article & Post Title Block --- */
+/* --- Article & Post Title Block (title → date → summary, like the reference) --- */
 header#title-block-header {
-  margin-top: 1.5rem !important;
-  margin-bottom: 2.5rem !important;
-  padding-bottom: 1.75rem !important;
-  border-bottom: 1px dashed var(--theme-divider) !important;
+  margin-top: 0 !important;
+  margin-bottom: 3rem !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-.quarto-title-banner {
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
+header#title-block-header .quarto-title {
+  display: contents !important;
 }
 
-/* Editorial Post Summary / Subtitle */
-header#title-block-header .subtitle,
-header#title-block-header .description,
-.post-summary {
-  border-left: 2px solid var(--theme-accent) !important;
-  padding-left: 1rem !important;
-  font-size: 1.1rem !important;
-  line-height: 1.65 !important;
-  color: var(--theme-muted) !important;
-  margin-top: 1.25rem !important;
-  margin-bottom: 1.25rem !important;
-  font-style: normal !important;
-  font-weight: 400 !important;
+header#title-block-header h1.title {
+  order: 0 !important;
+  margin-bottom: 0.5rem !important;
 }
 
-/* Post Meta (Date, Author) */
-.quarto-title-meta {
-  margin-top: 1.25rem !important;
+header#title-block-header .quarto-title-meta {
+  order: 1 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 1.5rem !important;
@@ -228,37 +236,87 @@ header#title-block-header .description,
   padding: 0 !important;
 }
 
-.quarto-title-meta-heading {
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
-  font-size: 0.75rem !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.12em !important;
-  color: var(--theme-muted) !important;
-  margin-bottom: 0.2rem !important;
+header#title-block-header .quarto-title-meta-heading {
+  display: none !important;
 }
 
-.quarto-title-meta-contents p,
-.quarto-title-meta-contents p.date,
-.quarto-title-meta-contents p.author,
+/* Reference shows only the date, not the author, under the title */
+header#title-block-header .quarto-title-meta .author {
+  display: none !important;
+}
+
+header#title-block-header .subtitle,
+header#title-block-header > div:has(> .description) {
+  order: 2 !important;
+}
+
+header#title-block-header .quarto-categories {
+  order: 3 !important;
+}
+
+/* Post date in mono, like the reference "time" element */
+header#title-block-header .quarto-title-meta-contents p,
+header#title-block-header .quarto-title-meta-contents p.date,
 time {
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
+  font-family: 'Roboto Mono', ui-monospace, monospace !important;
   font-size: 0.8125rem !important;
-  letter-spacing: -0.01em !important;
+  letter-spacing: -0.02em !important;
   font-variant-numeric: tabular-nums !important;
   color: var(--theme-muted) !important;
   margin: 0 !important;
 }
 
-/* --- Prose Elements --- */
+/* Editorial Post Summary / Subtitle (accent left border, like the reference) */
+header#title-block-header .subtitle,
+header#title-block-header .description,
+.post-summary {
+  border-left: 2px solid var(--theme-accent) !important;
+  padding-left: 1rem !important;
+  font-size: 1.125rem !important;
+  line-height: 1.75 !important;
+  color: var(--theme-muted) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0 !important;
+  text-wrap: balance !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+}
+
+header#title-block-header .quarto-categories {
+  margin-top: 1.5rem !important;
+}
+
+/* --- Prose Elements (prose-editorial, like the reference) --- */
 p, li {
   color: var(--theme-text) !important;
-  font-size: 1.025rem !important;
+  font-size: 1.0625rem !important;
   line-height: 1.75 !important;
 }
 
 p {
   margin-top: 1.25em !important;
   margin-bottom: 1.25em !important;
+}
+
+/* Strong emphasis: pure black in light, white in dark */
+strong {
+  color: #000 !important;
+}
+
+[data-quarto-color-scheme="dark"] strong,
+body.quarto-dark strong {
+  color: #fff !important;
+}
+
+/* "#" markers hanging in the left margin before headings */
+#quarto-document-content h2::before,
+#quarto-document-content h3::before,
+#quarto-document-content h4::before {
+  content: "#";
+  color: var(--theme-accent) !important;
+  font-weight: 700 !important;
+  margin-inline-start: -1.5rem !important;
+  margin-inline-end: 0.5rem !important;
 }
 
 /* Links in body text */
@@ -279,7 +337,7 @@ p {
 hr {
   border: none !important;
   border-top: 1px dashed var(--theme-divider) !important;
-  margin: 2.75rem 0 !important;
+  margin: 3em 0 !important;
   opacity: 1 !important;
 }
 
@@ -322,23 +380,35 @@ blockquote a:hover {
 
 /* Code & Syntax Highlighting */
 code:not(pre code) {
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
+  font-family: 'Roboto Mono', ui-monospace, monospace !important;
   font-size: 0.875em !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   color: var(--theme-text) !important;
   background-color: var(--theme-code-bg) !important;
   border: 1px dotted var(--theme-divider) !important;
-  border-radius: 4px !important;
+  border-radius: 2px !important;
   padding: 0.15em 0.4em !important;
 }
 
+/* Backticks around inline code, like the reference prose */
+code:not(pre code)::before {
+  content: "`" !important;
+}
+
+code:not(pre code)::after {
+  content: "`" !important;
+}
+
 div.sourceCode, pre {
-  border-radius: 8px !important;
-  border: 1px solid var(--theme-divider) !important;
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
-  font-size: 0.85rem !important;
-  line-height: 1.6 !important;
-  margin: 1.75rem 0 !important;
+  border-radius: 6px !important;
+  border: 1px dashed #666 !important;
+  font-family: 'Roboto Mono', ui-monospace, monospace !important;
+  font-size: 0.875em !important;
+  line-height: 1.71429 !important;
+  margin-top: 1.71429em !important;
+  margin-bottom: 1.71429em !important;
+  padding: 0.857143em 1.14286em !important;
+  background-color: var(--theme-code-bg) !important;
 }
 
 .code-copy-button {
@@ -379,7 +449,7 @@ div.sourceCode, pre {
 
 .quarto-category,
 .badge {
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
+  font-family: 'Roboto Mono', monospace !important;
   font-size: 0.725rem !important;
   font-weight: 500 !important;
   text-transform: lowercase !important;
@@ -429,7 +499,7 @@ div.sourceCode, pre {
 }
 
 .quarto-post .listing-date {
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
+  font-family: 'Roboto Mono', monospace !important;
   font-size: 0.8125rem !important;
   letter-spacing: -0.01em !important;
   color: var(--theme-muted) !important;
@@ -516,7 +586,7 @@ div.sourceCode, pre {
 
 /* Listing Filter & Category Sidebar */
 .quarto-listing-category-title {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'Roboto Mono', monospace !important;
   font-size: 0.75rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.12em !important;
@@ -525,7 +595,7 @@ div.sourceCode, pre {
 }
 
 .quarto-listing-category .category {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'Roboto Mono', monospace !important;
   font-size: 0.8rem !important;
   color: var(--theme-muted) !important;
   border: none !important;
@@ -554,7 +624,7 @@ div.sourceCode, pre {
 
 #toc-title,
 .toc-title {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'Roboto Mono', monospace !important;
   font-size: 0.75rem !important;
   font-weight: 600 !important;
   text-transform: uppercase !important;
@@ -647,7 +717,7 @@ table.table tbody td {
 }
 
 .quarto-about-trestles .about-link {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'Roboto Mono', monospace !important;
   font-size: 0.8rem !important;
   border: 1px solid var(--theme-divider) !important;
   border-radius: 6px !important;
@@ -663,25 +733,25 @@ table.table tbody td {
   color: var(--theme-accent) !important;
 }
 
-/* --- Footer --- */
+/* --- Footer (minimal, like the reference) --- */
 footer.footer,
 .nav-footer {
-  border-top: 1px dashed var(--theme-divider) !important;
-  padding-top: 2rem !important;
-  padding-bottom: 2rem !important;
-  margin-top: 4rem !important;
+  border-top: none !important;
+  padding-top: 5rem !important;
+  padding-bottom: 1rem !important;
+  margin-top: 3rem !important;
   color: var(--theme-muted) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.8125rem !important;
+  font-size: 0.75rem !important;
   background: transparent !important;
 }
 
 .nav-footer a {
   color: var(--theme-muted) !important;
   text-decoration: none !important;
+  padding: 0.5rem 1rem !important;
 }
 
 .nav-footer a:hover {
-  color: var(--theme-accent) !important;
-  text-decoration: underline dotted !important;
+  color: var(--theme-text) !important;
+  text-decoration: underline !important;
 }

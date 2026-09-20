@@ -17,7 +17,6 @@ execute:
 
 format:
   html:
-    toc: true         # Adds a Table of Contents on the right
     toc-depth: 3      # How many heading levels to show in TOC
     code-fold: show   # Allows readers to toggle code visibility (starts as shown)
     code-copy: true   # Adds a copy button to your code blocks

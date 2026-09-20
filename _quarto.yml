@@ -31,3 +31,4 @@ format:
       dark: [darkly, theme-dark.scss]
     css: styles.css
     smooth-scroll: true
+    date-format: "D MMMM YYYY"

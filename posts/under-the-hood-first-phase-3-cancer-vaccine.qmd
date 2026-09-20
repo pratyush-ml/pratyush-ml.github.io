@@ -8,7 +8,6 @@ description: "How mRNA technology and machine learning algorithms combined to pa
 draft: false
 format:
   html:
-    toc: true
     toc-depth: 3
     code-copy: true
 ---
