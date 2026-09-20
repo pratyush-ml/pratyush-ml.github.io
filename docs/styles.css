@@ -64,9 +64,9 @@ body {
   color: #ffffff;
 }
 
-/* --- Layout Measure (Max 50rem centered column) --- */
+/* --- Layout Measure & Multi-Column Alignment --- */
 #quarto-content {
-  max-width: 50rem !important;
+  max-width: 72rem !important;
   margin-left: auto !important;
   margin-right: auto !important;
   padding-left: 1.5rem !important;
@@ -75,10 +75,17 @@ body {
   flex: 1 0 auto;
 }
 
+/* Ideal reading column measure for content (matches sunilpai.dev 48rem) */
+#quarto-document-content,
 .page-columns .column-body,
-.page-columns .column-body-outset,
-.page-columns .column-page {
-  max-width: 100% !important;
+.page-columns .column-body-outset {
+  max-width: 48rem !important;
+}
+
+/* Pages with no sidebar (like index, about) center neatly */
+.page-layout-article #quarto-document-content {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- Header / Navigation Bar --- */
@@ -92,9 +99,15 @@ body {
 }
 
 .navbar > .container-fluid {
-  max-width: 50rem !important;
+  max-width: 48rem !important;
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
+}
+
+@media (min-width: 1200px) {
+  .navbar > .container-fluid {
+    max-width: 68rem !important;
+  }
 }
 
 .navbar-brand {
@@ -152,26 +165,28 @@ h1.title {
 
 @media (min-width: 640px) {
   h1.title {
-    font-size: 2.75rem !important;
+    font-size: 2.65rem !important;
   }
 }
 
-h2 {
-  font-size: 1.5rem !important;
-  margin-top: 2.25em !important;
-  margin-bottom: 0.8em !important;
+#quarto-document-content h2 {
+  font-size: 1.45rem !important;
+  margin-top: 2.4em !important;
+  margin-bottom: 0.75em !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
 }
 
-h3 {
-  font-size: 1.25rem !important;
-  margin-top: 1.75em !important;
-  margin-bottom: 0.6em !important;
+#quarto-document-content h3 {
+  font-size: 1.2rem !important;
+  margin-top: 1.8em !important;
+  margin-bottom: 0.5em !important;
 }
 
-h4 {
+#quarto-document-content h4 {
   font-size: 1.05rem !important;
   margin-top: 1.5em !important;
-  margin-bottom: 0.5em !important;
+  margin-bottom: 0.4em !important;
 }
 
 /* --- Article & Post Title Block --- */
@@ -246,16 +261,17 @@ p {
   margin-bottom: 1.25em !important;
 }
 
-/* Links */
-#quarto-document-content a:not(.anchorjs-link):not(.quarto-category):not(.btn) {
+/* Links in body text */
+#quarto-document-content a:not(.anchorjs-link):not(.quarto-category):not(.btn):not(.nav-link) {
   color: var(--theme-link) !important;
   text-decoration: underline dotted !important;
-  text-underline-offset: 4px !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 3px !important;
   font-weight: 500 !important;
   transition: color 0.15s ease !important;
 }
 
-#quarto-document-content a:not(.anchorjs-link):not(.quarto-category):not(.btn):hover {
+#quarto-document-content a:not(.anchorjs-link):not(.quarto-category):not(.btn):not(.nav-link):hover {
   color: var(--theme-accent) !important;
 }
 
@@ -269,19 +285,39 @@ hr {
 
 /* Blockquotes */
 blockquote {
-  border-left: 3px solid var(--theme-accent) !important;
+  border-left: 2px solid var(--theme-accent) !important;
   border-top: none !important;
   border-bottom: none !important;
   border-right: none !important;
-  padding: 0.4rem 0 0.4rem 1.25rem !important;
+  padding: 0.5rem 0 0.5rem 1.25rem !important;
   margin: 1.75rem 0 !important;
-  color: var(--theme-text) !important;
+  color: var(--theme-muted) !important;
   font-style: italic !important;
   background: transparent !important;
 }
 
+blockquote p {
+  color: var(--theme-muted) !important;
+  font-size: 1.025rem !important;
+  line-height: 1.7 !important;
+}
+
 blockquote p:last-child {
   margin-bottom: 0 !important;
+}
+
+/* Clean, unobtrusive links inside blockquotes */
+blockquote a {
+  color: var(--theme-link) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid var(--theme-divider) !important;
+  font-weight: 400 !important;
+  transition: all 0.15s ease !important;
+}
+
+blockquote a:hover {
+  color: var(--theme-accent) !important;
+  border-bottom-color: var(--theme-accent) !important;
 }
 
 /* Code & Syntax Highlighting */
@@ -504,36 +540,73 @@ div.sourceCode, pre {
   text-decoration: underline dotted !important;
 }
 
-/* --- Table of Contents (TOC) --- */
+/* --- Table of Contents (TOC / Margin Sidebar) --- */
+#quarto-margin-sidebar {
+  padding-left: 2rem !important;
+  min-width: 15rem !important;
+}
+
 #TOC {
   border-left: 1px dashed var(--theme-divider) !important;
   padding-left: 1rem !important;
-  font-size: 0.85rem !important;
+  font-size: 0.8125rem !important;
 }
 
-#TOC-title {
+#toc-title,
+.toc-title {
   font-family: 'JetBrains Mono', monospace !important;
   font-size: 0.75rem !important;
+  font-weight: 600 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.12em !important;
   color: var(--theme-muted) !important;
-  margin-bottom: 0.75rem !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.85rem !important;
+  white-space: nowrap !important;
+  border-bottom: none !important;
 }
 
 #TOC ul {
-  padding-left: 0.75rem !important;
+  list-style: none !important;
+  padding-left: 0.65rem !important;
+  margin: 0 !important;
 }
 
-#TOC a {
+#TOC > ul {
+  padding-left: 0 !important;
+}
+
+#TOC li {
+  font-size: 0.8125rem !important;
+  line-height: 1.45 !important;
+  margin-top: 0.35rem !important;
+  margin-bottom: 0.35rem !important;
+}
+
+#TOC .nav-link {
   color: var(--theme-muted) !important;
   text-decoration: none !important;
+  border-left: none !important;
+  padding: 0.15rem 0 !important;
   transition: color 0.15s ease !important;
+  word-break: normal !important;
 }
 
-#TOC a:hover,
-#TOC a.active {
+#TOC .nav-link:hover {
+  color: var(--theme-accent) !important;
+  text-decoration: none !important;
+}
+
+#TOC .nav-link.active {
   color: var(--theme-accent) !important;
   font-weight: 600 !important;
+  border-left: none !important;
+}
+
+/* Eliminate bootstrap's nested left border lines in TOC */
+#TOC nav > ul > li > ul,
+#TOC ul ul {
+  border-left: none !important;
 }
 
 /* --- Tables --- */

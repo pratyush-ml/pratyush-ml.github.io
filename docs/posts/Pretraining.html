@@ -465,7 +465,7 @@ window.Quarto = {
 <h1 data-number="2"><span class="header-section-number">2</span> Implementing the training loop for GPT</h1>
 <p>This is going to be a step by step process, where we start with the inner most loop and then add batch and epochs: - Defining Training &amp; Valdiation Sets - Defining the <span class="math inline">\(X\)</span> and <span class="math inline">\(y\)</span> variables - Defining Cross-Entropy loss - Create a loop for batches with loss - Create a loop for epoch</p>
 <p>We should define a few constants which we are going to use across our model training. This is similar to the config file we had defined in the previous Chapter except the context length is significantly shorter. Larger Context length implies shorter memory requirements.</p>
-<div id="cbc29d34" class="cell">
+<div id="ca8790a3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -488,7 +488,7 @@ window.Quarto = {
 <section id="defining-training-validation-sets" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="defining-training-validation-sets"><span class="header-section-number">2.1</span> Defining training &amp; Validation Sets</h2>
 <p>We start by loading the data we had downloaded in Chapter 02.</p>
-<div id="5e4c4bf0" class="cell">
+<div id="be3503f9" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiktoken</span>
@@ -505,7 +505,7 @@ window.Quarto = {
 </details>
 </div>
 <p>Having loaded the file, we now split this into training and validation set.</p>
-<div id="bd793bf4" class="cell">
+<div id="f30e0366" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>train_ratio <span class="op">=</span> <span class="fl">0.9</span></span>
@@ -522,7 +522,7 @@ window.Quarto = {
 <p>This is mostly a recap from Chapter 02 of the book. In the last section of Chapter 02, we had created batches of token with the following code. The class GPTDatasetV1 defines the class which gives the structure on how to load the datasets with DataLoader.</p>
 <p>The DataLoader using this schema, defined by GPTDatasetV1, loads the datasets.</p>
 <p>I am using the same code as Chapter 02 with more comments for clarity.</p>
-<div id="215c5ed0" class="cell">
+<div id="7d374d06" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiktoken</span>
@@ -597,7 +597,7 @@ window.Quarto = {
 <p>There are a total of 5 batches now. Drop_last = True means that would mean that the last 2 would be discarded. This is done to maximize GPU utilization. With shuffle = False, batches would be picked in the same order in which they were present in the Dataset. Here 0,1,2,3 represent the chunk order. Batch 1: Samples [0,1,2,3] Batch 2: Samples [4,5,6,7] Batch 3: Samples [8, 9, 10, 11] Batch 4: Samples [12,13,14,15] Batch 5: Samples [16,17,18,19]</p>
 <p>If we set shuffle = True, the batch gets filled just not in the serialized order of the Dataset Variable. Shuffling helps in avoid correlations as sequential chunks are highly correlated. If we do not shuffle, the model might memorize the general patters. Batch 1: Samples [0,16,13,6] Batch 2: Samples [4,5,9,7] Batch 3: Samples [8, 3, 11, 17] Batch 4: Samples [12,2,14,18] Batch 5: Samples [16,10,15,19]</p>
 <p>With this we have defined the <span class="math inline">\(X\)</span> and <span class="math inline">\(y\)</span> variables in a clear way. We can now use this in our analysis.</p>
-<div id="4b16bfeb" class="cell">
+<div id="e8927774" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> create_dataloader_v1(</span>
@@ -633,7 +633,7 @@ window.Quarto = {
 <section id="defining-cross-entropy-loss" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="defining-cross-entropy-loss"><span class="header-section-number">2.3</span> Defining Cross Entropy loss</h2>
 <p>We now move to create the cross-entropy loss function for a batch. We calculate losses at batch level.</p>
-<div id="d773ffb1" class="cell">
+<div id="6ba196da" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc_loss_batch(input_batch, target_batch, model, device):</span>
@@ -648,7 +648,7 @@ window.Quarto = {
 </details>
 </div>
 <p>We now calculate the training and validation sets.</p>
-<div id="f7f0f9c7" class="cell">
+<div id="28f5be13" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calc_loss_loader(data_loader, model, device, num_batches <span class="op">=</span> <span class="va">None</span>):</span>
@@ -673,7 +673,7 @@ window.Quarto = {
 <p>This is a generic function that works for both training and validation loss. Ideally, the validation loss should be higher than the training loss, but both should be decreasing as we increase the number of epochs.</p>
 <p>It iterates over all batches, calculates the total loss across all batches and calculates the average. We use num_batches to use a smnall number of batches to speed up the evaluation during model training.</p>
 <p>We will now calculate thee loss for both training and validation. Ideally the values should be significantly high.</p>
-<div id="e64f1c1f" class="cell">
+<div id="a12d2a8d" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
@@ -694,7 +694,7 @@ window.Quarto = {
 <section id="creating-a-training-loop-for-epochs-and-batch" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="creating-a-training-loop-for-epochs-and-batch"><span class="header-section-number">2.4</span> Creating a training loop for epochs and batch</h2>
 <p>The goal here is to create two loops: Iterate over epochs(make multiple passes at the data), Iterate over batches. There would be a lot of new components that we introduce here which we need to introduce in one more iteration. What are the parameters that we are going to need to make this function work: - model: The model which is going to be used - train_loader, val_loader: Training dataset in DataLoader Object, Validation dataset in DataLoader object - device: CPU or GPU - num_epochs: Total passes at the whole data we want our model to make - optimizer: An optimizer that helps us adjust weights</p>
-<div id="7eade783" class="cell">
+<div id="fcba1bd2" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_model_simple(model, train_loader, val_loader, optimizer,device, num_epochs, eval_freq, eval_iter, start_context, tokenizer):</span>
@@ -727,7 +727,7 @@ window.Quarto = {
 </details>
 </div>
 <p>Let’s build all the remaining functions that we need. We start with building the evaluate model that returns training and validation loss. It take the model as an input because we need to change the model to inference model and change it back to training mode at the end. This is also we have a conditional parameter to avoid calculating training and validation losses after each batch calculation.</p>
-<div id="bc3e451b" class="cell">
+<div id="a5a796ff" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate_model(model, train_loader, val_loader,device, eval_iter):</span>
@@ -742,7 +742,7 @@ window.Quarto = {
 </details>
 </div>
 <p>We will now improve on the generate and print simple which helps us visualize what the model has generater for a sense checks. We will create text to token mapping and an inverse function. These were all defined in the previous chapter.</p>
-<div id="52235ad0" class="cell">
+<div id="49aac4d4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gpt <span class="im">import</span> generate_text_simple</span>
@@ -771,7 +771,7 @@ window.Quarto = {
 </details>
 </div>
 <p>We are only left with one other component to complete our training loop - The optimizer. Below code creates an optimizer AdamW(Adam with Weight Decay) and calls the training loop.</p>
-<div id="0e3856e1" class="cell">
+<div id="256fb4ac" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">123</span>)</span>
@@ -792,7 +792,7 @@ window.Quarto = {
 </div>
 <p>This tells us that as the model goes through multiple epochs, the training loss decreases but the validation does not decrease as much.</p>
 <p>Looking at training and validation losses over epochs is incredibly hard. We should create a plot to visualize it a little better.</p>
-<div id="d6584591" class="cell">
+<div id="4b97859e" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -830,7 +830,7 @@ window.Quarto = {
 <p>Temperature works by adding a probabilistic selection process to the next-token generation task. In the greedy approach(generate_text_simple) we sample the token with the highest probability. To generate text with more variety, we replace argmax with a function that samples from a probability distribution.</p>
 <p>Illustrating this below to reduce the fluff. We start with a dictionary and its reverse map.</p>
 <p>We introduce a next_token_logits which we assume is the logits output from the GPT2 model for “every effort moves you”. We then implement the greedy algorithm that selects the maximum probability after softmaxing over the logits.</p>
-<div id="98123191" class="cell">
+<div id="b52de413" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>vocab <span class="op">=</span> {</span>
@@ -856,7 +856,7 @@ window.Quarto = {
 </div>
 <p>The largest logit in the sequence is at 4th. The softmax over the logits would mean that the highest probabilty would be at 4th. Thus, the next token is 4th which in our case is “forward”.</p>
 <p>We now move to a probabilistic sampling process where we replace the argmax with multinomial sampling.</p>
-<div id="0df00276" class="cell">
+<div id="1197783f" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">123</span>)</span>
@@ -865,7 +865,7 @@ window.Quarto = {
 </details>
 </div>
 <p>This will also print the same output as before - “forward”, because multinomial distribution is dependent on the probability score. The way it is different from the Greedy approach is because if we generate multiple samples, we would see a probability distribution instead of a single word upfront.</p>
-<div id="9e9f563e" class="cell">
+<div id="c44e3c70" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> print_sampled_tokens(probas):</span>
@@ -879,7 +879,7 @@ window.Quarto = {
 </details>
 </div>
 <p>This allows some variation on the text. We could improve on this by adding a temperature scaling which is a fancy description for dividing the logits by a number greater than 0.</p>
-<div id="04364c38" class="cell">
+<div id="7b60b1f3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> softmax_with_temperature(logits, temperature):</span>
@@ -888,7 +888,7 @@ window.Quarto = {
 </details>
 </div>
 <p>Temperatures greater than 1 would result in a more uniform distribution of token probabilities and temperatures smaller than 1 will result in sharper or peaky distribution. Here is a plot that illustrates the temperatures impact:</p>
-<div id="df0d5699" class="cell">
+<div id="746e28c4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>temperatures <span class="op">=</span> [<span class="dv">1</span>,<span class="fl">0.1</span>,<span class="dv">5</span>]</span>
@@ -916,7 +916,7 @@ window.Quarto = {
 <section id="top-k-sampling" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="top-k-sampling"><span class="header-section-number">3.2</span> Top-k Sampling</h2>
 <p>Top-k Sampling works by restrict the sampled tokens to the top-k most likely tokkens and exclude all other tokens from the selection process by masking their probability scores. This relies on the softmax of negative infinity is zero.</p>
-<div id="fed57fa4" class="cell">
+<div id="80f541d1" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>top_k <span class="op">=</span> <span class="dv">3</span></span>
@@ -926,7 +926,7 @@ window.Quarto = {
 </details>
 </div>
 <p>This gives us the top 3 tokens based on their logits values. We now create the masking of the tokens.</p>
-<div id="ccd77cb5" class="cell">
+<div id="7b2de881" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>new_logits <span class="op">=</span> torch.where(</span>
@@ -947,7 +947,7 @@ window.Quarto = {
 <section id="modify-the-text-generation-function" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="modify-the-text-generation-function"><span class="header-section-number">3.3</span> Modify the text generation function</h2>
 <p>We can move to create a single text generation function that combines the two approaches discussed earlier.</p>
-<div id="bafb70ac" class="cell">
+<div id="e73f2773" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate(model, idx, max_new_tokens, context_size, temperature<span class="op">=</span><span class="fl">0.0</span>, top_k <span class="op">=</span> <span class="va">None</span>, eos_id<span class="op">=</span><span class="va">None</span>):</span>
@@ -995,7 +995,7 @@ window.Quarto = {
 <section id="loading-and-saving-model-weights" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Loading and saving model weights</h1>
 <p>We have trained a pretty bad model which is functional. We can save and reload the model with the following:</p>
-<div id="05c67d51" class="cell">
+<div id="e084ec50" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>torch.save(model.state_dict(),<span class="st">"model.pth"</span>)</span>
@@ -1006,7 +1006,7 @@ window.Quarto = {
 </details>
 </div>
 <p>This only saves the model weights. We can also save optimizer states.</p>
-<div id="cdaa1e04" class="cell">
+<div id="faf4db93" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>torch.save({</span>

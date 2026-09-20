@@ -1798,7 +1798,7 @@ font-style: inherit;">]</span></span></code></pre></div></div>
 <h1 data-number="2"><span class="header-section-number">2</span> Implementing the training loop for GPT</h1>
 <p>This is going to be a step by step process, where we start with the inner most loop and then add batch and epochs: - Defining Training &amp; Valdiation Sets - Defining the <img src="https://latex.codecogs.com/png.latex?X"> and <img src="https://latex.codecogs.com/png.latex?y"> variables - Defining Cross-Entropy loss - Create a loop for batches with loss - Create a loop for epoch</p>
 <p>We should define a few constants which we are going to use across our model training. This is similar to the config file we had defined in the previous Chapter except the context length is significantly shorter. Larger Context length implies shorter memory requirements.</p>
-<div id="cbc29d34" class="cell">
+<div id="ca8790a3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
@@ -1863,7 +1863,7 @@ font-style: inherit;">eval</span>()</span></code></pre></div></div>
 <section id="defining-training-validation-sets" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="defining-training-validation-sets"><span class="header-section-number">2.1</span> Defining training &amp; Validation Sets</h2>
 <p>We start by loading the data we had downloaded in Chapter 02.</p>
-<div id="5e4c4bf0" class="cell">
+<div id="be3503f9" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
@@ -1925,7 +1925,7 @@ font-style: inherit;">"Tokens:"</span>, total_tokens)</span></code></pre></div><
 </details>
 </div>
 <p>Having loaded the file, we now split this into training and validation set.</p>
-<div id="bd793bf4" class="cell">
+<div id="f30e0366" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">train_ratio <span class="op" style="color: #5E5E5E;
@@ -1958,7 +1958,7 @@ font-style: inherit;">=</span> text_data[split_idx:]</span></code></pre></div></
 <p>This is mostly a recap from Chapter 02 of the book. In the last section of Chapter 02, we had created batches of token with the following code. The class GPTDatasetV1 defines the class which gives the structure on how to load the datasets with DataLoader.</p>
 <p>The DataLoader using this schema, defined by GPTDatasetV1, loads the datasets.</p>
 <p>I am using the same code as Chapter 02 with more comments for clarity.</p>
-<div id="215c5ed0" class="cell">
+<div id="7d374d06" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
@@ -2207,7 +2207,7 @@ font-style: inherit;">return</span> dataloader</span></code></pre></div></div>
 <p>There are a total of 5 batches now. Drop_last = True means that would mean that the last 2 would be discarded. This is done to maximize GPU utilization. With shuffle = False, batches would be picked in the same order in which they were present in the Dataset. Here 0,1,2,3 represent the chunk order. Batch 1: Samples [0,1,2,3] Batch 2: Samples [4,5,6,7] Batch 3: Samples [8, 9, 10, 11] Batch 4: Samples [12,13,14,15] Batch 5: Samples [16,17,18,19]</p>
 <p>If we set shuffle = True, the batch gets filled just not in the serialized order of the Dataset Variable. Shuffling helps in avoid correlations as sequential chunks are highly correlated. If we do not shuffle, the model might memorize the general patters. Batch 1: Samples [0,16,13,6] Batch 2: Samples [4,5,9,7] Batch 3: Samples [8, 3, 11, 17] Batch 4: Samples [12,2,14,18] Batch 5: Samples [16,10,15,19]</p>
 <p>With this we have defined the <img src="https://latex.codecogs.com/png.latex?X"> and <img src="https://latex.codecogs.com/png.latex?y"> variables in a clear way. We can now use this in our analysis.</p>
-<div id="4b16bfeb" class="cell">
+<div id="e8927774" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">train_loader <span class="op" style="color: #5E5E5E;
@@ -2321,7 +2321,7 @@ font-style: inherit;">print</span>(x.shape, y.shape)</span></code></pre></div></
 <section id="defining-cross-entropy-loss" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="defining-cross-entropy-loss"><span class="header-section-number">2.3</span> Defining Cross Entropy loss</h2>
 <p>We now move to create the cross-entropy loss function for a batch. We calculate losses at batch level.</p>
-<div id="d773ffb1" class="cell">
+<div id="6ba196da" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="kw" style="color: #003B4F;
@@ -2360,7 +2360,7 @@ font-style: inherit;">return</span> loss</span></code></pre></div></div>
 </details>
 </div>
 <p>We now calculate the training and validation sets.</p>
-<div id="f7f0f9c7" class="cell">
+<div id="28f5be13" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="kw" style="color: #003B4F;
@@ -2467,7 +2467,7 @@ font-style: inherit;"># Average loss over all batches</span></span></code></pre>
 <p>This is a generic function that works for both training and validation loss. Ideally, the validation loss should be higher than the training loss, but both should be decreasing as we increase the number of epochs.</p>
 <p>It iterates over all batches, calculates the total loss across all batches and calculates the average. We use num_batches to use a smnall number of batches to speed up the evaluation during model training.</p>
 <p>We will now calculate thee loss for both training and validation. Ideally the values should be significantly high.</p>
-<div id="e64f1c1f" class="cell">
+<div id="a12d2a8d" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">device <span class="op" style="color: #5E5E5E;
@@ -2515,7 +2515,7 @@ font-style: inherit;">"Validation loss"</span>, val_loss)</span></code></pre></d
 <section id="creating-a-training-loop-for-epochs-and-batch" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="creating-a-training-loop-for-epochs-and-batch"><span class="header-section-number">2.4</span> Creating a training loop for epochs and batch</h2>
 <p>The goal here is to create two loops: Iterate over epochs(make multiple passes at the data), Iterate over batches. There would be a lot of new components that we introduce here which we need to introduce in one more iteration. What are the parameters that we are going to need to make this function work: - model: The model which is going to be used - train_loader, val_loader: Training dataset in DataLoader Object, Validation dataset in DataLoader object - device: CPU or GPU - num_epochs: Total passes at the whole data we want our model to make - optimizer: An optimizer that helps us adjust weights</p>
-<div id="7eade783" class="cell">
+<div id="fcba1bd2" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="kw" style="color: #003B4F;
@@ -2645,7 +2645,7 @@ font-style: inherit;">return</span> train_losses, val_losses, track_tokens_seen<
 </details>
 </div>
 <p>Let’s build all the remaining functions that we need. We start with building the evaluate model that returns training and validation loss. It take the model as an input because we need to change the model to inference model and change it back to training mode at the end. This is also we have a conditional parameter to avoid calculating training and validation losses after each batch calculation.</p>
-<div id="bc3e451b" class="cell">
+<div id="a5a796ff" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;
@@ -2681,7 +2681,7 @@ font-style: inherit;">return</span> train_loss, val_loss</span></code></pre></di
 </details>
 </div>
 <p>We will now improve on the generate and print simple which helps us visualize what the model has generater for a sense checks. We will create text to token mapping and an inverse function. These were all defined in the previous chapter.</p>
-<div id="52235ad0" class="cell">
+<div id="49aac4d4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
@@ -2780,7 +2780,7 @@ font-style: inherit;"># We do this to generate more compact text.</span></span>
 </details>
 </div>
 <p>We are only left with one other component to complete our training loop - The optimizer. Below code creates an optimizer AdamW(Adam with Weight Decay) and calls the training loop.</p>
-<div id="0e3856e1" class="cell">
+<div id="256fb4ac" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">torch.manual_seed(<span class="dv" style="color: #AD0000;
@@ -2837,7 +2837,7 @@ font-style: inherit;">=</span> tokenizer</span>
 </div>
 <p>This tells us that as the model goes through multiple epochs, the training loss decreases but the validation does not decrease as much.</p>
 <p>Looking at training and validation losses over epochs is incredibly hard. We should create a plot to visualize it a little better.</p>
-<div id="d6584591" class="cell">
+<div id="4b97859e" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="im" style="color: #00769E;
@@ -2932,7 +2932,7 @@ font-style: inherit;">len</span>(train_losses))</span>
 <p>Temperature works by adding a probabilistic selection process to the next-token generation task. In the greedy approach(generate_text_simple) we sample the token with the highest probability. To generate text with more variety, we replace argmax with a function that samples from a probability distribution.</p>
 <p>Illustrating this below to reduce the fluff. We start with a dictionary and its reverse map.</p>
 <p>We introduce a next_token_logits which we assume is the logits output from the GPT2 model for “every effort moves you”. We then implement the greedy algorithm that selects the maximum probability after softmaxing over the logits.</p>
-<div id="98123191" class="cell">
+<div id="b52de413" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1">vocab <span class="op" style="color: #5E5E5E;
@@ -3040,7 +3040,7 @@ font-style: inherit;">print</span>(inverse_vocab[next_token_id])</span></code></
 </div>
 <p>The largest logit in the sequence is at 4th. The softmax over the logits would mean that the highest probabilty would be at 4th. Thus, the next token is 4th which in our case is “forward”.</p>
 <p>We now move to a probabilistic sampling process where we replace the argmax with multinomial sampling.</p>
-<div id="0df00276" class="cell">
+<div id="1197783f" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">torch.manual_seed(<span class="dv" style="color: #AD0000;
@@ -3059,7 +3059,7 @@ font-style: inherit;">print</span>(inverse_vocab[next_token_id])</span></code></
 </details>
 </div>
 <p>This will also print the same output as before - “forward”, because multinomial distribution is dependent on the probability score. The way it is different from the Greedy approach is because if we generate multiple samples, we would see a probability distribution instead of a single word upfront.</p>
-<div id="9e9f563e" class="cell">
+<div id="c44e3c70" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="kw" style="color: #003B4F;
@@ -3120,7 +3120,7 @@ font-style: inherit;">"</span>)</span>
 </details>
 </div>
 <p>This allows some variation on the text. We could improve on this by adding a temperature scaling which is a fancy description for dividing the logits by a number greater than 0.</p>
-<div id="04364c38" class="cell">
+<div id="7b60b1f3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="kw" style="color: #003B4F;
@@ -3143,7 +3143,7 @@ font-style: inherit;">0</span>)</span></code></pre></div></div>
 </details>
 </div>
 <p>Temperatures greater than 1 would result in a more uniform distribution of token probabilities and temperatures smaller than 1 will result in sharper or peaky distribution. Here is a plot that illustrates the temperatures impact:</p>
-<div id="df0d5699" class="cell">
+<div id="746e28c4" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1">temperatures <span class="op" style="color: #5E5E5E;
@@ -3233,7 +3233,7 @@ font-style: inherit;">90</span>)</span>
 <section id="top-k-sampling" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="top-k-sampling"><span class="header-section-number">3.2</span> Top-k Sampling</h2>
 <p>Top-k Sampling works by restrict the sampled tokens to the top-k most likely tokkens and exclude all other tokens from the selection process by masking their probability scores. This relies on the softmax of negative infinity is zero.</p>
-<div id="fed57fa4" class="cell">
+<div id="80f541d1" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">top_k <span class="op" style="color: #5E5E5E;
@@ -3257,7 +3257,7 @@ font-style: inherit;">"Top positions:"</span>, top_pos)</span></code></pre></div
 </details>
 </div>
 <p>This gives us the top 3 tokens based on their logits values. We now create the masking of the tokens.</p>
-<div id="ccd77cb5" class="cell">
+<div id="7b2de881" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1">new_logits <span class="op" style="color: #5E5E5E;
@@ -3314,7 +3314,7 @@ font-style: inherit;">print</span>(topk_probas)</span></code></pre></div></div>
 <section id="modify-the-text-generation-function" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="modify-the-text-generation-function"><span class="header-section-number">3.3</span> Modify the text generation function</h2>
 <p>We can move to create a single text generation function that combines the two approaches discussed earlier.</p>
-<div id="bafb70ac" class="cell">
+<div id="e73f2773" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><span class="kw" style="color: #003B4F;
@@ -3516,7 +3516,7 @@ font-style: inherit;">"</span>, token_ids_to_text(token_ids, tokenizer))</span><
 <section id="loading-and-saving-model-weights" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Loading and saving model weights</h1>
 <p>We have trained a pretty bad model which is functional. We can save and reload the model with the following:</p>
-<div id="05c67d51" class="cell">
+<div id="e084ec50" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1">torch.save(model.state_dict(),<span class="st" style="color: #20794D;
@@ -3537,7 +3537,7 @@ font-style: inherit;">eval</span>()</span></code></pre></div></div>
 </details>
 </div>
 <p>This only saves the model weights. We can also save optimizer states.</p>
-<div id="cdaa1e04" class="cell">
+<div id="faf4db93" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1">torch.save({</span>
@@ -3841,7 +3841,7 @@ font-style: inherit;">"optimizer_state_dict"</span>])</span>
 <p>Before we start building, we need to define the arguments required for these components and a full-fledged Transformer block to run.</p>
 <section id="defining-the-configuration-for-gpt-2-class-of-models" class="level2" data-number="0.1">
 <h2 data-number="0.1" class="anchored" data-anchor-id="defining-the-configuration-for-gpt-2-class-of-models"><span class="header-section-number">0.1</span> Defining the configuration for GPT-2 class of models</h2>
-<div id="c6eaf9e6" class="cell">
+<div id="e5dbef95" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">GPT_CONFIG_124M <span class="op" style="color: #5E5E5E;
@@ -3913,7 +3913,7 @@ font-style: inherit;"># Query-Key-Value Bias</span></span>
 <section id="building-the-gpt-backbone" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Building the GPT Backbone</h1>
 <p>This backbone gives an overall structure to the model.</p>
-<div id="54eefef9" class="cell">
+<div id="42f61d6a" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="im" style="color: #00769E;
@@ -4126,7 +4126,7 @@ font-style: inherit;">return</span> x</span></code></pre></div></div>
 </details>
 </div>
 <p>There are three classes we have defined here. These form the backbone of the GPT model and are used multiple times.</p>
-<div id="a8e0dc04" class="cell">
+<div id="fbc8526c" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
@@ -4199,7 +4199,7 @@ font-style: inherit;">print</span>(logits)</span></code></pre></div></div>
 <p>The same applies to exploding gradients: large gradients multiplied repeatedly don’t just grow linearly; they compound exponentially like interest.</p>
 <p>One strategy to improve stability is Layer Normalization. It adjusts the activations of a layer to have a mean of 0 and a variance of 1. This adjustment speeds up the convergence to effective weights and ensures reliable training. In GPT-2, layer normalization is applied before and after the multi-head attention module.</p>
 <p>Let’s see how layer normalization works with a small tensor before filling in our class.</p>
-<div id="3b234e58" class="cell">
+<div id="90665f97" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">torch.manual_seed(<span class="dv" style="color: #AD0000;
@@ -4310,7 +4310,7 @@ font-style: inherit;">"Variance:"</span>, var)</span></code></pre></div></div>
 </details>
 </div>
 <p>Now we create the class.</p>
-<div id="be2dd2da" class="cell">
+<div id="96b1b296" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="kw" style="color: #003B4F;
@@ -4410,7 +4410,7 @@ font-style: inherit;">self</span>.shift</span></code></pre></div></div>
 <h1 data-number="3"><span class="header-section-number">3</span> Implementing a Feed-Forward Network with GELU Activations</h1>
 <p>GELU stands for Gaussian Error Linear Unit. It looks similar to ReLU (), but mathematically, it is the product of and the cumulative distribution function (CDF) of a standard normal distribution:</p>
 <p>GELU is like a “confidence booster.” If is high, confidence is high, and the CDF multiplies it by nearly 1. If is low, the model is less confident, and the CDF multiplies it by a smaller number.</p>
-<div id="c65b0de5" class="cell">
+<div id="8b0fc412" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="kw" style="color: #003B4F;
@@ -4472,7 +4472,7 @@ font-style: inherit;">3</span>))</span>
 </details>
 </div>
 <p>Now we implement the feed-forward neural network.</p>
-<div id="cf79da44" class="cell">
+<div id="37fd7b84" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="kw" style="color: #003B4F;
@@ -4536,7 +4536,7 @@ font-style: inherit;">self</span>.layers(x)</span></code></pre></div></div>
 <section id="adding-shortcut-connections" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Adding Shortcut Connections</h1>
 <p>Shortcut (or Skip/Residual) connections mitigate vanishing gradients. They create an alternative path for the gradient to flow by skipping one or more layers, adding the output of one layer to the output of a later layer.</p>
-<div id="02a143e1" class="cell">
+<div id="ccd693f1" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;
@@ -4644,7 +4644,7 @@ font-style: inherit;">return</span> x</span></code></pre></div></div>
 <section id="connecting-attention-linear-layers-in-transformer-blocks" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Connecting Attention &amp; Linear Layers in Transformer Blocks</h1>
 <p>We have now captured all the components of the GPT-2 architecture. Let’s fill in the actual <code>TransformerBlock</code>:</p>
-<div id="305f3011" class="cell">
+<div id="04317d7f" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
@@ -4803,7 +4803,7 @@ font-style: inherit;">return</span> x</span></code></pre></div></div>
 <section id="coding-the-gpt-model" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Coding the GPT Model</h1>
 <p>Time to stitch everything together.</p>
-<div id="42940ca8" class="cell">
+<div id="e3e4ec9c" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="kw" style="color: #003B4F;
@@ -4947,7 +4947,7 @@ font-style: inherit;">return</span> logits</span></code></pre></div></div>
 <section id="generating-text" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Generating Text</h1>
 <p>The model converts input text to an output tensor. We now need to generate text by selecting tokens based on probability distributions.</p>
-<div id="ca004aba" class="cell">
+<div id="fdf501aa" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="kw" style="color: #003B4F;
@@ -5106,7 +5106,7 @@ font-style: inherit;">return</span> idx</span></code></pre></div></div>
 <section id="step-1" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="step-1"><span class="header-section-number">2.1</span> Step 1</h2>
 <p>Generating intermediate weight W which is the dot product on the embedding vector for each token.</p>
-<div id="39143d29" class="cell">
+<div id="c2396870" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
@@ -5234,7 +5234,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-2" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="step-2"><span class="header-section-number">2.2</span> Step 2:</h2>
 <p>Normalizing the intermediate weights now. The weight should sum up on a scale of 0 to 1. The easiest way to do this is using softmax layer.</p>
-<div id="e5c5c3e6" class="cell">
+<div id="146676df" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">attn_weights_2 <span class="op" style="color: #5E5E5E;
@@ -5276,7 +5276,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-3" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="step-3"><span class="header-section-number">2.3</span> Step 3:</h2>
 <p>A weighted sum of the embeddings vector and the normalized attention weight.</p>
-<div id="1cf1efa0" class="cell">
+<div id="c8fc8607" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">query <span class="op" style="color: #5E5E5E;
@@ -5323,7 +5323,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="step-4" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="step-4"><span class="header-section-number">2.4</span> Step 4:</h2>
 <p>So far, we have only done this for one token. Let’s extend this to the whole list of input tokens.</p>
-<div id="2cc9c0fc" class="cell">
+<div id="6ea76ec7" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">attn_scores <span class="op" style="color: #5E5E5E;
@@ -5367,7 +5367,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </details>
 </div>
 <p>A slightly advanced approach leveraging linear algebra is:</p>
-<div id="68337b41" class="cell">
+<div id="fc41a6f3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
@@ -5418,7 +5418,7 @@ font-style: inherit;">print</span>(all_context_vectors)</span></code></pre></div
 <h1 data-number="3"><span class="header-section-number">3</span> Implementing self attention with trainable weights.</h1>
 <p>Trainable weights that form the basis of the mechanism used in LLMs. The previous iteration uses matrix multiplications on its own embeddings. This iteration introduces a new class of trainable weights matrices <img src="https://latex.codecogs.com/png.latex?W_%7Bq%7D">, <img src="https://latex.codecogs.com/png.latex?W_%7Bk%7D">, <img src="https://latex.codecogs.com/png.latex?W_%7Bv%7D">. These weights are randomly initialized and are used to project the input tokens into query, key, value matrices.</p>
 <p>We follow the same idea of the previous step, start with one token and then generalize for all tokens.</p>
-<div id="79e43538" class="cell">
+<div id="e66bbec0" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
@@ -5591,7 +5591,7 @@ font-style: inherit;">print</span>(context_vec_2)</span></code></pre></div></div
 <p>The scaling by the square root of the embedding dimension is the reason why this self attetnion mechanism is called the scaled-dot product attention.</p>
 </blockquote>
 <p>This looks fairly complex. This would be way simpler if we introduce some linear algebra. The central idea is, we do two successive matrix multiplications within the three initialized weights that we have introduced. There is one normalization layer in between.The output dimension needs to be the same as in the input i.e token_count * embedding_vector_size. The below code simplifies the above code</p>
-<div id="caf2a3cb" class="cell">
+<div id="e035c0d2" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="im" style="color: #00769E;
@@ -5727,7 +5727,7 @@ font-style: inherit;">print</span>(sa_v1(inputs))</span></code></pre></div></div
 <p>a further deep dive on the algorithms available for weight initialization of nn.Linear and when to use them is present in the link <a href="https://gemini.google.com/app/d91673816e6cae90">Weight Initialization</a></p>
 </blockquote>
 <p>We add the linear layer now to improve on the first interation.</p>
-<div id="249db7fb" class="cell">
+<div id="a192f160" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="kw" style="color: #003B4F;
@@ -5856,7 +5856,7 @@ font-style: inherit;">print</span>(sa_v2(inputs))</span></code></pre></div></div
 <li>Normalize the rows of the masked attention scores</li>
 </ul>
 <p>Implementing this pretty much the same way as before. We will do small codes with one go, then we will formalize with a class</p>
-<div id="c6a6bcb4" class="cell">
+<div id="da72f78a" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
@@ -5942,7 +5942,7 @@ font-style: inherit;">print</span>(masked_simple_norm)</span></code></pre></div>
 </div>
 <p>This is a pretty neat implementation which hits our objective of causal attention model right on the head. However, there is a room for a few improvements primarily from a mathematical standpoint. 1. Use negative infinity to get rid of that extra normalization at step 4. The whole idea of step 4 was normalize all the values left after zeroing upper traingle of the matrix.When we use negative infinity with softmax the output is 0 and 2. Dropouts addition to avoid overfitting - This is a technique where randomly selected hidden layer inputs are ignored during <strong>training</strong>. This avoids overfitting by making sure that the model does not rely heavily on a specific set of hidden layer inputs. Dropouts is only used during training and not inference.</p>
 <p>We can combine all of this in one go and create our final class. We will also make it work with batches.</p>
-<div id="ff0196c0" class="cell">
+<div id="8dc5c708" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">batch <span class="op" style="color: #5E5E5E;
@@ -6174,7 +6174,7 @@ font-style: inherit;">return</span> context_vec</span></code></pre></div></div>
 <h1 data-number="5"><span class="header-section-number">5</span> Multi-Headed Attention</h1>
 <p>The term multi-headed attention refers to dividing the attention mechanism into multiple heads each operating indepedent. Here a single causal attention module can be considered single-head attention, where these is only one set of attention weights processing the input sequentially.</p>
 <p>The main idea is to run the attention mechanism multiple times with different, learned linear projects.</p>
-<div id="f852ebee" class="cell">
+<div id="5040206a" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="kw" style="color: #003B4F;
@@ -6247,7 +6247,7 @@ font-style: inherit;">1</span>)</span></code></pre></div></div>
 </details>
 </div>
 <p>This is precisely what a multi-headed attention is.</p>
-<div id="18b884da" class="cell">
+<div id="88d184ad" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">torch.manual_seed(<span class="dv" style="color: #AD0000;
@@ -6297,7 +6297,7 @@ font-style: inherit;">"contex_vecs.shape:"</span>, context_vecs.shape)</span></c
 </div>
 <p>The shape of the output vector is now controlled by the number of Attention heads.</p>
 <p>Currently, the implementation is sequential. We need to parallelize this. We can do this with Linear Algebra. We need to concatenate these attention weights and then do matrix multiplication at once.</p>
-<div id="69b441ef" class="cell">
+<div id="20f1a67d" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="kw" style="color: #003B4F;

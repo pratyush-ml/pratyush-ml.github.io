@@ -502,7 +502,7 @@ window.Quarto = {
 <section id="step-1" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="step-1"><span class="header-section-number">2.1</span> Step 1</h2>
 <p>Generating intermediate weight W which is the dot product on the embedding vector for each token.</p>
-<div id="39143d29" class="cell">
+<div id="c2396870" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -538,7 +538,7 @@ window.Quarto = {
 <section id="step-2" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="step-2"><span class="header-section-number">2.2</span> Step 2:</h2>
 <p>Normalizing the intermediate weights now. The weight should sum up on a scale of 0 to 1. The easiest way to do this is using softmax layer.</p>
-<div id="e5c5c3e6" class="cell">
+<div id="146676df" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>attn_weights_2 <span class="op">=</span> torch.softmax(attn_scores_2, dim <span class="op">=</span><span class="dv">0</span>)</span>
@@ -550,7 +550,7 @@ window.Quarto = {
 <section id="step-3" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="step-3"><span class="header-section-number">2.3</span> Step 3:</h2>
 <p>A weighted sum of the embeddings vector and the normalized attention weight.</p>
-<div id="1cf1efa0" class="cell">
+<div id="c8fc8607" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> inputs[<span class="dv">1</span>]</span>
@@ -569,7 +569,7 @@ window.Quarto = {
 <section id="step-4" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="step-4"><span class="header-section-number">2.4</span> Step 4:</h2>
 <p>So far, we have only done this for one token. Let’s extend this to the whole list of input tokens.</p>
-<div id="2cc9c0fc" class="cell">
+<div id="6ea76ec7" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>attn_scores <span class="op">=</span> torch.empty(inputs.shape)</span>
@@ -581,7 +581,7 @@ window.Quarto = {
 </details>
 </div>
 <p>A slightly advanced approach leveraging linear algebra is:</p>
-<div id="68337b41" class="cell">
+<div id="fc41a6f3" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
@@ -608,7 +608,7 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> Implementing self attention with trainable weights.</h1>
 <p>Trainable weights that form the basis of the mechanism used in LLMs. The previous iteration uses matrix multiplications on its own embeddings. This iteration introduces a new class of trainable weights matrices <span class="math inline">\(W_{q}\)</span>, <span class="math inline">\(W_{k}\)</span>, <span class="math inline">\(W_{v}\)</span>. These weights are randomly initialized and are used to project the input tokens into query, key, value matrices.</p>
 <p>We follow the same idea of the previous step, start with one token and then generalize for all tokens.</p>
-<div id="79e43538" class="cell">
+<div id="e66bbec0" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Picking one token</span></span>
@@ -661,7 +661,7 @@ window.Quarto = {
 <p>The scaling by the square root of the embedding dimension is the reason why this self attetnion mechanism is called the scaled-dot product attention.</p>
 </blockquote>
 <p>This looks fairly complex. This would be way simpler if we introduce some linear algebra. The central idea is, we do two successive matrix multiplications within the three initialized weights that we have introduced. There is one normalization layer in between.The output dimension needs to be the same as in the input i.e token_count * embedding_vector_size. The below code simplifies the above code</p>
-<div id="caf2a3cb" class="cell">
+<div id="e035c0d2" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
@@ -707,7 +707,7 @@ window.Quarto = {
 <p>a further deep dive on the algorithms available for weight initialization of nn.Linear and when to use them is present in the link <a href="https://gemini.google.com/app/d91673816e6cae90">Weight Initialization</a></p>
 </blockquote>
 <p>We add the linear layer now to improve on the first interation.</p>
-<div id="249db7fb" class="cell">
+<div id="a192f160" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SelfAttention_v2(nn.Module):</span>
@@ -750,7 +750,7 @@ window.Quarto = {
 <li>Normalize the rows of the masked attention scores</li>
 </ul>
 <p>Implementing this pretty much the same way as before. We will do small codes with one go, then we will formalize with a class</p>
-<div id="c6a6bcb4" class="cell">
+<div id="da72f78a" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First two steps combined</span></span>
@@ -776,7 +776,7 @@ window.Quarto = {
 </div>
 <p>This is a pretty neat implementation which hits our objective of causal attention model right on the head. However, there is a room for a few improvements primarily from a mathematical standpoint. 1. Use negative infinity to get rid of that extra normalization at step 4. The whole idea of step 4 was normalize all the values left after zeroing upper traingle of the matrix.When we use negative infinity with softmax the output is 0 and 2. Dropouts addition to avoid overfitting - This is a technique where randomly selected hidden layer inputs are ignored during <strong>training</strong>. This avoids overfitting by making sure that the model does not rely heavily on a specific set of hidden layer inputs. Dropouts is only used during training and not inference.</p>
 <p>We can combine all of this in one go and create our final class. We will also make it work with batches.</p>
-<div id="ff0196c0" class="cell">
+<div id="8dc5c708" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>batch <span class="op">=</span> torch.stack((inputs,inputs), dim <span class="op">=</span> <span class="dv">0</span>)</span>
@@ -846,7 +846,7 @@ window.Quarto = {
 <h1 data-number="5"><span class="header-section-number">5</span> Multi-Headed Attention</h1>
 <p>The term multi-headed attention refers to dividing the attention mechanism into multiple heads each operating indepedent. Here a single causal attention module can be considered single-head attention, where these is only one set of attention weights processing the input sequentially.</p>
 <p>The main idea is to run the attention mechanism multiple times with different, learned linear projects.</p>
-<div id="f852ebee" class="cell">
+<div id="5040206a" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttentionWrapper(nn.Module):</span>
@@ -863,7 +863,7 @@ window.Quarto = {
 </details>
 </div>
 <p>This is precisely what a multi-headed attention is.</p>
-<div id="18b884da" class="cell">
+<div id="88d184ad" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">123</span>)</span>
@@ -883,7 +883,7 @@ window.Quarto = {
 </div>
 <p>The shape of the output vector is now controlled by the number of Attention heads.</p>
 <p>Currently, the implementation is sequential. We need to parallelize this. We can do this with Linear Algebra. We need to concatenate these attention weights and then do matrix multiplication at once.</p>
-<div id="69b441ef" class="cell">
+<div id="20f1a67d" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiHeadAttention(nn.Module):</span>

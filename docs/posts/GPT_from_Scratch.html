@@ -609,7 +609,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Before we start building, we need to define the arguments required for these components and a full-fledged Transformer block to run.</p>
 <section id="defining-the-configuration-for-gpt-2-class-of-models" class="level2" data-number="0.1">
 <h2 data-number="0.1" class="anchored" data-anchor-id="defining-the-configuration-for-gpt-2-class-of-models"><span class="header-section-number">0.1</span> Defining the configuration for GPT-2 class of models</h2>
-<div id="c6eaf9e6" class="cell">
+<div id="e5dbef95" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GPT_CONFIG_124M <span class="op">=</span> {</span>
@@ -637,7 +637,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="building-the-gpt-backbone" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Building the GPT Backbone</h1>
 <p>This backbone gives an overall structure to the model.</p>
-<div id="54eefef9" class="cell">
+<div id="42f61d6a" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -686,7 +686,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <p>There are three classes we have defined here. These form the backbone of the GPT model and are used multiple times.</p>
-<div id="a8e0dc04" class="cell">
+<div id="fbc8526c" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiktoken</span>
@@ -723,7 +723,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The same applies to exploding gradients: large gradients multiplied repeatedly don’t just grow linearly; they compound exponentially like interest.</p>
 <p>One strategy to improve stability is Layer Normalization. It adjusts the activations of a layer to have a mean of 0 and a variance of 1. This adjustment speeds up the convergence to effective weights and ensures reliable training. In GPT-2, layer normalization is applied before and after the multi-head attention module.</p>
 <p>Let’s see how layer normalization works with a small tensor before filling in our class.</p>
-<div id="3b234e58" class="cell">
+<div id="90665f97" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">123</span>)</span>
@@ -748,7 +748,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <p>Now we create the class.</p>
-<div id="be2dd2da" class="cell">
+<div id="96b1b296" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LayerNorm(nn.Module):</span>
@@ -770,7 +770,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="3"><span class="header-section-number">3</span> Implementing a Feed-Forward Network with GELU Activations</h1>
 <p>GELU stands for Gaussian Error Linear Unit. It looks similar to ReLU (), but mathematically, it is the product of and the cumulative distribution function (CDF) of a standard normal distribution:</p>
 <p>GELU is like a “confidence booster.” If is high, confidence is high, and the CDF multiplies it by nearly 1. If is low, the model is less confident, and the CDF multiplies it by a smaller number.</p>
-<div id="c65b0de5" class="cell">
+<div id="8b0fc412" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GELU(nn.Module):</span>
@@ -784,7 +784,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 <p>Now we implement the feed-forward neural network.</p>
-<div id="cf79da44" class="cell">
+<div id="37fd7b84" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FeedForward(nn.Module):</span>
@@ -804,7 +804,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="adding-shortcut-connections" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Adding Shortcut Connections</h1>
 <p>Shortcut (or Skip/Residual) connections mitigate vanishing gradients. They create an alternative path for the gradient to flow by skipping one or more layers, adding the output of one layer to the output of a later layer.</p>
-<div id="02a143e1" class="cell">
+<div id="ccd693f1" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ExampleDeepNeuralNetwork(nn.Module):</span>
@@ -833,7 +833,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="connecting-attention-linear-layers-in-transformer-blocks" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Connecting Attention &amp; Linear Layers in Transformer Blocks</h1>
 <p>We have now captured all the components of the GPT-2 architecture. Let’s fill in the actual <code>TransformerBlock</code>:</p>
-<div id="305f3011" class="cell">
+<div id="04317d7f" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> attention <span class="im">import</span> MultiHeadAttention </span>
@@ -876,7 +876,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="coding-the-gpt-model" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Coding the GPT Model</h1>
 <p>Time to stitch everything together.</p>
-<div id="42940ca8" class="cell">
+<div id="e3e4ec9c" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GPTModel(nn.Module):</span>
@@ -910,7 +910,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="generating-text" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Generating Text</h1>
 <p>The model converts input text to an output tensor. We now need to generate text by selecting tokens based on probability distributions.</p>
-<div id="ca004aba" class="cell">
+<div id="fdf501aa" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_text_simple(model,idx,max_new_tokens,context_size): </span>

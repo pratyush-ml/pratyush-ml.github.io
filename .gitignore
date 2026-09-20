@@ -3,4 +3,5 @@
 **/*.quarto_ipynb
 *.code-workspace
 **/*.code-workspace
+image.png
 
